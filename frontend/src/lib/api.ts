@@ -53,6 +53,27 @@ export const api = {
   // Report
   generateReport: () =>
     fetchAPI("/report/generate", { method: "POST" }),
+  getReportStatus: () =>
+    fetchAPI<{ status: string; error: string | null }>("/report/status"),
   getLatestReport: () =>
     fetchAPI<import("./types").ReportData | null>("/report/latest"),
+
+  // Puzzles
+  getNextPuzzle: (params?: { phase?: string; motif?: string }) => {
+    const query = params ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<import("./types").Puzzle | null>(`/puzzles/next${query}`);
+  },
+  submitPuzzle: (puzzleId: number, moveUci: string) =>
+    fetchAPI<import("./types").PuzzleResult>(`/puzzles/${puzzleId}/submit`, {
+      method: "POST",
+      body: JSON.stringify({ move_uci: moveUci }),
+    }),
+  getPuzzleStats: () =>
+    fetchAPI<import("./types").PuzzleStats>("/puzzles/stats"),
+
+  // Time Management
+  getTimeManagement: () =>
+    fetchAPI<import("./types").TimeManagementProfile>("/time-management"),
 };

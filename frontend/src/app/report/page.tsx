@@ -27,8 +27,18 @@ export default function ReportPage() {
     setGenerating(true);
     try {
       await api.generateReport();
-      await loadReport();
-    } catch (e) {
+      // Poll for completion since report generation is async
+      let status = await api.getReportStatus();
+      while (status.status === "generating") {
+        await new Promise((r) => setTimeout(r, 2000));
+        status = await api.getReportStatus();
+      }
+      if (status.status === "error") {
+        alert(`Report generation failed: ${status.error}`);
+      } else {
+        await loadReport();
+      }
+    } catch {
       alert(
         `Failed to generate report. Make sure ANTHROPIC_API_KEY is set in backend/.env and games have been analyzed.`
       );

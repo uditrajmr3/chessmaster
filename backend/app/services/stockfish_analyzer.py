@@ -130,9 +130,18 @@ class StockfishAnalyzer:
             board.push(move)
 
             # Evaluate the new position (this becomes eval_before for the next move)
-            info = engine.analyse(board, chess.engine.Limit(depth=self.depth))
-            current_eval = self._score_to_cp(info.get("score"), is_white)
-            current_best = info.get("pv", [None])[0]
+            if board.is_checkmate():
+                # Side to move is checkmated — the side that just moved wins
+                current_eval = 10000 if is_player_turn else -10000
+                current_best = None
+            elif board.is_game_over():
+                # Stalemate or draw
+                current_eval = 0.0
+                current_best = None
+            else:
+                info = engine.analyse(board, chess.engine.Limit(depth=self.depth))
+                current_eval = self._score_to_cp(info.get("score"), is_white)
+                current_best = info.get("pv", [None])[0]
 
             eval_after = current_eval
 
@@ -143,7 +152,10 @@ class StockfishAnalyzer:
 
             # Classify move
             is_best = best_move is not None and move == best_move
-            classification = classify_move(cpl, eval_before, eval_after, is_best)
+            classification = classify_move(
+                cpl, eval_before, eval_after, is_best,
+                is_checkmate=board.is_checkmate(),
+            )
 
             # Detect tactics on error moves (only for player moves with significant CPL)
             motifs = []

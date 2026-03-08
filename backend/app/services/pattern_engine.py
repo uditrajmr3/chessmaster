@@ -266,6 +266,8 @@ class PatternEngine:
             .filter(
                 MoveAnalysis.is_player_move == 1,
                 MoveAnalysis.classification == "blunder",
+                MoveAnalysis.best_move_san.isnot(None),
+                MoveAnalysis.move_san != MoveAnalysis.best_move_san,
             )
             .order_by(MoveAnalysis.centipawn_loss.desc())
             .limit(limit)

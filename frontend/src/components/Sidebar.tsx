@@ -7,8 +7,10 @@ import { useState } from "react";
 const navItems = [
   { href: "/", label: "Dashboard", icon: "📊" },
   { href: "/games", label: "Games", icon: "♟️" },
+  { href: "/puzzles", label: "Puzzles", icon: "🧩" },
   { href: "/openings", label: "Openings", icon: "📖" },
   { href: "/weaknesses", label: "Weaknesses", icon: "🎯" },
+  { href: "/time-management", label: "Time Management", icon: "⏱️" },
   { href: "/report", label: "AI Coach", icon: "🤖" },
 ];
 

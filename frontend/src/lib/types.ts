@@ -127,3 +127,90 @@ export interface ReportData {
   report_text: string;
   report_json: Record<string, unknown>;
 }
+
+export interface Puzzle {
+  id: number;
+  move_analysis_id: number;
+  fen: string;
+  best_move_uci: string;
+  best_move_san: string;
+  player_move_san: string;
+  centipawn_loss: number;
+  game_phase: string;
+  tactical_motifs: string[];
+  game_id: string;
+  opponent: string;
+  played_at: string | null;
+  attempts: number;
+  successes: number;
+}
+
+export interface PuzzleResult {
+  correct: boolean;
+  best_move_uci: string;
+  best_move_san: string;
+  player_move_san: string;
+  centipawn_loss: number;
+}
+
+export interface PuzzleStats {
+  total_puzzles: number;
+  attempted: number;
+  mastered: number;
+  due_for_review: number;
+  accuracy: number;
+  by_phase: Record<string, number>;
+  by_motif: Record<string, number>;
+}
+
+export interface TimeTroubleZone {
+  moves: number;
+  blunder_rate: number;
+  avg_cpl: number;
+}
+
+export interface TimeVsMove {
+  move: number;
+  avg_time: number;
+  avg_cpl: number;
+  sample_size: number;
+}
+
+export interface TimeClassBreakdown {
+  time_class: string;
+  games: number;
+  moves_analyzed: number;
+  avg_cpl: number;
+  time_trouble_pct: number;
+}
+
+export interface OverthinkMove {
+  game_id: string;
+  move_number: number;
+  move_san: string;
+  time_spent: number;
+  cpl: number;
+  phase: string;
+}
+
+export interface UnderthinkBlunder {
+  game_id: string;
+  move_number: number;
+  move_san: string;
+  best_move_san: string | null;
+  time_spent: number;
+  cpl: number;
+  phase: string;
+  opponent: string;
+}
+
+export interface TimeManagementProfile {
+  time_per_move_by_phase: Record<string, number>;
+  time_vs_move_number: TimeVsMove[];
+  time_trouble_stats: Record<string, TimeTroubleZone>;
+  overthink_moves: OverthinkMove[];
+  underthink_blunders: UnderthinkBlunder[];
+  avg_time_by_classification: Record<string, number>;
+  time_class_breakdown: TimeClassBreakdown[];
+  games_with_clock_data: number;
+}

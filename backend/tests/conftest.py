@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
 from app.main import app
-from app.models import AnalysisJob, Game, MoveAnalysis, Report, SyncState
+from app.models import AnalysisJob, Game, MoveAnalysis, PuzzleProgress, Report, SyncState
 
 # ── In-memory SQLite engine (single shared connection via StaticPool) ────────
 
@@ -122,6 +122,42 @@ def make_move_analysis(
         classification=classification,
         game_phase=game_phase,
         time_remaining=time_remaining,
+        tactical_motifs=json.dumps(tactical_motifs) if tactical_motifs else None,
+    )
+    db.add(m)
+    db.commit()
+    return m
+
+
+def make_blunder(
+    db,
+    *,
+    game_id="chesscom_test1",
+    move_number=0,
+    centipawn_loss=200.0,
+    game_phase="middlegame",
+    best_move_uci="d2d4",
+    best_move_san="d4",
+    move_uci="e2e4",
+    move_san="e4",
+    tactical_motifs=None,
+) -> MoveAnalysis:
+    """Create a blunder move analysis (convenience wrapper)."""
+    m = MoveAnalysis(
+        game_id=game_id,
+        move_number=move_number,
+        is_player_move=1,
+        fen_before="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+        move_uci=move_uci,
+        move_san=move_san,
+        eval_before=150.0,
+        eval_after=-50.0,
+        best_move_uci=best_move_uci,
+        best_move_san=best_move_san,
+        centipawn_loss=centipawn_loss,
+        classification="blunder",
+        game_phase=game_phase,
+        time_remaining=300.0,
         tactical_motifs=json.dumps(tactical_motifs) if tactical_motifs else None,
     )
     db.add(m)

@@ -5,7 +5,7 @@ import json
 import pytest
 
 from app.services.pattern_engine import PatternEngine
-from tests.conftest import make_game, make_move_analysis
+from tests.conftest import make_blunder, make_game, make_move_analysis
 
 
 class TestPatternEngine:
@@ -153,9 +153,9 @@ class TestPatternEngine:
     def test_worst_blunders_ordered_by_cpl(self, db):
         """Example positions should be sorted by centipawn loss descending."""
         make_game(db, id="g1", platform_id="g1")
-        make_move_analysis(db, game_id="g1", move_number=0, classification="blunder", centipawn_loss=200)
-        make_move_analysis(db, game_id="g1", move_number=2, classification="blunder", centipawn_loss=500)
-        make_move_analysis(db, game_id="g1", move_number=4, classification="blunder", centipawn_loss=300)
+        make_blunder(db, game_id="g1", move_number=0, centipawn_loss=200)
+        make_blunder(db, game_id="g1", move_number=2, centipawn_loss=500)
+        make_blunder(db, game_id="g1", move_number=4, centipawn_loss=300)
 
         engine = PatternEngine(db)
         examples = engine._worst_blunders()

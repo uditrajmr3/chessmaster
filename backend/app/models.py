@@ -97,3 +97,17 @@ class Report(Base):
     games_count = Column(Integer, nullable=False)
     report_json = Column(Text, nullable=False)
     report_text = Column(Text, nullable=False)
+
+
+class PuzzleProgress(Base):
+    __tablename__ = "puzzle_progress"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    move_analysis_id = Column(Integer, nullable=False, unique=True)  # FK to MoveAnalysis
+    attempts = Column(Integer, nullable=False, default=0)
+    successes = Column(Integer, nullable=False, default=0)
+    last_seen = Column(DateTime)
+    next_review = Column(DateTime)
+    ease_factor = Column(Float, nullable=False, default=2.5)  # SM-2 ease factor
+    interval_days = Column(Float, nullable=False, default=0)  # current interval in days
+    created_at = Column(DateTime, default=datetime.utcnow)

@@ -152,7 +152,7 @@ export default function RatingChart({ data }: Props) {
                 color: "#e8eaed",
               }}
               labelFormatter={(label) => label}
-              formatter={(value: number) => [`${value}`, "Rating"]}
+              formatter={(value) => [`${value ?? ""}`, "Rating"]}
             />
             <Line
               type="monotone"

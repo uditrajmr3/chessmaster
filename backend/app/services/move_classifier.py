@@ -3,11 +3,16 @@ def classify_move(
     eval_before: float | None,
     eval_after: float | None,
     is_best_move: bool,
+    is_checkmate: bool = False,
 ) -> str:
     """Classify a move based on centipawn loss.
 
     Returns one of: brilliant, great, good, book, inaccuracy, mistake, blunder
     """
+    # A move that delivers checkmate is never a blunder
+    if is_checkmate:
+        return "great"
+
     if centipawn_loss <= 0:
         centipawn_loss = 0
 

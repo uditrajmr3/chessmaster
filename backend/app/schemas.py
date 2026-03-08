@@ -132,3 +132,42 @@ class ReportOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class PuzzleOut(BaseModel):
+    id: int
+    move_analysis_id: int
+    fen: str
+    best_move_uci: str
+    best_move_san: str
+    player_move_san: str
+    centipawn_loss: float
+    game_phase: str
+    tactical_motifs: list[str]
+    game_id: str
+    opponent: str
+    played_at: datetime | None
+    attempts: int
+    successes: int
+
+
+class PuzzleSubmit(BaseModel):
+    move_uci: str
+
+
+class PuzzleResult(BaseModel):
+    correct: bool
+    best_move_uci: str
+    best_move_san: str
+    player_move_san: str
+    centipawn_loss: float
+
+
+class PuzzleStats(BaseModel):
+    total_puzzles: int
+    attempted: int
+    mastered: int  # success rate >= 80% and attempts >= 3
+    due_for_review: int
+    accuracy: float  # overall success rate
+    by_phase: dict[str, int]  # puzzle count by game phase
+    by_motif: dict[str, int]  # puzzle count by tactical motif

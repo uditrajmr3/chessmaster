@@ -1,4 +1,5 @@
 import asyncio
+import threading
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -11,10 +12,12 @@ from ..services.stockfish_analyzer import StockfishAnalyzer
 router = APIRouter(tags=["analysis"])
 
 _analysis_status: dict = {"status": "idle", "total": 0, "completed": 0, "current_game": None}
+_analysis_lock = threading.Lock()
+_analysis_task: asyncio.Task | None = None
 
 
 async def _run_analysis():
-    global _analysis_status
+    global _analysis_task
     _analysis_status["status"] = "running"
     try:
         analyzer = StockfishAnalyzer()
@@ -23,13 +26,20 @@ async def _run_analysis():
     except Exception as e:
         _analysis_status["status"] = "error"
         _analysis_status["current_game"] = str(e)
+    finally:
+        _analysis_task = None
 
 
 @router.post("/analyze")
 async def start_analysis():
-    if _analysis_status.get("status") == "running":
-        return {"message": "Analysis already in progress"}
-    asyncio.ensure_future(_run_analysis())
+    global _analysis_task
+    with _analysis_lock:
+        # Check if a task is actually still running
+        if _analysis_task is not None and not _analysis_task.done():
+            return {"message": "Analysis already in progress"}
+        # Reset stale status from a previous crashed run
+        _analysis_status.update({"status": "idle", "total": 0, "completed": 0, "current_game": None})
+        _analysis_task = asyncio.ensure_future(_run_analysis())
     return {"message": "Analysis started"}
 
 

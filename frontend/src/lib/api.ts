@@ -76,4 +76,8 @@ export const api = {
   // Time Management
   getTimeManagement: () =>
     fetchAPI<import("./types").TimeManagementProfile>("/time-management"),
+
+  // Tilt Detection
+  getTiltReport: () =>
+    fetchAPI<import("./types").TiltReport>("/tilt"),
 };

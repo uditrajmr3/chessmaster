@@ -171,3 +171,53 @@ class PuzzleStats(BaseModel):
     accuracy: float  # overall success rate
     by_phase: dict[str, int]  # puzzle count by game phase
     by_motif: dict[str, int]  # puzzle count by tactical motif
+
+
+class StreakStats(BaseModel):
+    max_win_streak: int
+    max_loss_streak: int
+    avg_win_streak: float
+    avg_loss_streak: float
+    total_win_streaks: int
+    total_loss_streaks: int
+
+
+class StreakBlunderData(BaseModel):
+    blunder_rate: float
+    games: int
+    total_moves: int
+    blunders: int
+
+
+class SessionGame(BaseModel):
+    game_number: int
+    result: str
+    rating: int
+    blunder_rate: float
+    cumulative_losses: int
+
+
+class SessionSummary(BaseModel):
+    date: str
+    game_count: int
+    wins: int
+    losses: int
+    rating_change: int
+    games: list[SessionGame]
+
+
+class RatingDrop(BaseModel):
+    date: str
+    games_in_session: int
+    rating_drop: int
+    peak_rating: int
+    low_rating: int
+    losses: int
+
+
+class TiltReport(BaseModel):
+    streaks: StreakStats
+    blunder_by_losing_streak: dict[str, StreakBlunderData]
+    sessions: list[SessionSummary]
+    rating_drops: list[RatingDrop]
+    recommendations: list[str]

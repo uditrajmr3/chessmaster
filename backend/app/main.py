@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .database import Base, engine
-from .routers import analysis, games, openings, patterns, puzzles, report, stats, sync, time_management
+from .routers import analysis, games, openings, patterns, puzzles, report, stats, sync, tilt, time_management
 
 
 @asynccontextmanager
@@ -32,6 +32,7 @@ app.include_router(openings.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
 app.include_router(report.router, prefix="/api")
 app.include_router(puzzles.router, prefix="/api")
+app.include_router(tilt.router, prefix="/api")
 app.include_router(time_management.router, prefix="/api")
 
 

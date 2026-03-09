@@ -214,3 +214,53 @@ export interface TimeManagementProfile {
   time_class_breakdown: TimeClassBreakdown[];
   games_with_clock_data: number;
 }
+
+export interface StreakStats {
+  max_win_streak: number;
+  max_loss_streak: number;
+  avg_win_streak: number;
+  avg_loss_streak: number;
+  total_win_streaks: number;
+  total_loss_streaks: number;
+}
+
+export interface StreakBlunderData {
+  blunder_rate: number;
+  games: number;
+  total_moves: number;
+  blunders: number;
+}
+
+export interface SessionGame {
+  game_number: number;
+  result: string;
+  rating: number;
+  blunder_rate: number;
+  cumulative_losses: number;
+}
+
+export interface SessionSummary {
+  date: string;
+  game_count: number;
+  wins: number;
+  losses: number;
+  rating_change: number;
+  games: SessionGame[];
+}
+
+export interface RatingDrop {
+  date: string;
+  games_in_session: number;
+  rating_drop: number;
+  peak_rating: number;
+  low_rating: number;
+  losses: number;
+}
+
+export interface TiltReport {
+  streaks: StreakStats;
+  blunder_by_losing_streak: Record<string, StreakBlunderData>;
+  sessions: SessionSummary[];
+  rating_drops: RatingDrop[];
+  recommendations: string[];
+}

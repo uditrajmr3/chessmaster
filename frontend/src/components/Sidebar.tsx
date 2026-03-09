@@ -11,6 +11,7 @@ const navItems = [
   { href: "/openings", label: "Openings", icon: "📖" },
   { href: "/weaknesses", label: "Weaknesses", icon: "🎯" },
   { href: "/time-management", label: "Time Management", icon: "⏱️" },
+  { href: "/tilt", label: "Tilt Detector", icon: "🔥" },
   { href: "/report", label: "AI Coach", icon: "🤖" },
 ];
 

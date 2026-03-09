@@ -16,6 +16,8 @@ import {
   Crown,
   Trophy,
   TrendingUp,
+  Mail,
+  Users,
   Menu,
   X,
 } from "lucide-react";
@@ -30,6 +32,8 @@ const navItems: { href: string; label: string; icon: ElementType }[] = [
   { href: "/tilt", label: "Tilt Detector", icon: Flame },
   { href: "/endgame", label: "Endgame Drills", icon: Trophy },
   { href: "/rating-predictor", label: "Rating Predictor", icon: TrendingUp },
+  { href: "/digest", label: "Weekly Digest", icon: Mail },
+  { href: "/peer-comparison", label: "Peer Comparison", icon: Users },
   { href: "/scouting", label: "Opponent Scout", icon: UserSearch },
   { href: "/report", label: "AI Coach", icon: BotMessageSquare },
 ];

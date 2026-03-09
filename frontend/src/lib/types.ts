@@ -402,3 +402,79 @@ export interface RatingPredictionReport {
   monthly_performance: MonthlyPerformance[];
   recommendations: string[];
 }
+
+// ── Digest ──
+
+export interface DigestSummary {
+  total_games: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  win_rate: number;
+  rating_start: number;
+  rating_end: number;
+  rating_change: number;
+}
+
+export interface DigestAccuracy {
+  avg_cpl: number;
+  blunders: number;
+  mistakes: number;
+  missed_tactics: number;
+}
+
+export interface DigestOpening {
+  eco: string;
+  name: string;
+  games: number;
+  wins: number;
+  losses: number;
+}
+
+export interface DigestImprovement {
+  has_comparison: boolean;
+  win_rate_change: number;
+  cpl_change: number;
+  games_change: number;
+  prev_win_rate: number;
+  prev_avg_cpl: number;
+}
+
+export interface DigestHighlight {
+  type: string;
+  game_id: string;
+  description: string;
+}
+
+export interface DigestReport {
+  period_days: number;
+  period_start: string;
+  period_end: string;
+  summary: DigestSummary;
+  openings: DigestOpening[];
+  accuracy: DigestAccuracy;
+  improvement: DigestImprovement;
+  highlights: DigestHighlight[];
+  digest_text: string;
+}
+
+// ── Peer Comparison ──
+
+export interface PeerMetric {
+  metric: string;
+  your_value: number;
+  peer_average: number;
+  difference_pct: number;
+  suffix: string;
+  verdict: string;
+}
+
+export interface PeerComparisonReport {
+  rating_band: string;
+  avg_rating: number;
+  games_analyzed: number;
+  comparisons: PeerMetric[];
+  strengths: string[];
+  weaknesses: string[];
+  recommendations: string[];
+}

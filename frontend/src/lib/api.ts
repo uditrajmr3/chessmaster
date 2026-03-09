@@ -113,6 +113,22 @@ export const api = {
     return fetchAPI<import("./types").EndgameReport>(`/endgame${query}`);
   },
 
+  // Digest
+  getDigest: (params?: { days?: number; platform?: string; time_class?: string }) => {
+    const query = params ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v != null).map(([k, v]) => [k, String(v)]))
+    ).toString() : "";
+    return fetchAPI<import("./types").DigestReport>(`/digest${query}`);
+  },
+
+  // Peer Comparison
+  getPeerComparison: (filters?: import("./types").GameFilters) => {
+    const query = filters ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<import("./types").PeerComparisonReport>(`/peer-comparison${query}`);
+  },
+
   // Scouting
   scoutOpponent: (params: { opponent_username: string; platform: string; max_games?: number }) =>
     fetchAPI<import("./types").ScoutReport>("/scouting/scout", {

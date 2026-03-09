@@ -360,3 +360,79 @@ class RatingPredictionReport(BaseModel):
     weakness_trends: WeaknessTrends
     monthly_performance: list[MonthlyPerformance]
     recommendations: list[str]
+
+
+# ── Digest ──
+
+class DigestSummary(BaseModel):
+    total_games: int
+    wins: int
+    losses: int
+    draws: int
+    win_rate: float
+    rating_start: int
+    rating_end: int
+    rating_change: int
+
+
+class DigestAccuracy(BaseModel):
+    avg_cpl: float
+    blunders: int
+    mistakes: int
+    missed_tactics: int
+
+
+class DigestOpening(BaseModel):
+    eco: str
+    name: str
+    games: int
+    wins: int
+    losses: int
+
+
+class DigestImprovement(BaseModel):
+    has_comparison: bool
+    win_rate_change: float = 0
+    cpl_change: float = 0
+    games_change: int = 0
+    prev_win_rate: float = 0
+    prev_avg_cpl: float = 0
+
+
+class DigestHighlight(BaseModel):
+    type: str
+    game_id: str
+    description: str
+
+
+class DigestReport(BaseModel):
+    period_days: int
+    period_start: str
+    period_end: str
+    summary: DigestSummary
+    openings: list[DigestOpening]
+    accuracy: DigestAccuracy
+    improvement: DigestImprovement
+    highlights: list[DigestHighlight]
+    digest_text: str
+
+
+# ── Peer Comparison ──
+
+class PeerMetric(BaseModel):
+    metric: str
+    your_value: float
+    peer_average: float
+    difference_pct: float
+    suffix: str
+    verdict: str
+
+
+class PeerComparisonReport(BaseModel):
+    rating_band: str
+    avg_rating: int
+    games_analyzed: int
+    comparisons: list[PeerMetric]
+    strengths: list[str]
+    weaknesses: list[str]
+    recommendations: list[str]

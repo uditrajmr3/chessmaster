@@ -349,3 +349,56 @@ export interface EndgameReport {
   worst_games: EndgameFailure[];
   recommendations: string[];
 }
+
+// ── Rating Predictor ──
+
+export interface RatingTrajectory {
+  current_rating: number;
+  starting_rating: number;
+  total_change: number;
+  days_tracked: number;
+  games_played: number;
+  rate_per_month: number;
+  recent_momentum: number;
+  peak_rating: number;
+  valley_rating: number;
+  recent_win_rate: number;
+}
+
+export interface RatingMilestone {
+  target_rating: number;
+  months_away: number;
+  projected_date: string;
+}
+
+export interface MonthlyPerformance {
+  month: string;
+  games: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  win_rate: number;
+  avg_rating: number;
+  peak_rating: number;
+  rating_change: number;
+}
+
+export interface CplTrend {
+  month: string;
+  avg_cpl: number;
+  moves: number;
+}
+
+export interface WeaknessTrends {
+  opening_cpl: CplTrend[];
+  middlegame_cpl: CplTrend[];
+  endgame_cpl: CplTrend[];
+}
+
+export interface RatingPredictionReport {
+  trajectory: RatingTrajectory;
+  milestones: RatingMilestone[];
+  weakness_trends: WeaknessTrends;
+  monthly_performance: MonthlyPerformance[];
+  recommendations: string[];
+}

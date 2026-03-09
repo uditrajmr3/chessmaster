@@ -307,3 +307,56 @@ class EndgameReport(BaseModel):
     by_type: list[EndgameTypeStats]
     worst_games: list[EndgameFailure]
     recommendations: list[str]
+
+
+# ── Rating Predictor ──
+
+class RatingTrajectory(BaseModel):
+    current_rating: int
+    starting_rating: int
+    total_change: int
+    days_tracked: int
+    games_played: int
+    rate_per_month: float
+    recent_momentum: float
+    peak_rating: int
+    valley_rating: int
+    recent_win_rate: float
+
+
+class RatingMilestone(BaseModel):
+    target_rating: int
+    months_away: float
+    projected_date: str
+
+
+class MonthlyPerformance(BaseModel):
+    month: str
+    games: int
+    wins: int
+    losses: int
+    draws: int
+    win_rate: float
+    avg_rating: int
+    peak_rating: int
+    rating_change: int
+
+
+class CplTrend(BaseModel):
+    month: str
+    avg_cpl: float
+    moves: int
+
+
+class WeaknessTrends(BaseModel):
+    opening_cpl: list[CplTrend]
+    middlegame_cpl: list[CplTrend]
+    endgame_cpl: list[CplTrend]
+
+
+class RatingPredictionReport(BaseModel):
+    trajectory: RatingTrajectory
+    milestones: list[RatingMilestone]
+    weakness_trends: WeaknessTrends
+    monthly_performance: list[MonthlyPerformance]
+    recommendations: list[str]

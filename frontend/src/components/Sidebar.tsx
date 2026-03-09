@@ -15,6 +15,7 @@ import {
   BotMessageSquare,
   Crown,
   Trophy,
+  TrendingUp,
   Menu,
   X,
 } from "lucide-react";
@@ -28,6 +29,7 @@ const navItems: { href: string; label: string; icon: ElementType }[] = [
   { href: "/time-management", label: "Time Management", icon: Timer },
   { href: "/tilt", label: "Tilt Detector", icon: Flame },
   { href: "/endgame", label: "Endgame Drills", icon: Trophy },
+  { href: "/rating-predictor", label: "Rating Predictor", icon: TrendingUp },
   { href: "/scouting", label: "Opponent Scout", icon: UserSearch },
   { href: "/report", label: "AI Coach", icon: BotMessageSquare },
 ];

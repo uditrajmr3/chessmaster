@@ -97,6 +97,14 @@ export const api = {
     return fetchAPI<import("./types").TiltReport>(`/tilt${query}`);
   },
 
+  // Rating Predictor
+  getRatingPrediction: (filters?: import("./types").GameFilters) => {
+    const query = filters ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<import("./types").RatingPredictionReport>(`/rating-predictor${query}`);
+  },
+
   // Endgame
   getEndgameReport: (filters?: import("./types").GameFilters) => {
     const query = filters ? "?" + new URLSearchParams(

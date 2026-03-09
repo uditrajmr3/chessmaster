@@ -10,9 +10,18 @@ class OpeningService:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_tree(self) -> list[dict]:
+    def get_tree(
+        self,
+        platform: str | None = None,
+        time_class: str | None = None,
+    ) -> list[dict]:
         """Build a personal opening tree with stats per ECO code."""
-        games = self.db.query(Game).filter(Game.opening_eco.isnot(None)).all()
+        q = self.db.query(Game).filter(Game.opening_eco.isnot(None))
+        if platform:
+            q = q.filter(Game.platform == platform)
+        if time_class:
+            q = q.filter(Game.time_class == time_class)
+        games = q.all()
         tree: dict[str, dict] = defaultdict(
             lambda: {"eco": "", "name": "", "games": 0, "wins": 0, "losses": 0, "draws": 0}
         )

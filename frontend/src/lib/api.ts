@@ -43,12 +43,20 @@ export const api = {
     fetchAPI<import("./types").OverviewStats>("/stats/overview"),
 
   // Patterns
-  getPatterns: () =>
-    fetchAPI<import("./types").PatternReport>("/patterns"),
+  getPatterns: (filters?: import("./types").GameFilters) => {
+    const query = filters ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<import("./types").PatternReport>(`/patterns${query}`);
+  },
 
   // Openings
-  getOpenings: () =>
-    fetchAPI<import("./types").OpeningNode[]>("/openings/tree"),
+  getOpenings: (filters?: import("./types").GameFilters) => {
+    const query = filters ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<import("./types").OpeningNode[]>(`/openings/tree${query}`);
+  },
 
   // Report
   generateReport: () =>
@@ -59,7 +67,7 @@ export const api = {
     fetchAPI<import("./types").ReportData | null>("/report/latest"),
 
   // Puzzles
-  getNextPuzzle: (params?: { phase?: string; motif?: string }) => {
+  getNextPuzzle: (params?: { phase?: string; motif?: string; platform?: string; time_class?: string }) => {
     const query = params ? "?" + new URLSearchParams(
       Object.fromEntries(Object.entries(params).filter(([, v]) => v))
     ).toString() : "";
@@ -74,10 +82,18 @@ export const api = {
     fetchAPI<import("./types").PuzzleStats>("/puzzles/stats"),
 
   // Time Management
-  getTimeManagement: () =>
-    fetchAPI<import("./types").TimeManagementProfile>("/time-management"),
+  getTimeManagement: (filters?: import("./types").GameFilters) => {
+    const query = filters ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<import("./types").TimeManagementProfile>(`/time-management${query}`);
+  },
 
   // Tilt Detection
-  getTiltReport: () =>
-    fetchAPI<import("./types").TiltReport>("/tilt"),
+  getTiltReport: (filters?: import("./types").GameFilters) => {
+    const query = filters ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<import("./types").TiltReport>(`/tilt${query}`);
+  },
 };

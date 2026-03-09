@@ -12,12 +12,17 @@ class TiltDetector:
     def __init__(self, db: Session):
         self.db = db
 
-    def analyze(self) -> dict:
-        games = (
-            self.db.query(Game)
-            .order_by(Game.played_at)
-            .all()
-        )
+    def analyze(
+        self,
+        platform: str | None = None,
+        time_class: str | None = None,
+    ) -> dict:
+        q = self.db.query(Game)
+        if platform:
+            q = q.filter(Game.platform == platform)
+        if time_class:
+            q = q.filter(Game.time_class == time_class)
+        games = q.order_by(Game.played_at).all()
 
         if not games:
             return self._empty_report()

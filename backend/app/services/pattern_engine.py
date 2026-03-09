@@ -10,8 +10,16 @@ from ..models import Game, MoveAnalysis
 class PatternEngine:
     def __init__(self, db: Session):
         self.db = db
+        self._platform: str | None = None
+        self._time_class: str | None = None
 
-    def generate_report(self) -> dict:
+    def generate_report(
+        self,
+        platform: str | None = None,
+        time_class: str | None = None,
+    ) -> dict:
+        self._platform = platform
+        self._time_class = time_class
         """Aggregate analysis across all games to find recurring patterns."""
         return {
             "opening_stats": self._opening_stats(),
@@ -28,9 +36,32 @@ class PatternEngine:
             "example_positions": self._worst_blunders(),
         }
 
+    def _filtered_game_ids(self) -> list[str] | None:
+        """Return game IDs matching platform/time_class filters, or None if no filters."""
+        if not self._platform and not self._time_class:
+            return None
+        q = self.db.query(Game.id)
+        if self._platform:
+            q = q.filter(Game.platform == self._platform)
+        if self._time_class:
+            q = q.filter(Game.time_class == self._time_class)
+        return [gid for (gid,) in q.all()]
+
+    def _apply_move_filter(self, query):
+        """Apply game-level filters to a MoveAnalysis query."""
+        game_ids = self._filtered_game_ids()
+        if game_ids is not None:
+            return query.filter(MoveAnalysis.game_id.in_(game_ids))
+        return query
+
     def _opening_stats(self) -> list[dict]:
         """Win/loss/draw and avg CPL per opening."""
-        games = self.db.query(Game).filter(Game.opening_eco.isnot(None)).all()
+        q = self.db.query(Game).filter(Game.opening_eco.isnot(None))
+        if self._platform:
+            q = q.filter(Game.platform == self._platform)
+        if self._time_class:
+            q = q.filter(Game.time_class == self._time_class)
+        games = q.all()
         openings: dict[str, dict] = defaultdict(
             lambda: {"eco": "", "name": "", "games": 0, "wins": 0, "losses": 0, "draws": 0, "total_cpl": 0, "cpl_count": 0}
         )
@@ -78,14 +109,11 @@ class PatternEngine:
         """Average centipawn loss per game phase."""
         result = {}
         for phase in ("opening", "middlegame", "endgame"):
-            avg = (
-                self.db.query(func.avg(MoveAnalysis.centipawn_loss))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.game_phase == phase,
-                )
-                .scalar()
+            q = self.db.query(func.avg(MoveAnalysis.centipawn_loss)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.game_phase == phase,
             )
+            avg = self._apply_move_filter(q).scalar()
             result[phase] = round(float(avg), 1) if avg else 0.0
         return result
 
@@ -93,38 +121,27 @@ class PatternEngine:
         """Blunders per player move per game phase."""
         result = {}
         for phase in ("opening", "middlegame", "endgame"):
-            total = (
-                self.db.query(func.count(MoveAnalysis.id))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.game_phase == phase,
-                )
-                .scalar()
-                or 0
+            q_total = self.db.query(func.count(MoveAnalysis.id)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.game_phase == phase,
             )
-            blunders = (
-                self.db.query(func.count(MoveAnalysis.id))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.game_phase == phase,
-                    MoveAnalysis.classification == "blunder",
-                )
-                .scalar()
-                or 0
+            total = self._apply_move_filter(q_total).scalar() or 0
+            q_blunders = self.db.query(func.count(MoveAnalysis.id)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.game_phase == phase,
+                MoveAnalysis.classification == "blunder",
             )
+            blunders = self._apply_move_filter(q_blunders).scalar() or 0
             result[phase] = round(blunders / total * 100, 2) if total > 0 else 0.0
         return result
 
     def _missed_tactics(self) -> dict[str, int]:
         """Count of missed tactical motifs across all games."""
-        rows = (
-            self.db.query(MoveAnalysis.tactical_motifs)
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.tactical_motifs.isnot(None),
-            )
-            .all()
+        q = self.db.query(MoveAnalysis.tactical_motifs).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.tactical_motifs.isnot(None),
         )
+        rows = self._apply_move_filter(q).all()
         counts: dict[str, int] = defaultdict(int)
         for (motifs_json,) in rows:
             if motifs_json:
@@ -139,32 +156,29 @@ class PatternEngine:
         else:
             condition = MoveAnalysis.time_remaining >= 60
 
-        total = (
-            self.db.query(func.count(MoveAnalysis.id))
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.time_remaining.isnot(None),
-                condition,
-            )
-            .scalar()
-            or 0
+        q_total = self.db.query(func.count(MoveAnalysis.id)).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.time_remaining.isnot(None),
+            condition,
         )
-        blunders = (
-            self.db.query(func.count(MoveAnalysis.id))
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.time_remaining.isnot(None),
-                condition,
-                MoveAnalysis.classification == "blunder",
-            )
-            .scalar()
-            or 0
+        total = self._apply_move_filter(q_total).scalar() or 0
+        q_blunders = self.db.query(func.count(MoveAnalysis.id)).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.time_remaining.isnot(None),
+            condition,
+            MoveAnalysis.classification == "blunder",
         )
+        blunders = self._apply_move_filter(q_blunders).scalar() or 0
         return round(blunders / total * 100, 2) if total > 0 else 0.0
 
     def _color_stats(self, color: str) -> dict[str, float]:
         """Win rate and avg CPL for a specific color."""
-        games = self.db.query(Game).filter(Game.player_color == color).all()
+        q = self.db.query(Game).filter(Game.player_color == color)
+        if self._platform:
+            q = q.filter(Game.platform == self._platform)
+        if self._time_class:
+            q = q.filter(Game.time_class == self._time_class)
+        games = q.all()
         total = len(games)
         if total == 0:
             return {"win_rate": 0, "avg_cpl": 0, "games": 0}
@@ -190,15 +204,11 @@ class PatternEngine:
     def _endgame_conversion(self) -> float:
         """Percentage of games where player had advantage entering endgame and won."""
         # Find games that have endgame moves
-        endgame_games = (
-            self.db.query(MoveAnalysis.game_id)
-            .filter(
-                MoveAnalysis.game_phase == "endgame",
-                MoveAnalysis.is_player_move == 1,
-            )
-            .distinct()
-            .all()
+        q = self.db.query(MoveAnalysis.game_id).filter(
+            MoveAnalysis.game_phase == "endgame",
+            MoveAnalysis.is_player_move == 1,
         )
+        endgame_games = self._apply_move_filter(q).distinct().all()
 
         won_from_advantage = 0
         had_advantage = 0
@@ -235,40 +245,32 @@ class PatternEngine:
         }
         result = {}
         for label, (ply_start, ply_end) in buckets.items():
-            total = (
-                self.db.query(func.count(MoveAnalysis.id))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.move_number >= ply_start,
-                    MoveAnalysis.move_number < ply_end,
-                )
-                .scalar()
-                or 0
+            q_total = self.db.query(func.count(MoveAnalysis.id)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.move_number >= ply_start,
+                MoveAnalysis.move_number < ply_end,
             )
-            blunders = (
-                self.db.query(func.count(MoveAnalysis.id))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.move_number >= ply_start,
-                    MoveAnalysis.move_number < ply_end,
-                    MoveAnalysis.classification == "blunder",
-                )
-                .scalar()
-                or 0
+            total = self._apply_move_filter(q_total).scalar() or 0
+            q_blunders = self.db.query(func.count(MoveAnalysis.id)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.move_number >= ply_start,
+                MoveAnalysis.move_number < ply_end,
+                MoveAnalysis.classification == "blunder",
             )
+            blunders = self._apply_move_filter(q_blunders).scalar() or 0
             result[label] = round(blunders / total * 100, 2) if total > 0 else 0.0
         return result
 
     def _worst_blunders(self, limit: int = 10) -> list[dict]:
         """Get the worst blunders as example positions."""
+        q = self.db.query(MoveAnalysis).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.classification == "blunder",
+            MoveAnalysis.best_move_san.isnot(None),
+            MoveAnalysis.move_san != MoveAnalysis.best_move_san,
+        )
         blunders = (
-            self.db.query(MoveAnalysis)
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.classification == "blunder",
-                MoveAnalysis.best_move_san.isnot(None),
-                MoveAnalysis.move_san != MoveAnalysis.best_move_san,
-            )
+            self._apply_move_filter(q)
             .order_by(MoveAnalysis.centipawn_loss.desc())
             .limit(limit)
             .all()

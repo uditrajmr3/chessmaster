@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -8,6 +8,10 @@ router = APIRouter(tags=["patterns"])
 
 
 @router.get("/patterns")
-def get_patterns(db: Session = Depends(get_db)):
+def get_patterns(
+    platform: str | None = Query(None, description="Filter by platform (chesscom, lichess)"),
+    time_class: str | None = Query(None, description="Filter by time class (rapid, blitz, bullet)"),
+    db: Session = Depends(get_db),
+):
     engine = PatternEngine(db)
-    return engine.generate_report()
+    return engine.generate_report(platform=platform, time_class=time_class)

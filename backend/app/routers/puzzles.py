@@ -12,10 +12,14 @@ router = APIRouter(tags=["puzzles"])
 def get_next_puzzle(
     phase: str | None = Query(None, description="Filter by game phase"),
     motif: str | None = Query(None, description="Filter by tactical motif"),
+    platform: str | None = Query(None, description="Filter by platform (chesscom, lichess)"),
+    time_class: str | None = Query(None, description="Filter by time class (rapid, blitz, bullet)"),
     db: Session = Depends(get_db),
 ):
     service = PuzzleService(db)
-    puzzle = service.get_next_puzzle(phase=phase, motif=motif)
+    puzzle = service.get_next_puzzle(
+        phase=phase, motif=motif, platform=platform, time_class=time_class
+    )
     if not puzzle:
         return None
     return puzzle

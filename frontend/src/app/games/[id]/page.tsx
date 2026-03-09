@@ -69,7 +69,7 @@ export default function GameDetailPage() {
       {/* Game header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold">
+          <h2 className="text-2xl sm:text-3xl font-bold">
             vs {game.opponent_name}
           </h2>
           <p className="text-gray-400 text-sm">
@@ -100,7 +100,7 @@ export default function GameDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Move list */}
         <div className="lg:col-span-2 bg-[#222639] rounded-xl p-4 max-h-[600px] overflow-y-auto">
-          <h3 className="text-lg font-semibold mb-3">Moves</h3>
+          <h3 className="text-xl font-semibold mb-3">Moves</h3>
           <table className="w-full text-sm">
             <thead>
               <tr className="text-gray-500 border-b border-gray-700">
@@ -141,7 +141,7 @@ export default function GameDetailPage() {
 
         {/* Move detail panel */}
         <div className="bg-[#222639] rounded-xl p-5">
-          <h3 className="text-lg font-semibold mb-3">Move Details</h3>
+          <h3 className="text-xl font-semibold mb-3">Move Details</h3>
           {selected ? (
             <div className="space-y-4">
               <div>
@@ -235,7 +235,7 @@ function MoveCell({
     <button
       onClick={onClick}
       className={`px-2 py-1 rounded text-left w-full transition-colors ${
-        isSelected ? "bg-blue-900/40" : "hover:bg-gray-700/50"
+        isSelected ? "bg-accent-900/40" : "hover:bg-gray-700/50"
       } ${move.is_player_move ? color : "text-gray-400"}`}
     >
       {move.move_san}

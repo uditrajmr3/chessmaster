@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CheckCircle, XCircle } from "lucide-react";
 import type { SyncStatus, AnalyzeStatus } from "@/lib/types";
 
 export default function StatusBar() {
   const [sync, setSync] = useState<SyncStatus | null>(null);
   const [analysis, setAnalysis] = useState<AnalyzeStatus | null>(null);
   const [showDone, setShowDone] = useState(true);
+  const [dismissing, setDismissing] = useState(false);
 
   useEffect(() => {
     poll();
@@ -20,7 +22,11 @@ export default function StatusBar() {
   useEffect(() => {
     if (syncDone || analysisDone) {
       setShowDone(true);
-      const timer = setTimeout(() => setShowDone(false), 8000);
+      setDismissing(false);
+      const timer = setTimeout(() => {
+        setDismissing(true);
+        setTimeout(() => setShowDone(false), 300);
+      }, 7000);
       return () => clearTimeout(timer);
     }
   }, [syncDone, analysisDone]);
@@ -49,12 +55,14 @@ export default function StatusBar() {
     return null;
   }
 
+  const doneClass = dismissing ? "animate-slide-out-up" : "animate-slide-in-down";
+
   return (
     <div className="fixed top-12 lg:top-0 left-0 lg:left-64 right-0 z-40 flex flex-col gap-0">
       {isSyncing && (
-        <div className="bg-blue-900/90 border-b border-blue-700 px-6 py-2.5 flex items-center gap-3">
-          <Spinner className="text-blue-400" />
-          <span className="text-blue-200 text-sm">
+        <div className="animate-slide-in-down bg-accent-900/90 backdrop-blur-sm border-b border-accent-700/50 px-6 py-2.5 flex items-center gap-3">
+          <Spinner className="text-accent-400" />
+          <span className="text-accent-200 text-sm font-medium">
             Syncing games... {sync?.message}
             {sync?.games_fetched ? ` (${sync.games_fetched} fetched)` : ""}
           </span>
@@ -62,23 +70,23 @@ export default function StatusBar() {
       )}
 
       {isAnalyzing && (
-        <div className="bg-purple-900/90 border-b border-purple-700 px-6 py-2.5 flex items-center gap-3">
-          <Spinner className="text-purple-400" />
+        <div className="animate-slide-in-down bg-accent-900/90 backdrop-blur-sm border-b border-accent-700/50 px-6 py-2.5 flex items-center gap-3">
+          <Spinner className="text-accent-400" />
           <div className="flex-1">
             <div className="flex items-center justify-between">
-              <span className="text-purple-200 text-sm">
+              <span className="text-accent-200 text-sm font-medium">
                 Analyzing games with Stockfish... {analysis?.completed}/{analysis?.total}
               </span>
-              <span className="text-purple-400 text-xs font-mono">
+              <span className="text-accent-400 text-xs font-mono">
                 {analysis?.total
                   ? `${Math.round(((analysis?.completed ?? 0) / analysis.total) * 100)}%`
                   : ""}
               </span>
             </div>
             {(analysis?.total ?? 0) > 0 && (
-              <div className="mt-1.5 h-1.5 bg-purple-950 rounded-full overflow-hidden">
+              <div className="mt-1.5 h-1.5 bg-accent-950/50 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-purple-400 rounded-full transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-accent-500 to-accent-400 rounded-full progress-animated"
                   style={{
                     width: `${((analysis?.completed ?? 0) / (analysis?.total || 1)) * 100}%`,
                   }}
@@ -90,34 +98,34 @@ export default function StatusBar() {
       )}
 
       {showSyncDone && (
-        <div className="bg-green-900/90 border-b border-green-700 px-6 py-2.5 flex items-center gap-3">
-          <span className="text-green-400">✓</span>
-          <span className="text-green-200 text-sm">
+        <div className={`${doneClass} bg-green-900/90 backdrop-blur-sm border-b border-green-700/50 px-6 py-2.5 flex items-center gap-3`}>
+          <CheckCircle className="w-4.5 h-4.5 text-green-400" />
+          <span className="text-green-200 text-sm font-medium">
             Sync complete — {sync?.games_fetched} games fetched
           </span>
         </div>
       )}
 
       {showAnalysisDone && (
-        <div className="bg-green-900/90 border-b border-green-700 px-6 py-2.5 flex items-center gap-3">
-          <span className="text-green-400">✓</span>
-          <span className="text-green-200 text-sm">
+        <div className={`${doneClass} bg-green-900/90 backdrop-blur-sm border-b border-green-700/50 px-6 py-2.5 flex items-center gap-3`}>
+          <CheckCircle className="w-4.5 h-4.5 text-green-400" />
+          <span className="text-green-200 text-sm font-medium">
             Analysis complete — {analysis?.completed} games analyzed. Refresh the page to see results.
           </span>
         </div>
       )}
 
       {syncError && (
-        <div className="bg-red-900/90 border-b border-red-700 px-6 py-2.5 flex items-center gap-3">
-          <span className="text-red-400">✗</span>
-          <span className="text-red-200 text-sm">Sync error: {sync?.message}</span>
+        <div className="animate-slide-in-down bg-red-900/90 backdrop-blur-sm border-b border-red-700/50 px-6 py-2.5 flex items-center gap-3">
+          <XCircle className="w-4.5 h-4.5 text-red-400" />
+          <span className="text-red-200 text-sm font-medium">Sync error: {sync?.message}</span>
         </div>
       )}
 
       {analysisError && (
-        <div className="bg-red-900/90 border-b border-red-700 px-6 py-2.5 flex items-center gap-3">
-          <span className="text-red-400">✗</span>
-          <span className="text-red-200 text-sm">
+        <div className="animate-slide-in-down bg-red-900/90 backdrop-blur-sm border-b border-red-700/50 px-6 py-2.5 flex items-center gap-3">
+          <XCircle className="w-4.5 h-4.5 text-red-400" />
+          <span className="text-red-200 text-sm font-medium">
             Analysis error: {analysis?.current_game}
           </span>
         </div>

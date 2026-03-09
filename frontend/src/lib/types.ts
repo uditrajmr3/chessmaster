@@ -1,3 +1,8 @@
+export interface GameFilters {
+  platform?: string;
+  time_class?: string;
+}
+
 export interface GameSummary {
   id: string;
   platform: string;

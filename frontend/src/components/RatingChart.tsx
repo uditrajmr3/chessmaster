@@ -23,11 +23,11 @@ interface Props {
 }
 
 const TIME_CLASS_COLORS: Record<string, string> = {
-  rapid: "#3b82f6",
-  classical: "#8b5cf6",
-  blitz: "#f59e0b",
-  bullet: "#ef4444",
-  daily: "#10b981",
+  rapid: "#0ebeb0",
+  classical: "#35ddcd",
+  blitz: "#59efdd",
+  bullet: "#089990",
+  daily: "#0b7a74",
 };
 
 const PLATFORM_LABELS: Record<string, string> = {
@@ -75,7 +75,7 @@ export default function RatingChart({ data }: Props) {
       }));
   }, [data, selectedPlatform, activeTimeClass]);
 
-  const color = TIME_CLASS_COLORS[activeTimeClass] || "#3b82f6";
+  const color = TIME_CLASS_COLORS[activeTimeClass] || "#0ebeb0";
 
   return (
     <div>
@@ -93,10 +93,10 @@ export default function RatingChart({ data }: Props) {
                 )];
                 setSelectedTimeClass(classes.includes("rapid") ? "rapid" : classes[0] || "");
               }}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 py-1 rounded-lg text-sm font-medium btn-press ${
                 selectedPlatform === p
-                  ? "bg-white/15 text-white"
-                  : "bg-gray-700/50 text-gray-400 hover:text-gray-200"
+                  ? "bg-accent-600 text-white"
+                  : "bg-gray-700/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700"
               }`}
             >
               {PLATFORM_LABELS[p] || p}
@@ -111,32 +111,30 @@ export default function RatingChart({ data }: Props) {
           <button
             key={tc}
             onClick={() => setSelectedTimeClass(tc)}
-            className={`px-3 py-1 rounded-lg text-sm font-medium capitalize transition-colors ${
+            className={`px-3 py-1 rounded-lg text-sm font-medium capitalize btn-press ${
               activeTimeClass === tc
-                ? "text-white"
-                : "bg-gray-700/50 text-gray-400 hover:text-gray-200"
+                ? "bg-accent-600 text-white"
+                : "bg-gray-700/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700"
             }`}
-            style={
-              activeTimeClass === tc
-                ? { backgroundColor: TIME_CLASS_COLORS[tc] || "#3b82f6" }
-                : undefined
-            }
           >
             {tc}
           </button>
         ))}
       </div>
 
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-64" style={{ minWidth: 0 }}>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis
               dataKey="date"
               stroke="#9ca3af"
-              fontSize={12}
+              fontSize={11}
               tickLine={false}
-              interval="preserveStartEnd"
+              interval={Math.max(0, Math.floor(chartData.length / 8))}
+              angle={-30}
+              textAnchor="end"
+              height={50}
             />
             <YAxis
               stroke="#9ca3af"

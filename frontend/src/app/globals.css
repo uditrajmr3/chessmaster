@@ -1,22 +1,91 @@
 @import "tailwindcss";
 
+@theme {
+  --color-accent-50: #effefa;
+  --color-accent-100: #cafdf4;
+  --color-accent-200: #95fae9;
+  --color-accent-300: #59efdd;
+  --color-accent-400: #35ddcd;
+  --color-accent-500: #0ebeb0;
+  --color-accent-600: #089990;
+  --color-accent-700: #0b7a74;
+  --color-accent-800: #0e615f;
+  --color-accent-900: #11504e;
+  --color-accent-950: #023131;
+}
+
 :root {
-  --bg-primary: #0f1117;
-  --bg-secondary: #1a1d27;
-  --bg-card: #222639;
-  --text-primary: #e8eaed;
-  --text-secondary: #9ca3af;
-  --accent-green: #22c55e;
-  --accent-red: #ef4444;
-  --accent-yellow: #eab308;
-  --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
+  /* Turquoise primary palette */
+  --color-turquoise-50: #effefa;
+  --color-turquoise-100: #cafdf4;
+  --color-turquoise-200: #95fae9;
+  --color-turquoise-300: #59efdd;
+  --color-turquoise-400: #35ddcd;
+  --color-turquoise-500: #0ebeb0;
+  --color-turquoise-600: #089990;
+  --color-turquoise-700: #0b7a74;
+  --color-turquoise-800: #0e615f;
+  --color-turquoise-900: #11504e;
+  --color-turquoise-950: #023131;
+
+  /* Rulebook 2.1 — Mandatory color roles */
+  --color-bg: #0f1117;
+  --color-surface: #1a1d27;
+  --color-card: #222639;
+  --color-card-hover: #2a2f47;
+  --color-border: #2e3348;
+  --color-text: #e8eaed;
+  --color-text-muted: #9ca3af;
+  --color-accent: var(--color-turquoise-500);
+  --color-accent-hover: var(--color-turquoise-600);
+
+  /* Semantic colors — data-driven, NOT accent alternatives */
+  --color-win: #22c55e;
+  --color-loss: #ef4444;
+  --color-draw: #eab308;
+
+  /* Legacy aliases */
+  --bg-primary: var(--color-bg);
+  --bg-secondary: var(--color-surface);
+  --bg-card: var(--color-card);
+  --bg-card-hover: var(--color-card-hover);
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
+
+  /* Easing — EXACT values from micro-animations easing dictionary */
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1.0);     /* entering screen */
+  --ease-in: cubic-bezier(0.4, 0.0, 1.0, 1.0);       /* leaving screen */
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1.0);   /* moving within screen */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1.0);      /* personality/satisfaction */
+
 }
 
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading typography — same font, heavier weight (rulebook 1.1 dashboard rule) */
+h1, h2, h3, h4 {
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em; /* rulebook 1.4: -0.02em to -0.04em for headings */
+  line-height: 1.2;       /* rulebook 1.4: 1.1-1.25 for headings */
+}
+
+/* ALL CAPS labels — wider letter-spacing (rulebook 1.4: 0.08em-0.12em) */
+.tracking-wider {
+  letter-spacing: 0.08em !important;
+}
+
+/* Monospace elements */
+code, .font-mono {
+  font-family: var(--font-mono), ui-monospace, monospace !important;
 }
 
 /* Custom scrollbar */
@@ -29,4 +98,223 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #4b5563;
   border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* ── Animation Keyframes (micro-animations guide) ── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Cards/content revealing (ease-out, 400-600ms per duration ref) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Toast entering from top (interaction 3: toastIn pattern) */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Toast exiting (interaction 3: toastOut — ease-in for leaving) */
+@keyframes slideOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+}
+
+/* Shimmer sweep for skeleton loading (interaction 5) */
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Spring scale-in for success states, badges (spring easing) */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes progress-fill {
+  from { width: 0%; }
+}
+
+/* ── Utility Classes ── */
+
+/* Fade in — 200ms for content swap (interaction 5 rule) */
+.animate-fade-in {
+  animation: fadeIn 0.2s var(--ease-out) both;
+}
+
+/* Cards/sections entering — 400-600ms (duration ref: long transitions) */
+.animate-fade-in-up {
+  animation: fadeInUp 0.45s var(--ease-out) both;
+}
+
+/* Side panel entering */
+.animate-slide-in-right {
+  animation: slideInRight 0.35s var(--ease-out) both;
+}
+
+/* Toast entering — 350ms (duration ref: medium transitions) */
+.animate-slide-in-down {
+  animation: slideInDown 0.35s var(--ease-out) both;
+}
+
+/* Toast exiting — 250ms with ease-in (interaction 3 rule) */
+.animate-slide-out-up {
+  animation: slideOutUp 0.25s var(--ease-in) both;
+}
+
+/* Spring scale for success states (interaction 2: 400-500ms) */
+.animate-scale-in {
+  animation: scaleIn 0.4s var(--spring) both;
+}
+
+/* Staggered children — 60ms per element (animation checklist rule) */
+.stagger-children > * {
+  animation: fadeInUp 0.45s var(--ease-out) both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+
+/*
+ * Skeleton shimmer loading (interaction 5 — dark mode variant)
+ * Uses ::after pseudo-element with subtle shimmer sweep.
+ * Duration: 1.5s infinite (rule: faster=frantic, slower=broken).
+ * Shape must match real content (applied via inline height/width).
+ */
+.skeleton {
+  background: #2a2d3e;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/*
+ * Card hover (rulebook 4.2)
+ * Explicit properties — NEVER transition: all (animation checklist rule)
+ * Hover: translateY(-2px) + box-shadow 0 8px 32px
+ * Duration: 200ms (short transition)
+ */
+.card-hover {
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
+    background-color 0.15s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  background-color: var(--bg-card-hover);
+}
+
+/*
+ * Button press (interaction 1)
+ * Hover: background 0.15s (rule: faster than you think)
+ * Active: scale(0.97) for large buttons (rule: never below 0.94)
+ * Explicit properties only — no transition: all
+ */
+.btn-press {
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+  transition-duration: 0.08s; /* faster on press than release (interaction 1) */
+}
+
+/* Active nav indicator (dashboard blueprint zone 2: left border accent + bg highlight) */
+.nav-active-indicator {
+  position: relative;
+}
+.nav-active-indicator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: 0 3px 3px 0;
+  background: var(--color-accent);
+  animation: scaleIn 0.4s var(--spring) both;
+}
+
+/*
+ * Progress bar (interaction 8)
+ * Width transition: 0.4s ease-in-out (rule: instant changes destroy metaphor)
+ */
+.progress-animated {
+  animation: progress-fill 0.8s var(--ease-in-out) both;
+  transition: width 0.4s var(--ease-in-out);
+}
+
+/* Reduced motion (animation checklist: disable scroll reveals + entrance animations) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

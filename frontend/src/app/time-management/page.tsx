@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { Timer } from "lucide-react";
 import { api } from "@/lib/api";
-import type { TimeManagementProfile } from "@/lib/types";
+import type { TimeManagementProfile, GameFilters } from "@/lib/types";
+import GameFilterBar from "@/components/GameFilterBar";
 import {
   BarChart,
   Bar,
@@ -27,20 +29,29 @@ const tooltipStyle = {
 export default function TimeManagementPage() {
   const [data, setData] = useState<TimeManagementProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState<GameFilters>({});
 
-  useEffect(() => {
+  const loadData = useCallback(() => {
+    setLoading(true);
     api
-      .getTimeManagement()
+      .getTimeManagement(filters)
       .then(setData)
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [filters]);
 
-  if (loading) return <div className="text-gray-400">Loading time data...</div>;
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  if (loading) return <TimeSkeleton />;
   if (!data || data.games_with_clock_data === 0)
     return (
-      <div className="text-gray-400">
-        No clock data available. Sync and analyze games with clock information first.
+      <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
+        <Timer className="w-10 h-10 text-gray-500" />
+        <p className="text-gray-400 text-center">
+          No clock data available. Sync and analyze games with clock information first.
+        </p>
       </div>
     );
 
@@ -69,27 +80,31 @@ export default function TimeManagementPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold mb-1">Time Management Profile</h2>
-        <p className="text-gray-400 text-sm">
-          How you spend your clock across {data.games_with_clock_data} analyzed games
-        </p>
+      {/* Page header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-3xl font-bold mb-1">Time Management Profile</h2>
+          <p className="text-gray-400 text-sm">
+            How you spend your clock across {data.games_with_clock_data} analyzed games
+          </p>
+        </div>
+        <GameFilterBar filters={filters} onChange={setFilters} />
       </div>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* KPI strip — phase timing cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger-children">
         {phaseTimeData.map((p) => (
-          <div key={p.phase} className="bg-[#222639] rounded-xl p-5">
-            <p className="text-sm text-gray-400">{p.phase} avg time/move</p>
+          <div key={p.phase} className="bg-[#222639] rounded-xl p-5 card-hover">
+            <p className="text-sm text-gray-400 font-medium">{p.phase} avg time/move</p>
             <p className="text-3xl font-bold mt-1">{p.time}s</p>
           </div>
         ))}
       </div>
 
-      {/* Time vs Move Number chart + Time by Classification */}
+      {/* Primary content — 2-column charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#222639] rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4">Time Spent vs Move Number</h3>
+        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+          <h3 className="text-xl font-semibold mb-4">Time Spent vs Move Number</h3>
           <p className="text-xs text-gray-500 mb-3">
             Average seconds spent per move (with CPL overlay)
           </p>
@@ -130,7 +145,7 @@ export default function TimeManagementPage() {
                   yAxisId="time"
                   type="monotone"
                   dataKey="avg_time"
-                  stroke="#3b82f6"
+                  stroke="#0ebeb0"
                   strokeWidth={2}
                   dot={false}
                   name="Avg Time (s)"
@@ -140,8 +155,8 @@ export default function TimeManagementPage() {
           </div>
         </div>
 
-        <div className="bg-[#222639] rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4">Time by Move Quality</h3>
+        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+          <h3 className="text-xl font-semibold mb-4">Time by Move Quality</h3>
           <p className="text-xs text-gray-500 mb-3">
             Average seconds spent on moves of each quality
           </p>
@@ -159,11 +174,7 @@ export default function TimeManagementPage() {
                   contentStyle={tooltipStyle}
                   formatter={(value) => [`${value}s`, "Avg Time"]}
                 />
-                <Bar
-                  dataKey="time"
-                  radius={[4, 4, 0, 0]}
-                  fill="#8b5cf6"
-                />
+                <Bar dataKey="time" radius={[4, 4, 0, 0]} fill="#0ebeb0" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -171,27 +182,27 @@ export default function TimeManagementPage() {
       </div>
 
       {/* Time Pressure Zones */}
-      <div className="bg-[#222639] rounded-xl p-6">
-        <h3 className="text-lg font-semibold mb-4">Time Pressure Zones</h3>
+      <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <h3 className="text-xl font-semibold mb-4">Time Pressure Zones</h3>
         <p className="text-xs text-gray-500 mb-4">
           How your play quality changes based on remaining clock time
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {troubleData.map((zone) => {
-            const color =
+            const dotColor =
               zone.zone === "Critical"
-                ? "red"
+                ? "#ef4444"
                 : zone.zone === "Low"
-                ? "orange"
+                ? "#f97316"
                 : zone.zone === "Normal"
-                ? "yellow"
-                : "green";
+                ? "#eab308"
+                : "#22c55e";
             return (
-              <div key={zone.zone} className="bg-gray-800 rounded-lg p-4">
+              <div key={zone.zone} className="bg-gray-800/70 rounded-lg p-4 card-hover">
                 <div className="flex items-center gap-2 mb-2">
                   <div
                     className="w-2.5 h-2.5 rounded-full"
-                    style={{ backgroundColor: color === "orange" ? "#f97316" : color === "yellow" ? "#eab308" : color }}
+                    style={{ backgroundColor: dotColor }}
                   />
                   <span className="font-medium">{zone.zone}</span>
                   <span className="text-xs text-gray-500">
@@ -238,28 +249,28 @@ export default function TimeManagementPage() {
 
       {/* Time Control Breakdown */}
       {data.time_class_breakdown.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4">By Time Control</h3>
+        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+          <h3 className="text-xl font-semibold mb-4">By Time Control</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-400 border-b border-gray-700">
-                  <th className="text-left py-2 pr-4">Time Control</th>
-                  <th className="text-right py-2 px-4">Games</th>
-                  <th className="text-right py-2 px-4">Moves</th>
-                  <th className="text-right py-2 px-4">Avg CPL</th>
-                  <th className="text-right py-2 pl-4">Time Trouble %</th>
+                <tr className="text-gray-400 border-b border-gray-700/50 text-xs uppercase tracking-wider">
+                  <th className="text-left py-2 pr-4 font-medium">Time Control</th>
+                  <th className="text-right py-2 px-4 font-medium">Games</th>
+                  <th className="text-right py-2 px-4 font-medium">Moves</th>
+                  <th className="text-right py-2 px-4 font-medium">Avg CPL</th>
+                  <th className="text-right py-2 pl-4 font-medium">Time Trouble %</th>
                 </tr>
               </thead>
               <tbody>
                 {data.time_class_breakdown.map((tc) => (
-                  <tr key={tc.time_class} className="border-b border-gray-800">
+                  <tr key={tc.time_class} className="border-b border-gray-800/50 hover:bg-white/[0.02] transition-colors">
                     <td className="py-2 pr-4 capitalize font-medium">{tc.time_class}</td>
-                    <td className="text-right py-2 px-4">{tc.games}</td>
-                    <td className="text-right py-2 px-4">{tc.moves_analyzed.toLocaleString()}</td>
-                    <td className="text-right py-2 px-4">{tc.avg_cpl}</td>
+                    <td className="text-right py-2 px-4 font-mono text-sm">{tc.games}</td>
+                    <td className="text-right py-2 px-4 font-mono text-sm">{tc.moves_analyzed.toLocaleString()}</td>
+                    <td className="text-right py-2 px-4 font-mono text-sm">{tc.avg_cpl}</td>
                     <td
-                      className={`text-right py-2 pl-4 font-mono ${
+                      className={`text-right py-2 pl-4 font-mono text-sm font-bold ${
                         tc.time_trouble_pct > 20
                           ? "text-red-400"
                           : tc.time_trouble_pct > 10
@@ -277,12 +288,11 @@ export default function TimeManagementPage() {
         </div>
       )}
 
-      {/* Overthinking + Rushing */}
+      {/* Overthinking + Rushing — 2-column */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Overthinking on book moves */}
         {data.overthink_moves.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-1">Overthinking Book Moves</h3>
+          <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+            <h3 className="text-xl font-semibold mb-1">Overthinking Book Moves</h3>
             <p className="text-xs text-gray-500 mb-4">
               Opening moves you played correctly but spent too long on
             </p>
@@ -290,7 +300,7 @@ export default function TimeManagementPage() {
               {data.overthink_moves.slice(0, 8).map((m, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between bg-gray-800 rounded-lg px-3 py-2"
+                  className="flex items-center justify-between bg-gray-800/70 rounded-lg px-3 py-2 card-hover"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-gray-500 font-mono text-xs w-6">
@@ -299,7 +309,7 @@ export default function TimeManagementPage() {
                     <span className="font-medium">{m.move_san}</span>
                     <span className="text-xs text-gray-500 capitalize">{m.phase}</span>
                   </div>
-                  <span className="text-yellow-400 font-mono text-sm">
+                  <span className="text-yellow-400 font-mono text-sm font-bold">
                     {m.time_spent}s
                   </span>
                 </div>
@@ -308,10 +318,9 @@ export default function TimeManagementPage() {
           </div>
         )}
 
-        {/* Rushed blunders */}
         {data.underthink_blunders.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-1">Rushed Blunders</h3>
+          <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+            <h3 className="text-xl font-semibold mb-1">Rushed Blunders</h3>
             <p className="text-xs text-gray-500 mb-4">
               Mistakes made in under 5 seconds — slow down here
             </p>
@@ -319,14 +328,14 @@ export default function TimeManagementPage() {
               {data.underthink_blunders.slice(0, 8).map((m, i) => (
                 <div
                   key={i}
-                  className="bg-gray-800 rounded-lg px-3 py-2"
+                  className="bg-gray-800/70 rounded-lg px-3 py-2 card-hover"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="text-gray-500 font-mono text-xs w-6">
                         #{m.move_number}
                       </span>
-                      <span className="text-red-400">
+                      <span className="text-red-400 font-medium">
                         {m.move_san}
                       </span>
                       <span className="text-green-400 text-xs">
@@ -337,7 +346,7 @@ export default function TimeManagementPage() {
                       <span className="text-red-400 font-mono text-xs">
                         -{m.cpl.toFixed(0)} cp
                       </span>
-                      <span className="text-yellow-400 font-mono text-sm">
+                      <span className="text-yellow-400 font-mono text-sm font-bold">
                         {m.time_spent}s
                       </span>
                     </div>
@@ -351,6 +360,33 @@ export default function TimeManagementPage() {
             </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function TimeSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div>
+        <div className="skeleton" style={{ height: 32, width: 240, borderRadius: 6 }} />
+        <div className="skeleton mt-2" style={{ height: 16, width: 320, borderRadius: 4 }} />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="bg-[#222639] rounded-xl p-5">
+            <div className="skeleton" style={{ height: 14, width: 140, borderRadius: 4 }} />
+            <div className="skeleton mt-2" style={{ height: 36, width: 60, borderRadius: 6 }} />
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {[...Array(2)].map((_, i) => (
+          <div key={i} className="bg-[#222639] rounded-xl p-6">
+            <div className="skeleton" style={{ height: 20, width: 200, borderRadius: 4 }} />
+            <div className="skeleton mt-4" style={{ height: 256, width: "100%", borderRadius: 8 }} />
+          </div>
+        ))}
       </div>
     </div>
   );

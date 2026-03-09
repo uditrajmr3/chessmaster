@@ -44,6 +44,8 @@ class PuzzleService:
         self,
         phase: str | None = None,
         motif: str | None = None,
+        platform: str | None = None,
+        time_class: str | None = None,
     ) -> dict | None:
         """Get the next puzzle to solve, prioritizing:
         1. Due for review (next_review <= now)
@@ -65,6 +67,10 @@ class PuzzleService:
             base = base.filter(MoveAnalysis.game_phase == phase)
         if motif:
             base = base.filter(MoveAnalysis.tactical_motifs.contains(f'"{motif}"'))
+        if platform:
+            base = base.filter(Game.platform == platform)
+        if time_class:
+            base = base.filter(Game.time_class == time_class)
 
         # Priority 1: Due for review
         due = (

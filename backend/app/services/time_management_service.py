@@ -9,8 +9,34 @@ from ..models import Game, MoveAnalysis
 class TimeManagementService:
     def __init__(self, db: Session):
         self.db = db
+        self._platform: str | None = None
+        self._time_class: str | None = None
 
-    def get_profile(self) -> dict:
+    def _filtered_game_ids(self) -> list[str] | None:
+        """Return game IDs matching platform/time_class filters, or None if no filters."""
+        if not self._platform and not self._time_class:
+            return None
+        q = self.db.query(Game.id)
+        if self._platform:
+            q = q.filter(Game.platform == self._platform)
+        if self._time_class:
+            q = q.filter(Game.time_class == self._time_class)
+        return [gid for (gid,) in q.all()]
+
+    def _apply_move_filter(self, query):
+        """Apply game-level filters to a MoveAnalysis query."""
+        game_ids = self._filtered_game_ids()
+        if game_ids is not None:
+            return query.filter(MoveAnalysis.game_id.in_(game_ids))
+        return query
+
+    def get_profile(
+        self,
+        platform: str | None = None,
+        time_class: str | None = None,
+    ) -> dict:
+        self._platform = platform
+        self._time_class = time_class
         """Build a complete time management profile from analyzed games."""
         return {
             "time_per_move_by_phase": self._time_per_move_by_phase(),
@@ -25,50 +51,38 @@ class TimeManagementService:
 
     def _games_with_clock_data(self) -> int:
         """Count analyzed games that have clock data."""
-        return (
-            self.db.query(func.count(func.distinct(MoveAnalysis.game_id)))
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.time_remaining.isnot(None),
-            )
-            .scalar()
-            or 0
+        q = self.db.query(func.count(func.distinct(MoveAnalysis.game_id))).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.time_remaining.isnot(None),
         )
+        return self._apply_move_filter(q).scalar() or 0
 
     def _time_per_move_by_phase(self) -> dict[str, float]:
         """Average time spent per move in each game phase."""
         result = {}
         for phase in ("opening", "middlegame", "endgame"):
-            rows = (
-                self.db.query(MoveAnalysis.time_remaining, MoveAnalysis.move_number, MoveAnalysis.game_id)
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.time_remaining.isnot(None),
-                    MoveAnalysis.game_phase == phase,
-                )
-                .order_by(MoveAnalysis.game_id, MoveAnalysis.move_number)
-                .all()
+            q = self.db.query(MoveAnalysis.time_remaining, MoveAnalysis.move_number, MoveAnalysis.game_id).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.time_remaining.isnot(None),
+                MoveAnalysis.game_phase == phase,
             )
+            rows = self._apply_move_filter(q).order_by(MoveAnalysis.game_id, MoveAnalysis.move_number).all()
             time_spent = self._compute_time_spent(rows)
             result[phase] = round(sum(time_spent) / len(time_spent), 1) if time_spent else 0.0
         return result
 
     def _time_vs_move_number(self) -> list[dict]:
         """Average time spent per move number bucket (player moves only)."""
-        rows = (
-            self.db.query(
-                MoveAnalysis.move_number,
-                MoveAnalysis.time_remaining,
-                MoveAnalysis.game_id,
-                MoveAnalysis.centipawn_loss,
-            )
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.time_remaining.isnot(None),
-            )
-            .order_by(MoveAnalysis.game_id, MoveAnalysis.move_number)
-            .all()
+        q = self.db.query(
+            MoveAnalysis.move_number,
+            MoveAnalysis.time_remaining,
+            MoveAnalysis.game_id,
+            MoveAnalysis.centipawn_loss,
+        ).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.time_remaining.isnot(None),
         )
+        rows = self._apply_move_filter(q).order_by(MoveAnalysis.game_id, MoveAnalysis.move_number).all()
 
         # Group by game to compute time spent per move
         games: dict[str, list[tuple]] = defaultdict(list)
@@ -117,39 +131,28 @@ class TimeManagementService:
         ]
         result = {}
         for label, low, high in thresholds:
-            total = (
-                self.db.query(func.count(MoveAnalysis.id))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.time_remaining.isnot(None),
-                    MoveAnalysis.time_remaining >= low,
-                    MoveAnalysis.time_remaining < high,
-                )
-                .scalar()
-                or 0
+            q_total = self.db.query(func.count(MoveAnalysis.id)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.time_remaining.isnot(None),
+                MoveAnalysis.time_remaining >= low,
+                MoveAnalysis.time_remaining < high,
             )
-            blunders = (
-                self.db.query(func.count(MoveAnalysis.id))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.time_remaining.isnot(None),
-                    MoveAnalysis.time_remaining >= low,
-                    MoveAnalysis.time_remaining < high,
-                    MoveAnalysis.classification.in_(["blunder", "mistake"]),
-                )
-                .scalar()
-                or 0
+            total = self._apply_move_filter(q_total).scalar() or 0
+            q_blunders = self.db.query(func.count(MoveAnalysis.id)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.time_remaining.isnot(None),
+                MoveAnalysis.time_remaining >= low,
+                MoveAnalysis.time_remaining < high,
+                MoveAnalysis.classification.in_(["blunder", "mistake"]),
             )
-            avg_cpl = (
-                self.db.query(func.avg(MoveAnalysis.centipawn_loss))
-                .filter(
-                    MoveAnalysis.is_player_move == 1,
-                    MoveAnalysis.time_remaining.isnot(None),
-                    MoveAnalysis.time_remaining >= low,
-                    MoveAnalysis.time_remaining < high,
-                )
-                .scalar()
+            blunders = self._apply_move_filter(q_blunders).scalar() or 0
+            q_cpl = self.db.query(func.avg(MoveAnalysis.centipawn_loss)).filter(
+                MoveAnalysis.is_player_move == 1,
+                MoveAnalysis.time_remaining.isnot(None),
+                MoveAnalysis.time_remaining >= low,
+                MoveAnalysis.time_remaining < high,
             )
+            avg_cpl = self._apply_move_filter(q_cpl).scalar()
             result[label] = {
                 "moves": total,
                 "blunder_rate": round(blunders / total * 100, 1) if total > 0 else 0,
@@ -159,18 +162,13 @@ class TimeManagementService:
 
     def _overthink_moves(self, limit: int = 10) -> list[dict]:
         """Moves where the player spent a lot of time on book/easy positions."""
-        # Find player moves in opening phase with low CPL but high time spent
-        rows = (
-            self.db.query(MoveAnalysis)
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.time_remaining.isnot(None),
-                MoveAnalysis.game_phase == "opening",
-                MoveAnalysis.centipawn_loss <= 10,
-            )
-            .order_by(MoveAnalysis.game_id, MoveAnalysis.move_number)
-            .all()
+        q = self.db.query(MoveAnalysis).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.time_remaining.isnot(None),
+            MoveAnalysis.game_phase == "opening",
+            MoveAnalysis.centipawn_loss <= 10,
         )
+        rows = self._apply_move_filter(q).order_by(MoveAnalysis.game_id, MoveAnalysis.move_number).all()
 
         # Group by game, compute time spent
         games: dict[str, list] = defaultdict(list)
@@ -219,17 +217,13 @@ class TimeManagementService:
 
     def _underthink_blunders(self, limit: int = 10) -> list[dict]:
         """Blunders where the player spent very little time (rushed)."""
-        rows = (
-            self.db.query(MoveAnalysis)
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.time_remaining.isnot(None),
-                MoveAnalysis.classification.in_(["blunder", "mistake"]),
-                MoveAnalysis.centipawn_loss > 100,
-            )
-            .order_by(MoveAnalysis.game_id, MoveAnalysis.move_number)
-            .all()
+        q = self.db.query(MoveAnalysis).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.time_remaining.isnot(None),
+            MoveAnalysis.classification.in_(["blunder", "mistake"]),
+            MoveAnalysis.centipawn_loss > 100,
         )
+        rows = self._apply_move_filter(q).order_by(MoveAnalysis.game_id, MoveAnalysis.move_number).all()
 
         games: dict[str, list] = defaultdict(list)
         for row in rows:
@@ -283,20 +277,16 @@ class TimeManagementService:
         classifications = ["great", "good", "inaccuracy", "mistake", "blunder"]
 
         # Get all player moves with clock data, grouped by game
-        rows = (
-            self.db.query(
-                MoveAnalysis.game_id,
-                MoveAnalysis.move_number,
-                MoveAnalysis.time_remaining,
-                MoveAnalysis.classification,
-            )
-            .filter(
-                MoveAnalysis.is_player_move == 1,
-                MoveAnalysis.time_remaining.isnot(None),
-            )
-            .order_by(MoveAnalysis.game_id, MoveAnalysis.move_number)
-            .all()
+        q = self.db.query(
+            MoveAnalysis.game_id,
+            MoveAnalysis.move_number,
+            MoveAnalysis.time_remaining,
+            MoveAnalysis.classification,
+        ).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.time_remaining.isnot(None),
         )
+        rows = self._apply_move_filter(q).order_by(MoveAnalysis.game_id, MoveAnalysis.move_number).all()
 
         games: dict[str, list[tuple]] = defaultdict(list)
         for game_id, move_num, time_rem, classif in rows:
@@ -319,15 +309,19 @@ class TimeManagementService:
 
     def _time_class_breakdown(self) -> list[dict]:
         """Stats broken down by time control (rapid, blitz, bullet)."""
-        time_classes = (
-            self.db.query(Game.time_class)
-            .distinct()
-            .all()
-        )
+        q = self.db.query(Game.time_class)
+        if self._platform:
+            q = q.filter(Game.platform == self._platform)
+        if self._time_class:
+            q = q.filter(Game.time_class == self._time_class)
+        time_classes = q.distinct().all()
 
         result = []
         for (tc,) in time_classes:
-            game_ids = [g.id for g in self.db.query(Game.id).filter(Game.time_class == tc).all()]
+            gq = self.db.query(Game.id).filter(Game.time_class == tc)
+            if self._platform:
+                gq = gq.filter(Game.platform == self._platform)
+            game_ids = [g.id for g in gq.all()]
             if not game_ids:
                 continue
 

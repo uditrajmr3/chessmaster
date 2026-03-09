@@ -18,6 +18,8 @@ import {
   TrendingUp,
   Mail,
   Users,
+  Upload,
+  Download,
   Menu,
   X,
 } from "lucide-react";
@@ -35,6 +37,8 @@ const navItems: { href: string; label: string; icon: ElementType }[] = [
   { href: "/digest", label: "Weekly Digest", icon: Mail },
   { href: "/peer-comparison", label: "Peer Comparison", icon: Users },
   { href: "/scouting", label: "Opponent Scout", icon: UserSearch },
+  { href: "/import", label: "Import PGN", icon: Upload },
+  { href: "/export", label: "Export Data", icon: Download },
   { href: "/report", label: "AI Coach", icon: BotMessageSquare },
 ];
 

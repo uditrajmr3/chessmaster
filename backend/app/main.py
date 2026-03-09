@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .database import Base, engine
-from .routers import analysis, digest, endgame, games, openings, patterns, peer_comparison, puzzles, rating_predictor, report, scouting, stats, sync, tilt, time_management
+from .routers import analysis, digest, endgame, export, games, opening_book, openings, patterns, peer_comparison, pgn_import, puzzles, rating_predictor, report, scouting, stats, sync, tilt, time_management
 
 
 @asynccontextmanager
@@ -39,6 +39,9 @@ app.include_router(endgame.router, prefix="/api")
 app.include_router(rating_predictor.router, prefix="/api")
 app.include_router(digest.router, prefix="/api")
 app.include_router(peer_comparison.router, prefix="/api")
+app.include_router(pgn_import.router, prefix="/api")
+app.include_router(export.router, prefix="/api")
+app.include_router(opening_book.router, prefix="/api")
 
 
 @app.get("/api/health")

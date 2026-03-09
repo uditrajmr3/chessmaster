@@ -135,4 +135,19 @@ export const api = {
       method: "POST",
       body: JSON.stringify(params),
     }),
+
+  // Import
+  importPgnText: (pgn: string, username: string) =>
+    fetchAPI<{ imported: number; skipped: number; errors: string[] }>("/import/pgn-text", {
+      method: "POST",
+      body: JSON.stringify({ pgn, username }),
+    }),
+
+  // Export
+  getExportSummary: (filters?: import("./types").GameFilters) => {
+    const query = filters ? "?" + new URLSearchParams(
+      Object.fromEntries(Object.entries(filters).filter(([, v]) => v))
+    ).toString() : "";
+    return fetchAPI<Record<string, unknown>>(`/export/summary${query}`);
+  },
 };

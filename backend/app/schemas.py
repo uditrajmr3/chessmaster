@@ -270,3 +270,40 @@ class ScoutReport(BaseModel):
     opponent_black_openings: list[OpponentOpening]
     cross_reference: CrossReference
     recommendations: list[str]
+
+
+# ── Endgame ──
+
+class EndgameOverall(BaseModel):
+    games_with_endgame: int
+    avg_endgame_cpl: float
+
+
+class EndgameTypeStats(BaseModel):
+    type: str
+    games: int
+    had_advantage: int
+    converted: int
+    failed: int
+    conversion_rate: float | None
+    avg_cpl: float
+    total_blunders: int
+
+
+class EndgameFailure(BaseModel):
+    game_id: str
+    endgame_type: str
+    result: str
+    entering_eval: float
+    avg_cpl: float
+    blunders: int
+    opponent: str
+    played_at: str
+    fen: str
+
+
+class EndgameReport(BaseModel):
+    overall: EndgameOverall
+    by_type: list[EndgameTypeStats]
+    worst_games: list[EndgameFailure]
+    recommendations: list[str]

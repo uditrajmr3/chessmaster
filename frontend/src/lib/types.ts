@@ -312,3 +312,40 @@ export interface ScoutReport {
   cross_reference: CrossReference;
   recommendations: string[];
 }
+
+// ── Endgame ──
+
+export interface EndgameOverall {
+  games_with_endgame: number;
+  avg_endgame_cpl: number;
+}
+
+export interface EndgameTypeStats {
+  type: string;
+  games: number;
+  had_advantage: number;
+  converted: number;
+  failed: number;
+  conversion_rate: number | null;
+  avg_cpl: number;
+  total_blunders: number;
+}
+
+export interface EndgameFailure {
+  game_id: string;
+  endgame_type: string;
+  result: string;
+  entering_eval: number;
+  avg_cpl: number;
+  blunders: number;
+  opponent: string;
+  played_at: string;
+  fen: string;
+}
+
+export interface EndgameReport {
+  overall: EndgameOverall;
+  by_type: EndgameTypeStats[];
+  worst_games: EndgameFailure[];
+  recommendations: string[];
+}

@@ -11,6 +11,7 @@ import {
   Target,
   Timer,
   Flame,
+  UserSearch,
   BotMessageSquare,
   Crown,
   Menu,
@@ -25,6 +26,7 @@ const navItems: { href: string; label: string; icon: ElementType }[] = [
   { href: "/weaknesses", label: "Weaknesses", icon: Target },
   { href: "/time-management", label: "Time Management", icon: Timer },
   { href: "/tilt", label: "Tilt Detector", icon: Flame },
+  { href: "/scouting", label: "Opponent Scout", icon: UserSearch },
   { href: "/report", label: "AI Coach", icon: BotMessageSquare },
 ];
 

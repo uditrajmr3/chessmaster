@@ -96,4 +96,11 @@ export const api = {
     ).toString() : "";
     return fetchAPI<import("./types").TiltReport>(`/tilt${query}`);
   },
+
+  // Scouting
+  scoutOpponent: (params: { opponent_username: string; platform: string; max_games?: number }) =>
+    fetchAPI<import("./types").ScoutReport>("/scouting/scout", {
+      method: "POST",
+      body: JSON.stringify(params),
+    }),
 };

@@ -221,3 +221,52 @@ class TiltReport(BaseModel):
     sessions: list[SessionSummary]
     rating_drops: list[RatingDrop]
     recommendations: list[str]
+
+
+# ── Scouting ──
+
+class ScoutRequest(BaseModel):
+    opponent_username: str
+    platform: str  # "chesscom" or "lichess"
+    max_games: int = 100
+
+
+class OpponentProfile(BaseModel):
+    username: str
+    platform: str
+    games_analyzed: int
+    rating: int
+    white_win_rate: float
+    black_win_rate: float
+    favorite_time_class: str
+
+
+class OpponentOpening(BaseModel):
+    eco: str
+    name: str
+    games: int
+    wins: int
+    losses: int
+    draws: int
+    frequency_pct: float
+
+
+class CrossReferenceEntry(BaseModel):
+    eco: str
+    name: str
+    opponent_plays_pct: float
+    your_games: int
+    your_win_rate: float | None
+
+
+class CrossReference(BaseModel):
+    your_record_vs_their_white_openings: list[CrossReferenceEntry]
+    your_record_vs_their_black_openings: list[CrossReferenceEntry]
+
+
+class ScoutReport(BaseModel):
+    opponent: OpponentProfile
+    opponent_white_openings: list[OpponentOpening]
+    opponent_black_openings: list[OpponentOpening]
+    cross_reference: CrossReference
+    recommendations: list[str]

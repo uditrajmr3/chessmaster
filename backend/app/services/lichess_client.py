@@ -6,6 +6,33 @@ import httpx
 class LichessClient:
     BASE = "https://lichess.org/api"
 
+    async def fetch_recent_games(self, username: str, max_games: int = 100) -> list[dict]:
+        """Fetch the most recent games for a user (limited for scouting)."""
+        url = f"{self.BASE}/games/user/{username}"
+        params = {
+            "opening": "true",
+            "pgnInJson": "true",
+            "max": str(max_games),
+            "sort": "dateDesc",
+        }
+        headers = {"Accept": "application/x-ndjson"}
+
+        all_games = []
+        async with httpx.AsyncClient(timeout=60) as client:
+            async with client.stream("GET", url, params=params, headers=headers) as resp:
+                resp.raise_for_status()
+                async for line in resp.aiter_lines():
+                    line = line.strip()
+                    if not line:
+                        continue
+                    import json
+                    g = json.loads(line)
+                    parsed = self._parse_game(g, username)
+                    if parsed:
+                        all_games.append(parsed)
+
+        return all_games
+
     async def fetch_games(self, username: str) -> list[dict]:
         """Fetch all games from Lichess via NDJSON streaming."""
         url = f"{self.BASE}/games/user/{username}"

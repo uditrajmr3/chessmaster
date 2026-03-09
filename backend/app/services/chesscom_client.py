@@ -10,6 +10,34 @@ class ChessComClient:
     BASE = "https://api.chess.com/pub"
     HEADERS = {"User-Agent": "ChessMaster/1.0 (chess analysis app)"}
 
+    async def fetch_recent_games(self, username: str, max_games: int = 100) -> list[dict]:
+        """Fetch the most recent games for a user (limited for scouting)."""
+        async with httpx.AsyncClient(headers=self.HEADERS, timeout=30) as client:
+            resp = await client.get(f"{self.BASE}/player/{username}/games/archives")
+            resp.raise_for_status()
+            archives = resp.json().get("archives", [])
+
+            all_games = []
+            # Iterate most recent archives first
+            for archive_url in reversed(archives):
+                resp = await client.get(archive_url)
+                resp.raise_for_status()
+                month_games = resp.json().get("games", [])
+
+                for g in month_games:
+                    if g.get("rules") != "chess":
+                        continue
+                    parsed = self._parse_game(g, username)
+                    if parsed:
+                        all_games.append(parsed)
+
+                if len(all_games) >= max_games:
+                    break
+
+            # Sort by date descending and limit
+            all_games.sort(key=lambda x: x["played_at"], reverse=True)
+            return all_games[:max_games]
+
     async def fetch_games(self, username: str) -> list[dict]:
         """Fetch all games for a user from Chess.com."""
         async with httpx.AsyncClient(headers=self.HEADERS, timeout=30) as client:

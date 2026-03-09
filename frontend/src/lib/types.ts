@@ -269,3 +269,46 @@ export interface TiltReport {
   rating_drops: RatingDrop[];
   recommendations: string[];
 }
+
+// ── Scouting ──
+
+export interface OpponentProfile {
+  username: string;
+  platform: string;
+  games_analyzed: number;
+  rating: number;
+  white_win_rate: number;
+  black_win_rate: number;
+  favorite_time_class: string;
+}
+
+export interface OpponentOpening {
+  eco: string;
+  name: string;
+  games: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  frequency_pct: number;
+}
+
+export interface CrossReferenceEntry {
+  eco: string;
+  name: string;
+  opponent_plays_pct: number;
+  your_games: number;
+  your_win_rate: number | null;
+}
+
+export interface CrossReference {
+  your_record_vs_their_white_openings: CrossReferenceEntry[];
+  your_record_vs_their_black_openings: CrossReferenceEntry[];
+}
+
+export interface ScoutReport {
+  opponent: OpponentProfile;
+  opponent_white_openings: OpponentOpening[];
+  opponent_black_openings: OpponentOpening[];
+  cross_reference: CrossReference;
+  recommendations: string[];
+}

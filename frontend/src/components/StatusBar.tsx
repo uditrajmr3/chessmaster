@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle, XCircle } from "lucide-react";
 import type { SyncStatus, AnalyzeStatus } from "@/lib/types";
+import { API_BASE } from "@/lib/api";
 
 export default function StatusBar() {
   const [sync, setSync] = useState<SyncStatus | null>(null);
@@ -34,8 +35,8 @@ export default function StatusBar() {
   async function poll() {
     try {
       const [syncRes, analysisRes] = await Promise.all([
-        fetch("http://localhost:8000/api/sync/status").then((r) => r.json()),
-        fetch("http://localhost:8000/api/analyze/status").then((r) => r.json()),
+        fetch(`${API_BASE}/sync/status`).then((r) => r.json()),
+        fetch(`${API_BASE}/analyze/status`).then((r) => r.json()),
       ]);
       setSync(syncRes);
       setAnalysis(analysisRes);

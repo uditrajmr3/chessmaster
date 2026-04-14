@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef, type ElementType } from "react";
+import { API_BASE } from "@/lib/api";
 import {
   LayoutDashboard,
   Swords,
@@ -291,7 +292,7 @@ function SyncButton() {
           if (!username) return;
           setSyncing(true);
           try {
-            await fetch("http://localhost:8000/api/sync", {
+            await fetch(`${API_BASE}/sync`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ username }),
@@ -312,7 +313,7 @@ function SyncButton() {
         onClick={async () => {
           setAnalyzing(true);
           try {
-            await fetch("http://localhost:8000/api/analyze", {
+            await fetch(`${API_BASE}/analyze`, {
               method: "POST",
             });
           } catch {

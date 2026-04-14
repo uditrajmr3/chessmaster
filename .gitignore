@@ -29,3 +29,6 @@ Thumbs.db
 
 # Claude
 .claude/
+.remember/
+.playwright-mcp/
+ui/

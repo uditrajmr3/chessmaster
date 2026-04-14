@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Timer } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { TimeManagementProfile, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 import {
@@ -43,6 +44,7 @@ export default function TimeManagementPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <TimeSkeleton />;
   if (!data || data.games_with_clock_data === 0)

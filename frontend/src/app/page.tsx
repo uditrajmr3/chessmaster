@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Crown, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { OverviewStats } from "@/lib/types";
 import RatingChart from "@/components/RatingChart";
 
@@ -12,9 +13,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 5000);
-    return () => clearInterval(interval);
   }, []);
+  useDataRefresh(loadData);
 
   async function loadData() {
     try {

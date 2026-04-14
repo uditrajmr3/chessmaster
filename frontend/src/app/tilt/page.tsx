@@ -7,6 +7,7 @@ import {
 } from "recharts";
 import { Flame } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { TiltReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
@@ -33,6 +34,7 @@ export default function TiltPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <TiltSkeleton />;
   if (!report) return (

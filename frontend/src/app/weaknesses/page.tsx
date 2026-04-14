@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Target } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { PatternReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 import {
@@ -43,6 +44,7 @@ export default function WeaknessesPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <WeaknessesSkeleton />;
   if (!patterns)

@@ -7,6 +7,7 @@ import {
 } from "recharts";
 import { TrendingUp } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { RatingPredictionReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
@@ -33,6 +34,7 @@ export default function RatingPredictorPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <PredictorSkeleton />;
   if (!report || report.trajectory.games_played === 0) return (

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Swords, Check, Minus } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { GameSummary } from "@/lib/types";
 
 export default function GamesPage() {
@@ -12,11 +13,7 @@ export default function GamesPage() {
   const [platform, setPlatform] = useState<string>("");
   const [result, setResult] = useState<string>("");
 
-  useEffect(() => {
-    loadGames();
-  }, [platform, result]);
-
-  async function loadGames() {
+  const loadGames = useCallback(async () => {
     setLoading(true);
     try {
       const params: Record<string, string> = {};
@@ -28,7 +25,12 @@ export default function GamesPage() {
       // Backend not running
     }
     setLoading(false);
-  }
+  }, [platform, result]);
+
+  useEffect(() => {
+    loadGames();
+  }, [loadGames]);
+  useDataRefresh(loadGames);
 
   return (
     <div className="space-y-6">

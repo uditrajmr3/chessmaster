@@ -1,21 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle, XCircle } from "lucide-react";
 import type { SyncStatus, AnalyzeStatus } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
+import { emitDataRefresh } from "@/lib/useDataRefresh";
 
 export default function StatusBar() {
   const [sync, setSync] = useState<SyncStatus | null>(null);
   const [analysis, setAnalysis] = useState<AnalyzeStatus | null>(null);
   const [showDone, setShowDone] = useState(true);
   const [dismissing, setDismissing] = useState(false);
+  const prevSyncStatus = useRef<string | undefined>(undefined);
+  const prevAnalysisStatus = useRef<string | undefined>(undefined);
+  const lastProgressEmit = useRef<number>(0);
 
   useEffect(() => {
     poll();
-    const interval = setInterval(poll, 2000);
+    const interval = setInterval(poll, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const now = Date.now();
+    const syncJustFinished =
+      prevSyncStatus.current === "syncing" && sync?.status === "done";
+    const analysisJustFinished =
+      prevAnalysisStatus.current === "running" && analysis?.status === "done";
+    const anyActive =
+      sync?.status === "syncing" || analysis?.status === "running";
+    const progressTick = anyActive && now - lastProgressEmit.current >= 10000;
+
+    if (syncJustFinished || analysisJustFinished) {
+      emitDataRefresh();
+      lastProgressEmit.current = now;
+    } else if (progressTick) {
+      emitDataRefresh();
+      lastProgressEmit.current = now;
+    }
+    prevSyncStatus.current = sync?.status;
+    prevAnalysisStatus.current = analysis?.status;
+  }, [sync?.status, analysis?.status, analysis?.completed, sync?.games_fetched]);
 
   const syncDone = sync?.status === "done";
   const analysisDone = analysis?.status === "done";

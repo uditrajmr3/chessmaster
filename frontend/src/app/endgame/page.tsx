@@ -7,6 +7,7 @@ import {
 } from "recharts";
 import { Trophy } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { EndgameReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
@@ -33,6 +34,7 @@ export default function EndgamePage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <EndgameSkeleton />;
   if (!report || report.overall.games_with_endgame === 0) return (

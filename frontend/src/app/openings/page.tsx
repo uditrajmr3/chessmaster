@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { BookOpen } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { OpeningNode, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
@@ -23,6 +24,7 @@ export default function OpeningsPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <OpeningsSkeleton />;
 

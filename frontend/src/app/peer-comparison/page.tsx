@@ -7,6 +7,7 @@ import {
 } from "recharts";
 import { Users } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { PeerComparisonReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
@@ -33,6 +34,7 @@ export default function PeerComparisonPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <PeerSkeleton />;
   if (!report || report.games_analyzed === 0) return (

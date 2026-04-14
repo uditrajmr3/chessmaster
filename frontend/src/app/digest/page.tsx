@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Mail } from "lucide-react";
 import { api } from "@/lib/api";
+import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { DigestReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
@@ -23,6 +24,7 @@ export default function DigestPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+  useDataRefresh(loadData);
 
   if (loading) return <DigestSkeleton />;
   if (!report || report.summary.total_games === 0) return (

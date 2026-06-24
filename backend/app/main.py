@@ -4,13 +4,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .database import Base, engine
 from .routers import analysis, digest, endgame, export, games, opening_book, openings, patterns, peer_comparison, pgn_import, puzzles, rating_predictor, report, scouting, stats, sync, tilt, time_management
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
+    # Schema is managed by Alembic migrations — no create_all here
     yield
 
 

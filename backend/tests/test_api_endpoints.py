@@ -209,8 +209,9 @@ class TestAnalyzeEndpoints:
 
 
 class TestReportEndpoints:
-    def test_latest_report_empty(self, client):
-        resp = client.get("/api/report/latest")
+    def test_latest_report_empty(self, verified_user_client):
+        # report/latest now requires authentication
+        resp = verified_user_client.get("/api/report/latest")
         assert resp.status_code == 200
         # No report yet — should return null
         assert resp.json() is None

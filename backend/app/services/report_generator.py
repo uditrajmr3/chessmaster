@@ -32,17 +32,22 @@ Structure your response as:
 
 
 class ReportGenerator:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
 
     async def generate(self) -> Report:
         if not settings.anthropic_api_key:
             raise RuntimeError("ANTHROPIC_API_KEY not set in .env")
 
-        pattern_engine = PatternEngine(self.db)
+        # PatternEngine already requires user_id and is scoped — pass through.
+        pattern_engine = PatternEngine(self.db, user_id=self._user_id)
         patterns = pattern_engine.generate_report()
 
-        games = self.db.query(Game).all()
+        # Scope Game query to the authenticated user only.
+        games = self.db.query(Game).filter(Game.user_id == self._user_id).all()
         total_games = len(games)
         if total_games == 0:
             raise RuntimeError("No games found. Sync games first.")
@@ -76,7 +81,9 @@ class ReportGenerator:
 
         report_text = response.content[0].text
 
+        # Stamp the Report row with the authenticated user's id.
         report = Report(
+            user_id=self._user_id,
             generated_at=datetime.utcnow(),
             games_count=total_games,
             report_json=json.dumps(patterns),

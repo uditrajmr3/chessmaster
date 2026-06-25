@@ -4,10 +4,9 @@ import json
 from datetime import datetime
 
 import pytest
-import pytest_asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy import StaticPool, create_engine
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_async_db, get_db
@@ -30,8 +29,8 @@ ASYNC_TEST_ENGINE = create_async_engine(
     connect_args={"check_same_thread": False},
     poolclass=StaticPool,
 )
-AsyncTestSession = sessionmaker(
-    bind=ASYNC_TEST_ENGINE, class_=AsyncSession, autoflush=False, autocommit=False
+AsyncTestSession = async_sessionmaker(
+    bind=ASYNC_TEST_ENGINE, expire_on_commit=False, autoflush=False
 )
 
 
@@ -48,7 +47,7 @@ def db():
         async with ASYNC_TEST_ENGINE.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-    asyncio.get_event_loop().run_until_complete(_async_create())
+    asyncio.run(_async_create())
 
     session = TestSession()
     try:
@@ -61,7 +60,7 @@ def db():
             async with ASYNC_TEST_ENGINE.begin() as conn:
                 await conn.run_sync(Base.metadata.drop_all)
 
-        asyncio.get_event_loop().run_until_complete(_async_drop())
+        asyncio.run(_async_drop())
 
 
 @pytest.fixture()

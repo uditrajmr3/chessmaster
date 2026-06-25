@@ -2,6 +2,7 @@
 
 import asyncio
 import pytest
+from sqlalchemy import func, select
 from app.auth.models import User
 from tests.conftest import AsyncTestSession
 
@@ -16,7 +17,6 @@ def verified_user_client(client, db):
     # Set is_verified=True directly via the async session.
     async def _verify_user():
         async with AsyncTestSession() as session:
-            from sqlalchemy import select, func
             result = await session.execute(
                 select(User).where(func.lower(User.email) == "a@test.com")
             )
@@ -24,7 +24,7 @@ def verified_user_client(client, db):
             u.is_verified = True
             await session.commit()
 
-    asyncio.get_event_loop().run_until_complete(_verify_user())
+    asyncio.run(_verify_user())
 
     login = client.post("/api/auth/login", data={"username": "a@test.com", "password": "pw12345678"})
     assert login.status_code in (200, 204), login.text

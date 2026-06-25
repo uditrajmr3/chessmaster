@@ -9,7 +9,11 @@ from ..services.sync_service import SyncService
 
 router = APIRouter(tags=["sync"])
 
-# Per-user status dict keyed by str(user_id)
+# Per-user sync status keyed by str(user_id).
+# NOTE: in-memory and process-local. Under a multi-worker deployment
+# (e.g. gunicorn --workers > 1) each worker has its own copy, so a user
+# may POST /sync on one worker and read idle status from another. Fine for
+# single-worker dev/staging; move to a shared store (Redis/DB) for scale-out.
 _sync_status: dict[str, dict] = {}
 
 

@@ -58,6 +58,13 @@ def store_results(db, user_id, payload: AnalyzeResultsIn) -> None:
         eval_before = move_eval.eval_before
         eval_after = move_eval.eval_after
 
+        # The client sends evals in WHITE-POV centipawns. Convert to the moving
+        # player's POV so that centipawn-loss (eval_before - eval_after) is always
+        # positive for the player who made a mistake, regardless of colour.
+        if game.player_color == "black":
+            eval_before = -eval_before if eval_before is not None else None
+            eval_after = -eval_after if eval_after is not None else None
+
         # Centipawn loss only meaningful for player moves
         cpl = 0.0
         if is_player_turn and eval_before is not None and eval_after is not None:

@@ -261,6 +261,103 @@ def test_results_rejects_other_users_game_via_api(verified_user_client, db):
     assert resp.status_code == 404
 
 
+# ── POV normalisation regression tests ───────────────────────────────────────
+
+def test_black_player_blunder_is_scored(db):
+    """Black-player blunder (raises white-POV eval) must produce a large, positive CPL.
+
+    Before Fix 1, eval_before - eval_after was negative for Black blunders
+    (white-POV goes UP when Black errs), so cpl was clamped to 0 and every
+    Black mistake was misclassified as "good".  This test guards that bug.
+
+    Scenario (all evals in WHITE-POV centipawns as the client sends):
+      eval_before = -20  → Black slightly ahead before the move
+      eval_after  = 200  → White clearly winning after Black's blunder
+    Player-POV (Black): before = +20, after = -200 → CPL ≈ 220  (a blunder)
+    """
+    from app.services.analysis_ingest import store_results
+
+    black_game = make_game(
+        db,
+        id="black_blunder_game",
+        platform_id="black_blunder_game",
+        user_id=TEST_USER_ID,
+        player_color="black",
+    )
+
+    payload = AnalyzeResultsIn(
+        game_id=black_game.id,
+        depth=12,
+        moves=[
+            MoveEval(
+                move_number=1,
+                is_player_move=1,
+                fen_before=START_FEN,
+                move_uci="e7e5",
+                move_san="e5",
+                eval_before=-20.0,   # white-POV: Black slightly better
+                eval_after=200.0,    # white-POV: White winning after Black blunder
+                best_move_uci="d7d5",
+            )
+        ],
+    )
+    store_results(db, black_game.user_id, payload)
+
+    row = db.query(MoveAnalysis).filter_by(game_id=black_game.id).first()
+    assert row is not None
+    # Player-POV CPL should be large (≈220) — definitely a blunder/mistake
+    assert row.centipawn_loss > 100, (
+        f"Expected large CPL for Black blunder, got {row.centipawn_loss}"
+    )
+    assert row.classification not in ("good", "best", "great"), (
+        f"Black blunder was misclassified as '{row.classification}'"
+    )
+
+
+def test_white_player_blunder_still_scores_correctly(db):
+    """White-player blunders (lowers white-POV eval) must still compute correct CPL.
+
+    This ensures Fix 1 does not regress the existing White-game path.
+    """
+    from app.services.analysis_ingest import store_results
+
+    white_game = make_game(
+        db,
+        id="white_blunder_game",
+        platform_id="white_blunder_game",
+        user_id=TEST_USER_ID,
+        player_color="white",
+    )
+
+    payload = AnalyzeResultsIn(
+        game_id=white_game.id,
+        depth=12,
+        moves=[
+            MoveEval(
+                move_number=0,
+                is_player_move=1,
+                fen_before=START_FEN,
+                move_uci="e2e4",
+                move_san="e4",
+                eval_before=200.0,   # white-POV: White clearly ahead
+                eval_after=-50.0,    # white-POV: White blundered into losing position
+                best_move_uci="d2d4",
+            )
+        ],
+    )
+    store_results(db, white_game.user_id, payload)
+
+    row = db.query(MoveAnalysis).filter_by(game_id=white_game.id).first()
+    assert row is not None
+    # Player-POV CPL = 200 - (-50) = 250 → blunder
+    assert row.centipawn_loss > 100, (
+        f"Expected large CPL for White blunder, got {row.centipawn_loss}"
+    )
+    assert row.classification not in ("good", "best", "great"), (
+        f"White blunder was misclassified as '{row.classification}'"
+    )
+
+
 # ── Guard test: no chess.engine in request paths ──────────────────────────────
 
 def test_no_engine_import_in_request_paths():

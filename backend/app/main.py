@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -8,10 +9,24 @@ from .routers import analysis, digest, endgame, export, games, opening_book, ope
 from .auth.users import fastapi_users, auth_backend
 from .auth.schemas import UserRead, UserCreate, UserUpdate
 
+logger = logging.getLogger(__name__)
+
+_INSECURE_DEFAULT_KEY = "CHANGE_ME_DEV_ONLY"
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Schema is managed by Alembic migrations — no create_all here
+    if settings.secret_key == _INSECURE_DEFAULT_KEY:
+        logger.warning(
+            "SECURITY: SECRET_KEY is the insecure dev default — "
+            "set SECRET_KEY in the environment for any non-local deployment."
+        )
+    elif not settings.cookie_secure:
+        logger.warning(
+            "SECURITY: COOKIE_SECURE is False but SECRET_KEY has been changed — "
+            "set COOKIE_SECURE=true for any non-local deployment."
+        )
     yield
 
 

@@ -1,48 +1,70 @@
-import asyncio
-import threading
+"""Analysis router — client-side Stockfish model.
+
+The browser runs Stockfish and posts per-move evaluations.  The server:
+  - GET  /analyze/pending  → returns games that need analysis
+  - POST /analyze/results  → ingests browser-computed evals
+  - GET  /analyze/status   → lightweight counts for the current user
+
+Stockfish runs in the browser; the server only classifies and stores results.
+"""
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from ..auth.deps import current_verified_user
+from ..auth.models import User
 from ..database import get_db
 from ..models import AnalysisJob, Game
-from ..schemas import AnalyzeStatus
-from ..services.stockfish_analyzer import StockfishAnalyzer
+from ..schemas import AnalyzeResultsIn, AnalyzeStatus
+from ..services.analysis_ingest import store_results
 
 router = APIRouter(tags=["analysis"])
 
-_analysis_status: dict = {"status": "idle", "total": 0, "completed": 0, "current_game": None}
-_analysis_lock = threading.Lock()
-_analysis_task: asyncio.Task | None = None
+
+@router.get("/analyze/pending")
+def pending(
+    user: User = Depends(current_verified_user),
+    db: Session = Depends(get_db),
+):
+    """Return the authenticated user's games that do not yet have a completed AnalysisJob."""
+    done = {
+        row.game_id
+        for row in db.query(AnalysisJob.game_id).filter(
+            AnalysisJob.user_id == str(user.id),
+            AnalysisJob.status == "completed",
+        )
+    }
+    games = db.query(Game).filter(Game.user_id == str(user.id)).all()
+    return [
+        {"game_id": g.id, "pgn": g.pgn, "player_color": g.player_color}
+        for g in games
+        if g.id not in done
+    ]
 
 
-async def _run_analysis():
-    global _analysis_task
-    _analysis_status["status"] = "running"
-    try:
-        analyzer = StockfishAnalyzer()
-        await analyzer.analyze_all(_analysis_status)
-        _analysis_status["status"] = "done"
-    except Exception as e:
-        _analysis_status["status"] = "error"
-        _analysis_status["current_game"] = str(e)
-    finally:
-        _analysis_task = None
-
-
-@router.post("/analyze")
-async def start_analysis():
-    global _analysis_task
-    with _analysis_lock:
-        # Check if a task is actually still running
-        if _analysis_task is not None and not _analysis_task.done():
-            return {"message": "Analysis already in progress"}
-        # Reset stale status from a previous crashed run
-        _analysis_status.update({"status": "idle", "total": 0, "completed": 0, "current_game": None})
-        _analysis_task = asyncio.ensure_future(_run_analysis())
-    return {"message": "Analysis started"}
+@router.post("/analyze/results")
+def results(
+    payload: AnalyzeResultsIn,
+    user: User = Depends(current_verified_user),
+    db: Session = Depends(get_db),
+):
+    """Ingest browser-computed Stockfish evaluations for a game owned by the user."""
+    store_results(db, str(user.id), payload)
+    return {"status": "ok"}
 
 
 @router.get("/analyze/status", response_model=AnalyzeStatus)
-def get_analysis_status():
-    return AnalyzeStatus(**_analysis_status)
+def get_analysis_status(
+    user: User = Depends(current_verified_user),
+    db: Session = Depends(get_db),
+):
+    """Return lightweight analysis counts for the authenticated user."""
+    jobs = db.query(AnalysisJob).filter(AnalysisJob.user_id == str(user.id)).all()
+    total_games = db.query(Game).filter(Game.user_id == str(user.id)).count()
+    completed = sum(1 for j in jobs if j.status == "completed")
+    return AnalyzeStatus(
+        status="done" if completed >= total_games and total_games > 0 else "idle",
+        total=total_games,
+        completed=completed,
+        current_game=None,
+    )

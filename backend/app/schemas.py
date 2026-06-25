@@ -413,6 +413,25 @@ class DigestReport(BaseModel):
     digest_text: str
 
 
+# ── Analysis Ingest (client-side Stockfish) ──
+
+class MoveEval(BaseModel):
+    move_number: int
+    is_player_move: int
+    fen_before: str
+    move_uci: str
+    move_san: str
+    eval_before: float | None = None
+    eval_after: float | None = None
+    best_move_uci: str | None = None
+
+
+class AnalyzeResultsIn(BaseModel):
+    game_id: str
+    depth: int
+    moves: list[MoveEval]
+
+
 # ── Peer Comparison ──
 
 class PeerMetric(BaseModel):

@@ -199,13 +199,35 @@ class TestOpeningsEndpoint:
 
 
 class TestAnalyzeEndpoints:
-    def test_analyze_status_initial(self, client):
+    def test_analyze_status_requires_auth(self, client):
+        """GET /api/analyze/status is now auth-gated (client-side analysis model)."""
         resp = client.get("/api/analyze/status")
+        assert resp.status_code == 401
+
+    def test_analyze_status_authenticated(self, verified_user_client):
+        """Authenticated GET /api/analyze/status returns expected fields."""
+        resp = verified_user_client.get("/api/analyze/status")
         assert resp.status_code == 200
         data = resp.json()
         assert "status" in data
         assert "total" in data
         assert "completed" in data
+
+    def test_analyze_pending_requires_auth(self, client):
+        """GET /api/analyze/pending must return 401 for unauthenticated users."""
+        resp = client.get("/api/analyze/pending")
+        assert resp.status_code == 401
+
+    def test_analyze_results_requires_auth(self, client):
+        """POST /api/analyze/results must return 401 for unauthenticated users."""
+        resp = client.post("/api/analyze/results", json={"game_id": "x", "depth": 10, "moves": []})
+        assert resp.status_code == 401
+
+    def test_analyze_pending_returns_list(self, verified_user_client):
+        """GET /api/analyze/pending returns a list (empty when no games)."""
+        resp = verified_user_client.get("/api/analyze/pending")
+        assert resp.status_code == 200
+        assert isinstance(resp.json(), list)
 
 
 class TestReportEndpoints:

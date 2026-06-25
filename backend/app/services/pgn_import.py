@@ -13,12 +13,21 @@ from ..models import Game
 def import_pgn(
     db: Session,
     pgn_text: str,
-    username: str,
-    user_id: uuid.UUID | None = None,
+    usernames: list[str] | str,
+    user_id: uuid.UUID,
 ) -> dict:
-    """Parse a PGN string (potentially multi-game) and import games."""
-    # Placeholder user_id for pre-auth compatibility; Task 11 will pass real user_id
-    effective_user_id = user_id or uuid.UUID("00000000-0000-0000-0000-000000000001")
+    """Parse a PGN string (potentially multi-game) and import games.
+
+    Args:
+        db: Database session.
+        pgn_text: Raw PGN text (may contain multiple games).
+        usernames: One or more player usernames used for color/result detection.
+                   Accepts a list (preferred) or a single string for backward compat.
+        user_id: The authenticated user's UUID. All imported games are stamped with this.
+    """
+    if isinstance(usernames, str):
+        usernames = [usernames]
+
     stream = io.StringIO(pgn_text)
     imported = 0
     skipped = 0
@@ -34,7 +43,7 @@ def import_pgn(
         if game is None:
             break
 
-        result = _import_single_game(db, game, username, effective_user_id)
+        result = _import_single_game(db, game, usernames, user_id)
         if result == "imported":
             imported += 1
         elif result == "skipped":
@@ -51,7 +60,12 @@ def import_pgn(
     }
 
 
-def _import_single_game(db: Session, game: chess.pgn.Game, username: str, user_id: uuid.UUID) -> str:
+def _import_single_game(
+    db: Session,
+    game: chess.pgn.Game,
+    usernames: list[str],
+    user_id: uuid.UUID,
+) -> str:
     """Import a single parsed PGN game. Returns 'imported', 'skipped', or error string."""
     headers = game.headers
 
@@ -60,17 +74,17 @@ def _import_single_game(db: Session, game: chess.pgn.Game, username: str, user_i
     black = headers.get("Black", "Unknown")
     result_str = headers.get("Result", "*")
 
-    # Determine player color
+    # Determine player color by matching any of the user's known usernames
     white_lower = white.lower()
     black_lower = black.lower()
-    user_lower = username.lower()
+    user_name_set = {u.lower() for u in usernames}
 
-    if user_lower == white_lower:
+    if white_lower in user_name_set:
         player_color = "white"
-    elif user_lower == black_lower:
+    elif black_lower in user_name_set:
         player_color = "black"
     else:
-        # Default to white if username doesn't match either
+        # Default to white if no username matches either side
         player_color = "white"
 
     # Parse result
@@ -83,12 +97,17 @@ def _import_single_game(db: Session, game: chess.pgn.Game, username: str, user_i
     else:
         result = "draw"
 
-    # Generate unique ID
-    platform_id = str(uuid.uuid4())[:12]
-    game_id = f"pgn_{platform_id}"
+    # Generate a stable UUID-based game id
+    game_uuid = str(uuid.uuid4())
+    platform_id = game_uuid[:12]
+    game_id = game_uuid
 
-    # Check for duplicate (by PGN content hash)
-    existing = db.query(Game).filter(Game.id == game_id).first()
+    # Deduplicate: check (user_id, platform, platform_id)
+    existing = (
+        db.query(Game)
+        .filter_by(user_id=user_id, platform="pgn", platform_id=platform_id)
+        .first()
+    )
     if existing:
         return "skipped"
 

@@ -1,12 +1,17 @@
-"""Tests for PGN Import feature."""
+"""Tests for PGN Import feature.
 
-import io
+All API tests require authentication (Task 11). Direct service tests pass a user_id.
+"""
+
+import uuid
 
 import pytest
 
 from app.models import Game
 from app.services.pgn_import import import_pgn, _classify_time_control
 
+# A fixed test user UUID used in direct service tests
+_TEST_USER_ID = uuid.UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 
 SAMPLE_PGN = """[Event "Casual Game"]
 [Site "OTB"]
@@ -46,8 +51,10 @@ MULTI_GAME_PGN = """[Event "Game 1"]
 
 
 class TestPgnImport:
+    """Direct service-layer tests (bypass auth; pass user_id explicitly)."""
+
     def test_imports_single_game(self, db):
-        result = import_pgn(db, SAMPLE_PGN, "testuser")
+        result = import_pgn(db, SAMPLE_PGN, ["testuser"], _TEST_USER_ID)
 
         assert result["imported"] == 1
         assert result["skipped"] == 0
@@ -61,9 +68,11 @@ class TestPgnImport:
         assert game.player_rating == 1200
         assert game.opponent_rating == 1100
         assert game.opening_eco == "B12"
+        # Confirm user_id is stamped correctly (not placeholder)
+        assert str(game.user_id) == str(_TEST_USER_ID)
 
     def test_imports_multiple_games(self, db):
-        result = import_pgn(db, MULTI_GAME_PGN, "testuser")
+        result = import_pgn(db, MULTI_GAME_PGN, ["testuser"], _TEST_USER_ID)
 
         assert result["imported"] == 2
         games = db.query(Game).all()
@@ -80,39 +89,56 @@ class TestPgnImport:
         assert g2.player_color == "black"
 
     def test_handles_unknown_username(self, db):
-        result = import_pgn(db, SAMPLE_PGN, "unknownuser")
+        result = import_pgn(db, SAMPLE_PGN, ["unknownuser"], _TEST_USER_ID)
 
         assert result["imported"] == 1
         game = db.query(Game).first()
-        # Defaults to white when username doesn't match
+        # Defaults to white when username doesn't match either player
         assert game.player_color == "white"
 
     def test_handles_empty_pgn(self, db):
-        result = import_pgn(db, "", "testuser")
+        result = import_pgn(db, "", ["testuser"], _TEST_USER_ID)
 
         assert result["imported"] == 0
         assert result["skipped"] == 0
 
     def test_handles_draw_result(self, db):
         pgn = SAMPLE_PGN.replace("1-0", "1/2-1/2")
-        result = import_pgn(db, pgn, "testuser")
+        result = import_pgn(db, pgn, ["testuser"], _TEST_USER_ID)
 
         game = db.query(Game).first()
         assert game.result == "draw"
 
     def test_handles_loss_result(self, db):
         pgn = SAMPLE_PGN.replace("1-0", "0-1")
-        result = import_pgn(db, pgn, "testuser")
+        result = import_pgn(db, pgn, ["testuser"], _TEST_USER_ID)
 
         game = db.query(Game).first()
         assert game.result == "loss"
 
     def test_parses_date(self, db):
-        result = import_pgn(db, SAMPLE_PGN, "testuser")
+        result = import_pgn(db, SAMPLE_PGN, ["testuser"], _TEST_USER_ID)
         game = db.query(Game).first()
         assert game.played_at.year == 2025
         assert game.played_at.month == 6
         assert game.played_at.day == 15
+
+    def test_accepts_string_username_for_backward_compat(self, db):
+        """Service accepts a plain string username (not just a list)."""
+        result = import_pgn(db, SAMPLE_PGN, "testuser", _TEST_USER_ID)
+        assert result["imported"] == 1
+        game = db.query(Game).first()
+        assert game.player_color == "white"
+
+    def test_accepts_multiple_usernames(self, db):
+        """Multiple usernames: matches against both lichess and chesscom names."""
+        result = import_pgn(
+            db,
+            MULTI_GAME_PGN,
+            ["testuser", "alias_testuser"],
+            _TEST_USER_ID,
+        )
+        assert result["imported"] == 2
 
 
 class TestTimeClassification:
@@ -134,21 +160,47 @@ class TestTimeClassification:
 
 
 class TestPgnImportAPI:
-    def test_import_pgn_text(self, client, db):
-        resp = client.post("/api/import/pgn-text", json={
-            "pgn": SAMPLE_PGN,
-            "username": "testuser",
-        })
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["imported"] == 1
+    """API-level tests: require authentication (verified_user_client)."""
 
-    def test_import_pgn_file(self, client, db):
-        resp = client.post(
-            "/api/import/pgn",
-            files={"file": ("test.pgn", SAMPLE_PGN.encode(), "text/plain")},
-            data={"username": "testuser"},
+    def test_import_pgn_text(self, verified_user_client, db):
+        """Authenticated user imports PGN text; response confirms import."""
+        resp = verified_user_client.post(
+            "/api/import/pgn-text",
+            json={"pgn": SAMPLE_PGN},
         )
         assert resp.status_code == 200
         data = resp.json()
         assert data["imported"] == 1
+
+        # Confirm the game is stored with the authed user's id
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        games = db.query(Game).filter_by(user_id=uid).all()
+        assert len(games) == 1
+
+    def test_import_pgn_file(self, verified_user_client, db):
+        """Authenticated user uploads a PGN file; response confirms import."""
+        resp = verified_user_client.post(
+            "/api/import/pgn",
+            files={"file": ("test.pgn", SAMPLE_PGN.encode(), "text/plain")},
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["imported"] == 1
+
+        # Confirm the game is stored with the authed user's id
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        games = db.query(Game).filter_by(user_id=uid).all()
+        assert len(games) == 1
+
+    def test_import_pgn_text_requires_auth(self, client):
+        """Unauthenticated access to pgn-text endpoint → 401."""
+        resp = client.post("/api/import/pgn-text", json={"pgn": SAMPLE_PGN})
+        assert resp.status_code == 401
+
+    def test_import_pgn_file_requires_auth(self, client):
+        """Unauthenticated access to pgn file endpoint → 401."""
+        resp = client.post(
+            "/api/import/pgn",
+            files={"file": ("test.pgn", SAMPLE_PGN.encode(), "text/plain")},
+        )
+        assert resp.status_code == 401

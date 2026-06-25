@@ -1,5 +1,6 @@
 """Shared test fixtures: in-memory SQLite DB, FastAPI test client, sample data factories."""
 
+import asyncio
 import json
 from datetime import datetime
 
@@ -8,10 +9,11 @@ TEST_USER_ID = "00000000-0000-0000-0000-000000000001"
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import StaticPool, create_engine
+from sqlalchemy import StaticPool, create_engine, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.auth.models import User
 from app.database import Base, get_async_db, get_db
 from app.main import app
 from app.models import AnalysisJob, Game, MoveAnalysis, PuzzleProgress, Report, SyncState
@@ -40,8 +42,6 @@ AsyncTestSession = async_sessionmaker(
 @pytest.fixture()
 def db():
     """Yield a fresh DB session with all tables created, torn down after each test."""
-    import asyncio
-
     # Create tables in both the sync engine (for regular ORM access in tests)
     # and the async engine (for fastapi-users which requires an async session).
     Base.metadata.create_all(bind=TEST_ENGINE)
@@ -88,6 +88,30 @@ def client(db):
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def verified_user_client(client, db):
+    """Register, verify, and log in a user; return the authenticated TestClient."""
+    r = client.post("/api/auth/register", json={"email": "a@test.com", "password": "pw12345678"})
+    assert r.status_code == 201, r.text
+
+    # The user is stored in the async SQLite engine (fastapi-users uses async).
+    # Set is_verified=True directly via the async session.
+    async def _verify_user():
+        async with AsyncTestSession() as session:
+            result = await session.execute(
+                select(User).where(func.lower(User.email) == "a@test.com")
+            )
+            u = result.scalar_one()
+            u.is_verified = True
+            await session.commit()
+
+    asyncio.run(_verify_user())
+
+    login = client.post("/api/auth/login", data={"username": "a@test.com", "password": "pw12345678"})
+    assert login.status_code in (200, 204), login.text
+    return client
 
 
 # ── Factory helpers ──────────────────────────────────────────────────────────

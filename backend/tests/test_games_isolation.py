@@ -6,9 +6,6 @@ These tests establish the canonical per-user query-scoping pattern.
 import pytest
 from tests.conftest import make_game, make_move_analysis
 
-# Reuse the verified_user_client fixture from test_auth_endpoints
-from tests.test_auth_endpoints import verified_user_client  # noqa: F401
-
 OTHER_USER_ID = "22222222-2222-2222-2222-222222222222"
 
 

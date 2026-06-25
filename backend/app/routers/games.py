@@ -23,7 +23,7 @@ def list_games(
     db: Session = Depends(get_db),
     user: User = Depends(current_verified_user),
 ):
-    q = db.query(Game).filter(Game.user_id == str(user.id))
+    q = db.query(Game).filter(Game.user_id == user.id)
     if platform:
         q = q.filter(Game.platform == platform)
     if time_class:
@@ -40,7 +40,7 @@ def list_games(
         row.game_id
         for row in db.query(AnalysisJob.game_id)
         .filter(AnalysisJob.status == "completed")
-        .filter(AnalysisJob.user_id == str(user.id))
+        .filter(AnalysisJob.user_id == user.id)
         .all()
     }
 

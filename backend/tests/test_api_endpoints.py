@@ -6,7 +6,6 @@ import pytest
 
 from app.models import AnalysisJob, MoveAnalysis
 from tests.conftest import TEST_USER_ID, make_game, make_move_analysis
-from tests.test_auth_endpoints import verified_user_client  # noqa: F401
 
 
 class TestHealthEndpoint:

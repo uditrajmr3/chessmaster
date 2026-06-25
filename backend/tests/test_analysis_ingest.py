@@ -133,6 +133,33 @@ def test_store_results_user_id_string_or_uuid(db, seeded_user_game):
     store_results(db, str(seeded_user_game.user_id), payload)
 
 
+def test_store_results_upsert_corrects_stale_user_id(db, seeded_user_game):
+    """AnalysisJob upsert is scoped by user_id: a row with a different user_id
+    is never silently adopted — re-submitting creates a correctly-stamped job."""
+    from app.services.analysis_ingest import store_results
+
+    # Pre-seed an AnalysisJob for the same game_id but with a DIFFERENT user_id
+    stale_job = AnalysisJob(
+        game_id=seeded_user_game.id,
+        user_id=OTHER_USER_ID,  # wrong owner
+        status="completed",
+    )
+    db.add(stale_job)
+    db.commit()
+
+    payload = AnalyzeResultsIn(game_id=seeded_user_game.id, depth=10, moves=[])
+    store_results(db, seeded_user_game.user_id, payload)
+
+    # There should now be a job stamped with the CORRECT user_id
+    correct_job = (
+        db.query(AnalysisJob)
+        .filter_by(game_id=seeded_user_game.id, user_id=str(seeded_user_game.user_id))
+        .first()
+    )
+    assert correct_job is not None, "Expected a job stamped with the correct user_id"
+    assert correct_job.status == "completed"
+
+
 # ── /analyze/pending endpoint tests ───────────────────────────────────────────
 
 def test_pending_requires_auth(client):
@@ -239,9 +266,5 @@ def test_results_rejects_other_users_game_via_api(verified_user_client, db):
 def test_no_engine_import_in_request_paths():
     """No module under backend/app may import chess.engine (Stockfish moved to browser)."""
     app_dir = pathlib.Path(__file__).parent.parent / "app"
-    offenders = [
-        p for p in app_dir.rglob("*.py")
-        if "chess.engine" in p.read_text()
-        and "stockfish_analyzer" not in p.name  # already deleted
-    ]
-    assert not offenders, f"chess.engine found in: {[str(p) for p in offenders]}"
+    offenders = [p for p in app_dir.rglob("*.py") if "chess.engine" in p.read_text()]
+    assert not offenders, f"chess.engine found in request paths: {offenders}"

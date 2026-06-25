@@ -137,18 +137,36 @@ def store_results(db, user_id, payload: AnalyzeResultsIn) -> None:
         db.add(analysis)
 
     # ── 5. Upsert AnalysisJob ──
-    job = db.query(AnalysisJob).filter(AnalysisJob.game_id == payload.game_id).first()
+    # Scope by both game_id and user_id; if a stale row exists with a different
+    # user_id (shouldn't happen in normal flow, but defensively handle it) we
+    # correct it rather than attempting to insert a duplicate game_id.
+    job = db.query(AnalysisJob).filter(
+        AnalysisJob.game_id == payload.game_id,
+        AnalysisJob.user_id == user_id_str,
+    ).first()
     if job is None:
-        job = AnalysisJob(
-            game_id=payload.game_id,
-            user_id=user_id_str,
-            status="completed",
-            engine_depth=payload.depth,
-            started_at=datetime.utcnow(),
-            completed_at=datetime.utcnow(),
-        )
-        db.add(job)
+        # No row for this (game_id, user_id) — check for a stale row with wrong user
+        stale_job = db.query(AnalysisJob).filter(
+            AnalysisJob.game_id == payload.game_id,
+        ).first()
+        if stale_job is not None:
+            # Correct the stale ownership stamp in-place
+            stale_job.user_id = user_id_str
+            stale_job.status = "completed"
+            stale_job.completed_at = datetime.utcnow()
+            stale_job.engine_depth = payload.depth
+        else:
+            job = AnalysisJob(
+                game_id=payload.game_id,
+                user_id=user_id_str,
+                status="completed",
+                engine_depth=payload.depth,
+                started_at=datetime.utcnow(),
+                completed_at=datetime.utcnow(),
+            )
+            db.add(job)
     else:
+        job.user_id = user_id_str
         job.status = "completed"
         job.completed_at = datetime.utcnow()
         job.engine_depth = payload.depth

@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -417,7 +418,7 @@ class DigestReport(BaseModel):
 
 class MoveEval(BaseModel):
     move_number: int
-    is_player_move: int
+    is_player_move: Literal[0, 1]
     fen_before: str
     move_uci: str
     move_san: str

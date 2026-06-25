@@ -7,7 +7,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from app.models import AnalysisJob, Game, MoveAnalysis, Report, SyncState
-from tests.conftest import make_game, make_move_analysis
+from tests.conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 class TestGameModel:
@@ -72,22 +72,22 @@ class TestMoveAnalysisModel:
 class TestAnalysisJobModel:
     def test_create_job(self, db):
         make_game(db)
-        job = AnalysisJob(game_id="chesscom_test1", status="pending")
+        job = AnalysisJob(game_id="chesscom_test1", status="pending", user_id=TEST_USER_ID)
         db.add(job)
         db.commit()
         assert job.status == "pending"
 
     def test_unique_game_id(self, db):
         make_game(db)
-        db.add(AnalysisJob(game_id="chesscom_test1", status="pending"))
+        db.add(AnalysisJob(game_id="chesscom_test1", status="pending", user_id=TEST_USER_ID))
         db.commit()
         with pytest.raises(IntegrityError):
-            db.add(AnalysisJob(game_id="chesscom_test1", status="running"))
+            db.add(AnalysisJob(game_id="chesscom_test1", status="running", user_id=TEST_USER_ID))
             db.commit()
 
     def test_status_transitions(self, db):
         make_game(db)
-        job = AnalysisJob(game_id="chesscom_test1", status="pending")
+        job = AnalysisJob(game_id="chesscom_test1", status="pending", user_id=TEST_USER_ID)
         db.add(job)
         db.commit()
 
@@ -104,13 +104,13 @@ class TestAnalysisJobModel:
 
 class TestSyncStateModel:
     def test_create_sync_state(self, db):
-        state = SyncState(platform="chesscom")
+        state = SyncState(platform="chesscom", user_id=TEST_USER_ID)
         db.add(state)
         db.commit()
         assert state.platform == "chesscom"
 
     def test_update_sync_state(self, db):
-        state = SyncState(platform="lichess", last_synced_at=datetime(2025, 1, 1))
+        state = SyncState(platform="lichess", user_id=TEST_USER_ID, last_synced_at=datetime(2025, 1, 1))
         db.add(state)
         db.commit()
         state.last_synced_at = datetime(2025, 6, 1)
@@ -124,6 +124,7 @@ class TestSyncStateModel:
 class TestReportModel:
     def test_create_report(self, db):
         report = Report(
+            user_id=TEST_USER_ID,
             games_count=50,
             report_json='{"test": true}',
             report_text="Your main weakness is ...",
@@ -135,6 +136,7 @@ class TestReportModel:
 
     def test_report_auto_timestamp(self, db):
         report = Report(
+            user_id=TEST_USER_ID,
             games_count=10,
             report_json="{}",
             report_text="Test report",

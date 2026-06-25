@@ -5,7 +5,7 @@ import json
 import pytest
 
 from app.models import AnalysisJob, MoveAnalysis
-from tests.conftest import make_game, make_move_analysis
+from tests.conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 class TestHealthEndpoint:
@@ -67,7 +67,7 @@ class TestGamesEndpoints:
     def test_list_games_shows_analyzed_status(self, client, db):
         make_game(db, id="g1", platform_id="g1")
         # Mark as analyzed
-        job = AnalysisJob(game_id="g1", status="completed")
+        job = AnalysisJob(game_id="g1", status="completed", user_id=TEST_USER_ID)
         db.add(job)
         db.commit()
 

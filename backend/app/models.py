@@ -1,10 +1,12 @@
 from .auth.models import User  # noqa: F401
 from datetime import datetime
 
+from fastapi_users_db_sqlalchemy.generics import GUID
 from sqlalchemy import (
     Column,
     DateTime,
     Float,
+    ForeignKey,
     Index,
     Integer,
     String,
@@ -19,6 +21,7 @@ class Game(Base):
     __tablename__ = "games"
 
     id = Column(String, primary_key=True)  # "chesscom_{id}" or "lichess_{id}"
+    user_id = Column(GUID, ForeignKey("users.id"), nullable=False, index=True)
     platform = Column(String, nullable=False)
     platform_id = Column(String, nullable=False)
     pgn = Column(Text, nullable=False)
@@ -39,8 +42,8 @@ class Game(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
-        UniqueConstraint("platform", "platform_id"),
-        Index("idx_games_played_at", "played_at"),
+        UniqueConstraint("user_id", "platform", "platform_id"),
+        Index("idx_games_user_played_at", "user_id", "played_at"),
         Index("idx_games_opening", "opening_eco"),
         Index("idx_games_time_class", "time_class"),
     )
@@ -73,6 +76,7 @@ class AnalysisJob(Base):
     __tablename__ = "analysis_jobs"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(GUID, ForeignKey("users.id"), nullable=False, index=True)
     game_id = Column(String, unique=True, nullable=False)
     status = Column(String, nullable=False, default="pending")
     engine_depth = Column(Integer, default=20)
@@ -84,6 +88,7 @@ class AnalysisJob(Base):
 class SyncState(Base):
     __tablename__ = "sync_state"
 
+    user_id = Column(GUID, ForeignKey("users.id"), primary_key=True)
     platform = Column(String, primary_key=True)
     last_synced_at = Column(DateTime)
     last_game_time = Column(DateTime)
@@ -94,6 +99,7 @@ class Report(Base):
     __tablename__ = "reports"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(GUID, ForeignKey("users.id"), nullable=False, index=True)
     generated_at = Column(DateTime, default=datetime.utcnow)
     games_count = Column(Integer, nullable=False)
     report_json = Column(Text, nullable=False)
@@ -104,6 +110,7 @@ class PuzzleProgress(Base):
     __tablename__ = "puzzle_progress"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(GUID, ForeignKey("users.id"), nullable=False, index=True)
     move_analysis_id = Column(Integer, nullable=False, unique=True)  # FK to MoveAnalysis
     attempts = Column(Integer, nullable=False, default=0)
     successes = Column(Integer, nullable=False, default=0)

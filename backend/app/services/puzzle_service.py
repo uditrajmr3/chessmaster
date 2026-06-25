@@ -33,7 +33,10 @@ class PuzzleService:
         )
 
         for ma in new_blunders:
-            self.db.add(PuzzleProgress(move_analysis_id=ma.id))
+            # Derive user_id from the parent Game row
+            game = self.db.query(Game).filter(Game.id == ma.game_id).first()
+            puzzle_user_id = game.user_id if game else None
+            self.db.add(PuzzleProgress(move_analysis_id=ma.id, user_id=puzzle_user_id))
 
         if new_blunders:
             self.db.commit()

@@ -3,6 +3,9 @@
 import json
 from datetime import datetime
 
+# Fixed test user UUID (SQLite doesn't enforce FK so no real user row needed)
+TEST_USER_ID = "00000000-0000-0000-0000-000000000001"
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import StaticPool, create_engine
@@ -93,6 +96,7 @@ def make_game(
     db,
     *,
     id="chesscom_test1",
+    user_id=TEST_USER_ID,
     platform="chesscom",
     platform_id="test1",
     result="win",
@@ -107,6 +111,7 @@ def make_game(
 ) -> Game:
     g = Game(
         id=id,
+        user_id=user_id,
         platform=platform,
         platform_id=platform_id,
         pgn='[Event "Test"]\\n1. e4 c6 *',

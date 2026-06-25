@@ -118,19 +118,20 @@ class TestGamesEndpoints:
 
 
 class TestStatsEndpoints:
-    def test_overview_empty(self, client):
-        resp = client.get("/api/stats/overview")
+    def test_overview_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/stats/overview")
         assert resp.status_code == 200
         data = resp.json()
         assert data["total_games"] == 0
         assert data["wins"] == 0
 
-    def test_overview_with_games(self, client, db):
-        make_game(db, id="w1", platform_id="w1", result="win", platform_accuracy=85.0)
-        make_game(db, id="l1", platform_id="l1", result="loss", platform_accuracy=65.0)
-        make_game(db, id="d1", platform_id="d1", result="draw")
+    def test_overview_with_games(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="w1", platform_id="w1", result="win", platform_accuracy=85.0, user_id=uid)
+        make_game(db, id="l1", platform_id="l1", result="loss", platform_accuracy=65.0, user_id=uid)
+        make_game(db, id="d1", platform_id="d1", result="draw", user_id=uid)
 
-        resp = client.get("/api/stats/overview")
+        resp = verified_user_client.get("/api/stats/overview")
         data = resp.json()
         assert data["total_games"] == 3
         assert data["wins"] == 1
@@ -139,30 +140,32 @@ class TestStatsEndpoints:
         assert data["avg_accuracy"] == 75.0  # (85+65)/2
         assert len(data["rating_history"]) == 3
 
-    def test_overview_platforms(self, client, db):
-        make_game(db, id="cc1", platform_id="cc1", platform="chesscom")
-        make_game(db, id="cc2", platform_id="cc2", platform="chesscom")
-        make_game(db, id="li1", platform_id="li1", platform="lichess")
+    def test_overview_platforms(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="cc1", platform_id="cc1", platform="chesscom", user_id=uid)
+        make_game(db, id="cc2", platform_id="cc2", platform="chesscom", user_id=uid)
+        make_game(db, id="li1", platform_id="li1", platform="lichess", user_id=uid)
 
-        resp = client.get("/api/stats/overview")
+        resp = verified_user_client.get("/api/stats/overview")
         data = resp.json()
         assert data["platforms"]["chesscom"] == 2
         assert data["platforms"]["lichess"] == 1
 
 
 class TestPatternsEndpoint:
-    def test_patterns_empty(self, client):
-        resp = client.get("/api/patterns")
+    def test_patterns_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/patterns")
         assert resp.status_code == 200
         data = resp.json()
         assert "phase_accuracy" in data
         assert "missed_tactics" in data
 
-    def test_patterns_with_data(self, client, db):
-        make_game(db, id="g1", platform_id="g1", opening_eco="B12")
+    def test_patterns_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", opening_eco="B12", user_id=uid)
         make_move_analysis(db, game_id="g1", move_number=0, game_phase="opening", centipawn_loss=15)
 
-        resp = client.get("/api/patterns")
+        resp = verified_user_client.get("/api/patterns")
         data = resp.json()
         assert len(data["opening_stats"]) == 1
         assert data["phase_accuracy"]["opening"] == 15.0

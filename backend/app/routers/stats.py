@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from ..auth.deps import current_verified_user
+from ..auth.models import User
 from ..database import get_db
 from ..models import Game
 from ..schemas import OverviewStats, RatingEstimate
@@ -24,8 +26,11 @@ FIDE_OFFSETS: dict[tuple[str, str], int] = {
 
 
 @router.get("/stats/overview", response_model=OverviewStats)
-def get_overview(db: Session = Depends(get_db)):
-    games = db.query(Game).all()
+def get_overview(
+    db: Session = Depends(get_db),
+    user: User = Depends(current_verified_user),
+):
+    games = db.query(Game).filter(Game.user_id == user.id).all()
     total = len(games)
     wins = sum(1 for g in games if g.result == "win")
     losses = sum(1 for g in games if g.result == "loss")

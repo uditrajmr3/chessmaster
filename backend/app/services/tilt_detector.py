@@ -9,8 +9,9 @@ from ..models import Game, MoveAnalysis
 
 
 class TiltDetector:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
         self.db = db
+        self._user_id = user_id
 
     def analyze(
         self,
@@ -18,6 +19,8 @@ class TiltDetector:
         time_class: str | None = None,
     ) -> dict:
         q = self.db.query(Game)
+        if self._user_id is not None:
+            q = q.filter(Game.user_id == self._user_id)
         if platform:
             q = q.filter(Game.platform == platform)
         if time_class:

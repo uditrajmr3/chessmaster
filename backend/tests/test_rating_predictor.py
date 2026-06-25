@@ -11,8 +11,10 @@ from .conftest import make_game, make_move_analysis
 
 def _make_games_over_time(db, count=10, start_rating=1000, rating_step=5,
                           start_date=None, platform="chesscom",
-                          time_class="rapid"):
+                          time_class="rapid", user_id=None):
     """Create a series of games spread over time with rising rating."""
+    from tests.conftest import TEST_USER_ID
+    uid = user_id or TEST_USER_ID
     start = start_date or datetime(2025, 1, 1)
     for i in range(count):
         make_game(
@@ -24,6 +26,7 @@ def _make_games_over_time(db, count=10, start_rating=1000, rating_step=5,
             result="win" if i % 2 == 0 else "loss",
             platform=platform,
             time_class=time_class,
+            user_id=uid,
         )
 
 
@@ -212,27 +215,29 @@ class TestFilters:
 
 
 class TestRatingPredictorAPI:
-    def test_get_prediction_empty(self, client):
-        resp = client.get("/api/rating-predictor")
+    def test_get_prediction_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/rating-predictor")
         assert resp.status_code == 200
         data = resp.json()
         assert data["trajectory"]["games_played"] == 0
         assert data["milestones"] == []
 
-    def test_get_prediction_with_data(self, client, db):
-        _make_games_over_time(db, count=10, start_rating=1000, rating_step=10)
+    def test_get_prediction_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        _make_games_over_time(db, count=10, start_rating=1000, rating_step=10, user_id=uid)
 
-        resp = client.get("/api/rating-predictor")
+        resp = verified_user_client.get("/api/rating-predictor")
         assert resp.status_code == 200
         data = resp.json()
         assert data["trajectory"]["current_rating"] == 1090
         assert data["trajectory"]["games_played"] == 10
         assert len(data["recommendations"]) > 0
 
-    def test_get_prediction_with_filters(self, client, db):
-        _make_games_over_time(db, count=6, time_class="blitz")
+    def test_get_prediction_with_filters(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        _make_games_over_time(db, count=6, time_class="blitz", user_id=uid)
 
-        resp = client.get("/api/rating-predictor?time_class=rapid")
+        resp = verified_user_client.get("/api/rating-predictor?time_class=rapid")
         assert resp.status_code == 200
         data = resp.json()
         assert data["trajectory"]["games_played"] == 0

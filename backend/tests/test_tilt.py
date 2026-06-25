@@ -197,22 +197,24 @@ class TestRecommendations:
 
 
 class TestTiltAPI:
-    def test_get_tilt_report_empty(self, client):
-        resp = client.get("/api/tilt")
+    def test_get_tilt_report_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/tilt")
         assert resp.status_code == 200
         data = resp.json()
         assert data["streaks"]["max_win_streak"] == 0
         assert data["recommendations"]
 
-    def test_get_tilt_report_with_data(self, client, db):
+    def test_get_tilt_report_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
         base = datetime(2025, 6, 1, 10, 0)
         for i in range(3):
             make_game(db, id=f"g{i}", platform_id=f"g{i}",
                       result="win" if i < 2 else "loss",
-                      played_at=base + timedelta(minutes=i * 10))
+                      played_at=base + timedelta(minutes=i * 10),
+                      user_id=uid)
             make_move_analysis(db, game_id=f"g{i}", move_number=0)
 
-        resp = client.get("/api/tilt")
+        resp = verified_user_client.get("/api/tilt")
         assert resp.status_code == 200
         data = resp.json()
         assert data["streaks"]["max_win_streak"] == 2

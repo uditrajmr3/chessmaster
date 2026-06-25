@@ -8,8 +8,9 @@ from ..models import Game, MoveAnalysis
 
 
 class PatternEngine:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
         self.db = db
+        self._user_id = user_id
         self._platform: str | None = None
         self._time_class: str | None = None
 
@@ -36,11 +37,20 @@ class PatternEngine:
             "example_positions": self._worst_blunders(),
         }
 
+    def _base_game_query(self):
+        """Return a Game query pre-filtered by the authenticated user (if set)."""
+        q = self.db.query(Game)
+        if self._user_id is not None:
+            q = q.filter(Game.user_id == self._user_id)
+        return q
+
     def _filtered_game_ids(self) -> list[str] | None:
-        """Return game IDs matching platform/time_class filters, or None if no filters."""
-        if not self._platform and not self._time_class:
+        """Return game IDs matching user/platform/time_class filters, or None if no filters apply."""
+        if self._user_id is None and not self._platform and not self._time_class:
             return None
         q = self.db.query(Game.id)
+        if self._user_id is not None:
+            q = q.filter(Game.user_id == self._user_id)
         if self._platform:
             q = q.filter(Game.platform == self._platform)
         if self._time_class:
@@ -56,7 +66,7 @@ class PatternEngine:
 
     def _opening_stats(self) -> list[dict]:
         """Win/loss/draw and avg CPL per opening."""
-        q = self.db.query(Game).filter(Game.opening_eco.isnot(None))
+        q = self._base_game_query().filter(Game.opening_eco.isnot(None))
         if self._platform:
             q = q.filter(Game.platform == self._platform)
         if self._time_class:
@@ -173,7 +183,7 @@ class PatternEngine:
 
     def _color_stats(self, color: str) -> dict[str, float]:
         """Win rate and avg CPL for a specific color."""
-        q = self.db.query(Game).filter(Game.player_color == color)
+        q = self._base_game_query().filter(Game.player_color == color)
         if self._platform:
             q = q.filter(Game.platform == self._platform)
         if self._time_class:

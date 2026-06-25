@@ -1,8 +1,10 @@
 import json
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
+from ..auth.deps import current_verified_user
+from ..auth.models import User
 from ..database import get_db
 from ..models import AnalysisJob, Game, MoveAnalysis
 from ..schemas import GameDetail, GameSummary, MoveAnalysisOut
@@ -19,8 +21,9 @@ def list_games(
     page: int = Query(1, ge=1),
     per_page: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
+    user: User = Depends(current_verified_user),
 ):
-    q = db.query(Game)
+    q = db.query(Game).filter(Game.user_id == str(user.id))
     if platform:
         q = q.filter(Game.platform == platform)
     if time_class:
@@ -37,6 +40,7 @@ def list_games(
         row.game_id
         for row in db.query(AnalysisJob.game_id)
         .filter(AnalysisJob.status == "completed")
+        .filter(AnalysisJob.user_id == str(user.id))
         .all()
     }
 
@@ -66,10 +70,14 @@ def list_games(
 
 
 @router.get("/games/{game_id}", response_model=GameDetail)
-def get_game(game_id: str, db: Session = Depends(get_db)):
+def get_game(
+    game_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_verified_user),
+):
     g = db.query(Game).filter(Game.id == game_id).first()
-    if not g:
-        from fastapi import HTTPException
+    # 404 for missing games AND games owned by another user (no info leak)
+    if not g or g.user_id != user.id:
         raise HTTPException(404, "Game not found")
 
     opponent = g.black_username if g.player_color == "white" else g.white_username

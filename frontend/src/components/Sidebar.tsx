@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef, type ElementType } from "react";
-import { API_BASE } from "@/lib/api";
+import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { runAnalysis } from "@/lib/analyze";
 import { emitDataRefresh } from "@/lib/useDataRefresh";
 import {
@@ -30,6 +31,8 @@ import {
   GraduationCap,
   BarChart3,
   Wrench,
+  Settings,
+  LogOut,
 } from "lucide-react";
 
 type NavItem = { href: string; label: string; icon: ElementType };
@@ -274,8 +277,9 @@ export default function Sidebar() {
         </nav>
 
         {/* Action buttons */}
-        <div className="p-4 border-t border-gray-800/50">
+        <div className="p-4 border-t border-gray-800/50 space-y-3">
           <SyncButton />
+          <UserFooter onNavigate={() => setMobileOpen(false)} />
         </div>
       </aside>
     </>
@@ -283,36 +287,62 @@ export default function Sidebar() {
 }
 
 function SyncButton() {
+  const { user } = useAuth();
   const [syncing, setSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const [analysisDone, setAnalysisDone] = useState(0);
   const [analysisTotal, setAnalysisTotal] = useState(0);
   const [analyzing, setAnalyzing] = useState(false);
 
+  const hasLinkedAccount =
+    Boolean(user?.lichess_username) || Boolean(user?.chesscom_username);
+
+  const handleSync = async () => {
+    if (!hasLinkedAccount) {
+      setSyncError("Link an account in Settings first.");
+      return;
+    }
+    setSyncing(true);
+    setSyncError(null);
+    try {
+      await api.startSync();
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Sync failed. Please try again.";
+      setSyncError(msg);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   return (
     <div className="space-y-2">
       <button
-        onClick={async () => {
-          const username = prompt("Enter your Chess.com / Lichess username:");
-          if (!username) return;
-          setSyncing(true);
-          try {
-            await fetch(`${API_BASE}/sync`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ username }),
-            });
-          } catch {
-            alert(
-              "Backend not running. Start it with: cd backend && uvicorn app.main:app --reload"
-            );
-          }
-          setSyncing(false);
-        }}
-        disabled={syncing}
+        onClick={handleSync}
+        disabled={syncing || !hasLinkedAccount}
+        title={
+          !hasLinkedAccount
+            ? "Link a Lichess or Chess.com username in Settings first"
+            : undefined
+        }
         className="w-full px-4 py-2.5 bg-accent-600 hover:bg-accent-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg btn-press"
       >
         {syncing ? "Syncing..." : "Sync Games"}
       </button>
+
+      {!hasLinkedAccount && (
+        <p className="text-xs text-amber-400 text-center">
+          <Link href="/settings" className="underline underline-offset-2 hover:text-amber-300">
+            Link an account
+          </Link>
+          {" "}in Settings to sync.
+        </p>
+      )}
+
+      {syncError && hasLinkedAccount && (
+        <p className="text-xs text-red-400 text-center">{syncError}</p>
+      )}
+
       <button
         onClick={async () => {
           setAnalyzing(true);
@@ -342,6 +372,50 @@ function SyncButton() {
             ? `Analyzing… ${analysisDone}/${analysisTotal}`
             : "Starting…"
           : "Analyze Games"}
+      </button>
+    </div>
+  );
+}
+
+function UserFooter({ onNavigate }: { onNavigate: () => void }) {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
+
+  if (!user) return null;
+
+  return (
+    <div className="border-t border-gray-800/40 pt-3 space-y-1">
+      {/* User email */}
+      <p
+        className="text-xs text-gray-500 px-2 truncate"
+        title={user.email}
+      >
+        {user.email}
+      </p>
+
+      {/* Settings link */}
+      <Link
+        href="/settings"
+        onClick={onNavigate}
+        className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-sm text-gray-400 hover:text-gray-200 hover:bg-white/4 transition-colors"
+      >
+        <Settings className="w-4 h-4" />
+        <span>Settings</span>
+      </Link>
+
+      {/* Logout */}
+      <button
+        onClick={handleLogout}
+        data-testid="logout-button"
+        className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/6 transition-colors"
+      >
+        <LogOut className="w-4 h-4" />
+        <span>Logout</span>
       </button>
     </div>
   );

@@ -7,15 +7,16 @@ from fastapi_users.authentication import (
     JWTStrategy,
 )
 from fastapi_users.db import SQLAlchemyUserDatabase
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import settings
-from ..database import get_db
+from ..database import get_async_db
 from .models import User
 from ..services.email_service import send_verification_email, send_reset_email
 
 
-async def get_user_db(db=Depends(get_db)):
-    yield SQLAlchemyUserDatabase(db, User)
+async def get_user_db(session: AsyncSession = Depends(get_async_db)):
+    yield SQLAlchemyUserDatabase(session, User)
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):

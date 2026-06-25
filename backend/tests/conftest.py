@@ -10,7 +10,7 @@ from sqlalchemy import StaticPool, create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.database import Base, get_db
+from app.database import Base, get_async_db, get_db
 from app.main import app
 from app.models import AnalysisJob, Game, MoveAnalysis, PuzzleProgress, Report, SyncState
 
@@ -68,25 +68,21 @@ def db():
 def client(db):
     """FastAPI TestClient wired to the in-memory DB.
 
-    Also overrides get_user_db to use an async SQLite session (fastapi-users
-    requires an async SQLAlchemy session; our regular DB uses sync).
+    Overrides get_db (sync) and get_async_db (async) so both the chess data
+    layer and the FastAPI-Users layer use the in-memory SQLite test sessions.
     """
-    from app.auth.users import get_user_db
-    from fastapi_users.db import SQLAlchemyUserDatabase
-    from app.auth.models import User
-
     def _override_get_db():
         try:
             yield db
         finally:
             pass
 
-    async def _override_get_user_db():
+    async def _override_get_async_db():
         async with AsyncTestSession() as session:
-            yield SQLAlchemyUserDatabase(session, User)
+            yield session
 
     app.dependency_overrides[get_db] = _override_get_db
-    app.dependency_overrides[get_user_db] = _override_get_user_db
+    app.dependency_overrides[get_async_db] = _override_get_async_db
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()

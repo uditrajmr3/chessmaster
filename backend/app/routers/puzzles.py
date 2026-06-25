@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
+from ..auth.deps import current_verified_user
+from ..auth.models import User
 from ..database import get_db
 from ..schemas import PuzzleOut, PuzzleResult, PuzzleStats, PuzzleSubmit
 from ..services.puzzle_service import PuzzleService
@@ -15,8 +17,9 @@ def get_next_puzzle(
     platform: str | None = Query(None, description="Filter by platform (chesscom, lichess)"),
     time_class: str | None = Query(None, description="Filter by time class (rapid, blitz, bullet)"),
     db: Session = Depends(get_db),
+    user: User = Depends(current_verified_user),
 ):
-    service = PuzzleService(db)
+    service = PuzzleService(db, user_id=str(user.id))
     puzzle = service.get_next_puzzle(
         phase=phase, motif=motif, platform=platform, time_class=time_class
     )
@@ -30,8 +33,9 @@ def submit_puzzle_answer(
     puzzle_id: int,
     body: PuzzleSubmit,
     db: Session = Depends(get_db),
+    user: User = Depends(current_verified_user),
 ):
-    service = PuzzleService(db)
+    service = PuzzleService(db, user_id=str(user.id))
     try:
         result = service.submit_answer(puzzle_id, body.move_uci)
     except ValueError as e:
@@ -40,6 +44,9 @@ def submit_puzzle_answer(
 
 
 @router.get("/puzzles/stats", response_model=PuzzleStats)
-def get_puzzle_stats(db: Session = Depends(get_db)):
-    service = PuzzleService(db)
+def get_puzzle_stats(
+    db: Session = Depends(get_db),
+    user: User = Depends(current_verified_user),
+):
+    service = PuzzleService(db, user_id=str(user.id))
     return service.get_stats()

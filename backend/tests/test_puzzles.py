@@ -7,7 +7,7 @@ import pytest
 from app.models import PuzzleProgress
 from app.services.puzzle_service import PuzzleService
 
-from .conftest import make_blunder, make_game
+from .conftest import TEST_USER_ID, make_blunder, make_game
 
 
 class TestPuzzleService:
@@ -16,7 +16,7 @@ class TestPuzzleService:
         make_blunder(db, move_number=0, centipawn_loss=200)
         make_blunder(db, move_number=2, centipawn_loss=300)
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         created = service.ensure_puzzles_exist()
 
         assert created == 2
@@ -26,7 +26,7 @@ class TestPuzzleService:
         make_game(db)
         make_blunder(db, move_number=0)
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         service.ensure_puzzles_exist()
         created = service.ensure_puzzles_exist()
 
@@ -38,7 +38,7 @@ class TestPuzzleService:
         make_blunder(db, move_number=0, centipawn_loss=100)
         make_blunder(db, move_number=2, centipawn_loss=500)
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         puzzle = service.get_next_puzzle()
 
         assert puzzle is not None
@@ -46,7 +46,7 @@ class TestPuzzleService:
         assert puzzle["centipawn_loss"] == 500
 
     def test_get_next_puzzle_returns_none_when_empty(self, db):
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         puzzle = service.get_next_puzzle()
         assert puzzle is None
 
@@ -55,7 +55,7 @@ class TestPuzzleService:
         make_blunder(db, move_number=0, game_phase="opening")
         make_blunder(db, move_number=2, game_phase="endgame")
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         puzzle = service.get_next_puzzle(phase="endgame")
 
         assert puzzle is not None
@@ -66,7 +66,7 @@ class TestPuzzleService:
         make_blunder(db, move_number=0, tactical_motifs=["fork"])
         make_blunder(db, move_number=2, tactical_motifs=["pin"])
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         puzzle = service.get_next_puzzle(motif="pin")
 
         assert puzzle is not None
@@ -76,7 +76,7 @@ class TestPuzzleService:
         make_game(db)
         ma = make_blunder(db, move_number=0, best_move_uci="d2d4")
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         service.ensure_puzzles_exist()
 
         puzzle = service.get_next_puzzle()
@@ -94,7 +94,7 @@ class TestPuzzleService:
         make_game(db)
         make_blunder(db, move_number=0, best_move_uci="d2d4")
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         service.ensure_puzzles_exist()
 
         puzzle = service.get_next_puzzle()
@@ -111,7 +111,7 @@ class TestPuzzleService:
         make_game(db)
         make_blunder(db, move_number=0, best_move_uci="d2d4")
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         service.ensure_puzzles_exist()
         puzzle = service.get_next_puzzle()
         pid = puzzle["id"]
@@ -133,7 +133,7 @@ class TestPuzzleService:
         make_game(db)
         make_blunder(db, move_number=0, best_move_uci="d2d4")
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         service.ensure_puzzles_exist()
         puzzle = service.get_next_puzzle()
         pid = puzzle["id"]
@@ -152,7 +152,7 @@ class TestPuzzleService:
         make_blunder(db, move_number=0, centipawn_loss=100, best_move_uci="d2d4")
         make_blunder(db, move_number=2, centipawn_loss=500, best_move_uci="e2e4")
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         service.ensure_puzzles_exist()
 
         # Attempt puzzle with CPL 500 and get it wrong (so it's due immediately)
@@ -168,7 +168,7 @@ class TestPuzzleService:
         make_blunder(db, move_number=0, game_phase="middlegame", tactical_motifs=["fork"])
         make_blunder(db, move_number=2, game_phase="endgame")
 
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         stats = service.get_stats()
 
         assert stats["total_puzzles"] == 2
@@ -180,89 +180,95 @@ class TestPuzzleService:
         assert stats["by_motif"].get("fork") == 1
 
     def test_submit_nonexistent_puzzle(self, db):
-        service = PuzzleService(db)
+        service = PuzzleService(db, user_id=TEST_USER_ID)
         with pytest.raises(ValueError, match="Puzzle not found"):
             service.submit_answer(999, "e2e4")
 
 
 class TestPuzzleAPI:
-    def test_get_next_puzzle_empty(self, client):
-        resp = client.get("/api/puzzles/next")
+    def test_get_next_puzzle_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/puzzles/next")
         assert resp.status_code == 200
         assert resp.json() is None
 
-    def test_get_next_puzzle_with_data(self, client, db):
-        make_game(db)
+    def test_get_next_puzzle_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, user_id=uid)
         make_blunder(db, move_number=0)
 
-        resp = client.get("/api/puzzles/next")
+        resp = verified_user_client.get("/api/puzzles/next")
         assert resp.status_code == 200
         data = resp.json()
         assert data is not None
         assert "fen" in data
         assert "best_move_uci" in data
 
-    def test_submit_correct(self, client, db):
-        make_game(db)
+    def test_submit_correct(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, user_id=uid)
         make_blunder(db, move_number=0, best_move_uci="d2d4")
 
         # Get the puzzle first
-        resp = client.get("/api/puzzles/next")
+        resp = verified_user_client.get("/api/puzzles/next")
         puzzle = resp.json()
 
         # Submit correct answer
-        resp = client.post(
+        resp = verified_user_client.post(
             f"/api/puzzles/{puzzle['id']}/submit",
             json={"move_uci": "d2d4"},
         )
         assert resp.status_code == 200
         assert resp.json()["correct"] is True
 
-    def test_submit_wrong(self, client, db):
-        make_game(db)
+    def test_submit_wrong(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, user_id=uid)
         make_blunder(db, move_number=0, best_move_uci="d2d4")
 
-        resp = client.get("/api/puzzles/next")
+        resp = verified_user_client.get("/api/puzzles/next")
         puzzle = resp.json()
 
-        resp = client.post(
+        resp = verified_user_client.post(
             f"/api/puzzles/{puzzle['id']}/submit",
             json={"move_uci": "a2a3"},
         )
         assert resp.status_code == 200
         assert resp.json()["correct"] is False
 
-    def test_submit_nonexistent(self, client):
-        resp = client.post(
+    def test_submit_nonexistent(self, verified_user_client):
+        resp = verified_user_client.post(
             "/api/puzzles/999/submit",
             json={"move_uci": "e2e4"},
         )
         assert resp.status_code == 404
 
-    def test_get_stats(self, client, db):
-        make_game(db)
+    def test_get_stats(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, user_id=uid)
         make_blunder(db, move_number=0)
 
-        resp = client.get("/api/puzzles/stats")
+        resp = verified_user_client.get("/api/puzzles/stats")
         assert resp.status_code == 200
         data = resp.json()
         assert data["total_puzzles"] == 1
         assert "by_phase" in data
 
-    def test_filter_by_phase(self, client, db):
-        make_game(db)
+    def test_filter_by_phase(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, user_id=uid)
         make_blunder(db, move_number=0, game_phase="opening")
         make_blunder(db, move_number=2, game_phase="endgame")
 
-        resp = client.get("/api/puzzles/next?phase=endgame")
+        resp = verified_user_client.get("/api/puzzles/next?phase=endgame")
         data = resp.json()
         assert data["game_phase"] == "endgame"
 
-    def test_filter_by_motif(self, client, db):
-        make_game(db)
+    def test_filter_by_motif(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, user_id=uid)
         make_blunder(db, move_number=0, tactical_motifs=["fork"])
         make_blunder(db, move_number=2, tactical_motifs=["pin"])
 
-        resp = client.get("/api/puzzles/next?motif=fork")
+        resp = verified_user_client.get("/api/puzzles/next?motif=fork")
         data = resp.json()
         assert "fork" in data["tactical_motifs"]

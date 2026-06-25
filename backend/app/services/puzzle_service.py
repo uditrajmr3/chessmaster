@@ -8,26 +8,37 @@ from ..models import Game, MoveAnalysis, PuzzleProgress
 
 
 class PuzzleService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id: str | None = None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
+
+    def _user_game_ids_query(self):
+        """Query returning game IDs owned by the authenticated user."""
+        return self.db.query(Game.id).filter(Game.user_id == self._user_id)
 
     def ensure_puzzles_exist(self) -> int:
         """Create PuzzleProgress rows for blunders that don't have one yet.
         Returns the number of new puzzles created."""
-        existing = (
+        # Only consider puzzles already belonging to this user
+        existing_ids = (
             self.db.query(PuzzleProgress.move_analysis_id)
-            .subquery()
+            .filter(PuzzleProgress.user_id == self._user_id)
         )
+
+        user_game_ids = self._user_game_ids_query()
 
         new_blunders = (
             self.db.query(MoveAnalysis)
             .filter(
+                MoveAnalysis.game_id.in_(user_game_ids),
                 MoveAnalysis.is_player_move == 1,
                 MoveAnalysis.classification.in_(["blunder", "mistake"]),
                 MoveAnalysis.best_move_uci.isnot(None),
                 # Exclude moves that are checkmate (false positives from eval sign flip)
                 ~MoveAnalysis.move_san.like("%#"),
-                ~MoveAnalysis.id.in_(self.db.query(existing.c.move_analysis_id)),
+                ~MoveAnalysis.id.in_(existing_ids),
             )
             .all()
         )
@@ -62,11 +73,12 @@ class PuzzleService:
 
         now = datetime.utcnow()
 
-        # Base query joining PuzzleProgress -> MoveAnalysis -> Game
+        # Base query joining PuzzleProgress -> MoveAnalysis -> Game, scoped to this user
         base = (
             self.db.query(PuzzleProgress, MoveAnalysis, Game)
             .join(MoveAnalysis, PuzzleProgress.move_analysis_id == MoveAnalysis.id)
             .join(Game, MoveAnalysis.game_id == Game.id)
+            .filter(PuzzleProgress.user_id == self._user_id)
         )
 
         if phase:
@@ -111,7 +123,11 @@ class PuzzleService:
 
     def submit_answer(self, puzzle_id: int, move_uci: str) -> dict:
         """Check an answer and update spaced repetition state."""
-        progress = self.db.query(PuzzleProgress).filter(PuzzleProgress.id == puzzle_id).first()
+        progress = (
+            self.db.query(PuzzleProgress)
+            .filter(PuzzleProgress.id == puzzle_id, PuzzleProgress.user_id == self._user_id)
+            .first()
+        )
         if not progress:
             raise ValueError("Puzzle not found")
 
@@ -147,10 +163,14 @@ class PuzzleService:
         self.ensure_puzzles_exist()
         now = datetime.utcnow()
 
-        total = self.db.query(func.count(PuzzleProgress.id)).scalar() or 0
+        total = (
+            self.db.query(func.count(PuzzleProgress.id))
+            .filter(PuzzleProgress.user_id == self._user_id)
+            .scalar() or 0
+        )
         attempted = (
             self.db.query(func.count(PuzzleProgress.id))
-            .filter(PuzzleProgress.attempts > 0)
+            .filter(PuzzleProgress.user_id == self._user_id, PuzzleProgress.attempts > 0)
             .scalar() or 0
         )
 
@@ -159,7 +179,7 @@ class PuzzleService:
         if attempted > 0:
             all_attempted = (
                 self.db.query(PuzzleProgress)
-                .filter(PuzzleProgress.attempts >= 3)
+                .filter(PuzzleProgress.user_id == self._user_id, PuzzleProgress.attempts >= 3)
                 .all()
             )
             mastered = sum(
@@ -170,6 +190,7 @@ class PuzzleService:
         due_for_review = (
             self.db.query(func.count(PuzzleProgress.id))
             .filter(
+                PuzzleProgress.user_id == self._user_id,
                 PuzzleProgress.next_review <= now,
                 PuzzleProgress.attempts > 0,
             )
@@ -177,10 +198,14 @@ class PuzzleService:
         )
 
         total_attempts = (
-            self.db.query(func.sum(PuzzleProgress.attempts)).scalar() or 0
+            self.db.query(func.sum(PuzzleProgress.attempts))
+            .filter(PuzzleProgress.user_id == self._user_id)
+            .scalar() or 0
         )
         total_successes = (
-            self.db.query(func.sum(PuzzleProgress.successes)).scalar() or 0
+            self.db.query(func.sum(PuzzleProgress.successes))
+            .filter(PuzzleProgress.user_id == self._user_id)
+            .scalar() or 0
         )
         accuracy = (
             round(total_successes / total_attempts * 100, 1)
@@ -193,7 +218,7 @@ class PuzzleService:
             count = (
                 self.db.query(func.count(PuzzleProgress.id))
                 .join(MoveAnalysis, PuzzleProgress.move_analysis_id == MoveAnalysis.id)
-                .filter(MoveAnalysis.game_phase == phase)
+                .filter(PuzzleProgress.user_id == self._user_id, MoveAnalysis.game_phase == phase)
                 .scalar() or 0
             )
             phase_counts[phase] = count
@@ -202,7 +227,7 @@ class PuzzleService:
         motif_rows = (
             self.db.query(MoveAnalysis.tactical_motifs)
             .join(PuzzleProgress, PuzzleProgress.move_analysis_id == MoveAnalysis.id)
-            .filter(MoveAnalysis.tactical_motifs.isnot(None))
+            .filter(PuzzleProgress.user_id == self._user_id, MoveAnalysis.tactical_motifs.isnot(None))
             .all()
         )
         motif_counts: dict[str, int] = {}

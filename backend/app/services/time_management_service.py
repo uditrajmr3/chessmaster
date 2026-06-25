@@ -7,16 +7,18 @@ from ..models import Game, MoveAnalysis
 
 
 class TimeManagementService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id: str | None = None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
         self._platform: str | None = None
         self._time_class: str | None = None
 
-    def _filtered_game_ids(self) -> list[str] | None:
-        """Return game IDs matching platform/time_class filters, or None if no filters."""
-        if not self._platform and not self._time_class:
-            return None
-        q = self.db.query(Game.id)
+    def _filtered_game_ids(self) -> list[str]:
+        """Return game IDs owned by the authenticated user, optionally filtered by platform/time_class.
+        Always scoped by user_id — never returns None (fail-closed)."""
+        q = self.db.query(Game.id).filter(Game.user_id == self._user_id)
         if self._platform:
             q = q.filter(Game.platform == self._platform)
         if self._time_class:
@@ -24,11 +26,9 @@ class TimeManagementService:
         return [gid for (gid,) in q.all()]
 
     def _apply_move_filter(self, query):
-        """Apply game-level filters to a MoveAnalysis query."""
+        """Apply user + game-level filters to a MoveAnalysis query."""
         game_ids = self._filtered_game_ids()
-        if game_ids is not None:
-            return query.filter(MoveAnalysis.game_id.in_(game_ids))
-        return query
+        return query.filter(MoveAnalysis.game_id.in_(game_ids))
 
     def get_profile(
         self,
@@ -256,7 +256,7 @@ class TimeManagementService:
                 prev_time = all_moves[i - 1].time_remaining
                 spent = prev_time - m.time_remaining
                 if 0 < spent < 5:  # Less than 5s on a blunder
-                    game = self.db.query(Game).filter(Game.id == game_id).first()
+                    game = self.db.query(Game).filter(Game.id == game_id, Game.user_id == self._user_id).first()
                     underthinks.append({
                         "game_id": m.game_id,
                         "move_number": m.move_number // 2 + 1,
@@ -309,7 +309,7 @@ class TimeManagementService:
 
     def _time_class_breakdown(self) -> list[dict]:
         """Stats broken down by time control (rapid, blitz, bullet)."""
-        q = self.db.query(Game.time_class)
+        q = self.db.query(Game.time_class).filter(Game.user_id == self._user_id)
         if self._platform:
             q = q.filter(Game.platform == self._platform)
         if self._time_class:
@@ -318,7 +318,7 @@ class TimeManagementService:
 
         result = []
         for (tc,) in time_classes:
-            gq = self.db.query(Game.id).filter(Game.time_class == tc)
+            gq = self.db.query(Game.id).filter(Game.user_id == self._user_id, Game.time_class == tc)
             if self._platform:
                 gq = gq.filter(Game.platform == self._platform)
             game_ids = [g.id for g in gq.all()]

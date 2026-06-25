@@ -3,7 +3,7 @@
 import pytest
 
 from app.services.time_management_service import TimeManagementService
-from tests.conftest import make_game, make_move_analysis
+from tests.conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 # ── Service Tests ────────────────────────────────────────────────────────────
@@ -12,7 +12,7 @@ from tests.conftest import make_game, make_move_analysis
 class TestTimeManagementService:
 
     def test_empty_db_returns_zero_games(self, db):
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         profile = service.get_profile()
         assert profile["games_with_clock_data"] == 0
 
@@ -24,14 +24,14 @@ class TestTimeManagementService:
         make_game(db, id="g2", platform_id="t2")
         make_move_analysis(db, game_id="g2", move_number=0, time_remaining=600)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         assert service.get_profile()["games_with_clock_data"] == 2
 
     def test_games_without_clock_data_not_counted(self, db):
         make_game(db, id="g1")
         make_move_analysis(db, game_id="g1", move_number=0, time_remaining=None)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         assert service.get_profile()["games_with_clock_data"] == 0
 
     def test_time_per_move_by_phase(self, db):
@@ -41,7 +41,7 @@ class TestTimeManagementService:
         make_move_analysis(db, game_id="g1", move_number=2, game_phase="opening", time_remaining=290)
         make_move_analysis(db, game_id="g1", move_number=4, game_phase="opening", time_remaining=275)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         phase = service.get_profile()["time_per_move_by_phase"]
         assert phase["opening"] == 12.5  # avg of 10, 15
         assert phase["middlegame"] == 0.0
@@ -55,7 +55,7 @@ class TestTimeManagementService:
         # Normal zone: 60-180s
         make_move_analysis(db, game_id="g1", move_number=4, time_remaining=120, classification="good", centipawn_loss=5)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         stats = service.get_profile()["time_trouble_stats"]
 
         assert stats["critical"]["moves"] == 2
@@ -70,7 +70,7 @@ class TestTimeManagementService:
         make_move_analysis(db, game_id="g1", move_number=2, time_remaining=290, centipawn_loss=10)
         make_move_analysis(db, game_id="g1", move_number=4, time_remaining=275, centipawn_loss=20)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         data = service.get_profile()["time_vs_move_number"]
 
         # First move is skipped (can't compute time), so we get move 2 and 3
@@ -85,7 +85,7 @@ class TestTimeManagementService:
         make_move_analysis(db, game_id="g1", move_number=2, time_remaining=290, classification="good")
         make_move_analysis(db, game_id="g1", move_number=4, time_remaining=280, classification="blunder", centipawn_loss=200)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         by_class = service.get_profile()["avg_time_by_classification"]
         assert by_class["good"] == 10.0  # 10s for the second good move
         assert by_class["blunder"] == 10.0
@@ -99,7 +99,7 @@ class TestTimeManagementService:
         make_move_analysis(db, game_id="g2", move_number=0, time_remaining=180)
         make_move_analysis(db, game_id="g2", move_number=2, time_remaining=170)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         breakdown = service.get_profile()["time_class_breakdown"]
         tc_names = [b["time_class"] for b in breakdown]
         assert "rapid" in tc_names
@@ -111,7 +111,7 @@ class TestTimeManagementService:
         make_move_analysis(db, game_id="g1", move_number=0, game_phase="opening", time_remaining=300, centipawn_loss=0)
         make_move_analysis(db, game_id="g1", move_number=2, game_phase="opening", time_remaining=280, centipawn_loss=5)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         overthinks = service.get_profile()["overthink_moves"]
         assert len(overthinks) == 1
         assert overthinks[0]["time_spent"] == 20.0
@@ -121,7 +121,7 @@ class TestTimeManagementService:
         make_move_analysis(db, game_id="g1", move_number=0, game_phase="opening", time_remaining=300, centipawn_loss=0)
         make_move_analysis(db, game_id="g1", move_number=2, game_phase="opening", time_remaining=295, centipawn_loss=5)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         overthinks = service.get_profile()["overthink_moves"]
         assert len(overthinks) == 0
 
@@ -135,7 +135,7 @@ class TestTimeManagementService:
             eval_before=150, eval_after=-100,
         )
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         underthinks = service.get_profile()["underthink_blunders"]
         assert len(underthinks) == 1
         assert underthinks[0]["time_spent"] == 3.0
@@ -149,7 +149,7 @@ class TestTimeManagementService:
             classification="blunder", centipawn_loss=250,
         )
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         underthinks = service.get_profile()["underthink_blunders"]
         assert len(underthinks) == 0  # 20s is not "rushed"
 
@@ -160,7 +160,7 @@ class TestTimeManagementService:
         make_move_analysis(db, game_id="g1", move_number=2, time_remaining=15)
         make_move_analysis(db, game_id="g1", move_number=4, time_remaining=120)
 
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         breakdown = service.get_profile()["time_class_breakdown"]
         blitz = next(b for b in breakdown if b["time_class"] == "blitz")
         # 2 out of 3 moves in time trouble
@@ -168,7 +168,7 @@ class TestTimeManagementService:
 
     def test_profile_structure(self, db):
         """Verify the full profile has all expected keys."""
-        service = TimeManagementService(db)
+        service = TimeManagementService(db, user_id=TEST_USER_ID)
         profile = service.get_profile()
         expected_keys = {
             "time_per_move_by_phase",
@@ -188,30 +188,32 @@ class TestTimeManagementService:
 
 class TestTimeManagementAPI:
 
-    def test_get_time_management_empty(self, client):
-        resp = client.get("/api/time-management")
+    def test_get_time_management_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/time-management")
         assert resp.status_code == 200
         data = resp.json()
         assert data["games_with_clock_data"] == 0
 
-    def test_get_time_management_with_data(self, client, db):
-        make_game(db, id="g1")
+    def test_get_time_management_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", user_id=uid)
         make_move_analysis(db, game_id="g1", move_number=0, time_remaining=300)
         make_move_analysis(db, game_id="g1", move_number=2, time_remaining=285)
 
-        resp = client.get("/api/time-management")
+        resp = verified_user_client.get("/api/time-management")
         assert resp.status_code == 200
         data = resp.json()
         assert data["games_with_clock_data"] == 1
         assert "time_per_move_by_phase" in data
         assert "time_trouble_stats" in data
 
-    def test_time_trouble_stats_in_response(self, client, db):
-        make_game(db, id="g1")
+    def test_time_trouble_stats_in_response(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", user_id=uid)
         make_move_analysis(db, game_id="g1", move_number=0, time_remaining=20, classification="blunder", centipawn_loss=200)
         make_move_analysis(db, game_id="g1", move_number=2, time_remaining=120, classification="good", centipawn_loss=5)
 
-        resp = client.get("/api/time-management")
+        resp = verified_user_client.get("/api/time-management")
         data = resp.json()
         stats = data["time_trouble_stats"]
         assert "critical" in stats

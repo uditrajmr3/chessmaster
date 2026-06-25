@@ -3,10 +3,6 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class SyncRequest(BaseModel):
-    username: str
-
-
 class SyncStatus(BaseModel):
     status: str  # idle/syncing/done/error
     games_fetched: int = 0

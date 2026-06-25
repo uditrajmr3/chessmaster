@@ -18,14 +18,21 @@ class TestHealthEndpoint:
 
 
 class TestSyncEndpoints:
-    def test_sync_status_initial(self, client):
+    def test_sync_status_requires_auth(self, client):
+        """Unauthenticated GET /api/sync/status → 401 (endpoints are now auth-gated)."""
         resp = client.get("/api/sync/status")
+        assert resp.status_code == 401
+
+    def test_sync_status_initial_authenticated(self, verified_user_client):
+        """Authenticated GET /api/sync/status → 200 with idle status."""
+        resp = verified_user_client.get("/api/sync/status")
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] in ("idle", "syncing", "done", "error")
 
-    def test_sync_status_schema(self, client):
-        resp = client.get("/api/sync/status")
+    def test_sync_status_schema(self, verified_user_client):
+        resp = verified_user_client.get("/api/sync/status")
+        assert resp.status_code == 200
         data = resp.json()
         assert "status" in data
         assert "games_fetched" in data

@@ -1,4 +1,4 @@
-import json
+import uuid
 from datetime import datetime
 
 from sqlalchemy.orm import Session
@@ -14,37 +14,55 @@ class SyncService:
         self.chesscom = ChessComClient()
         self.lichess = LichessClient()
 
-    async def sync_all(self, username: str, status: dict) -> int:
+    async def sync_all(
+        self,
+        user_id,
+        lichess_username: str | None,
+        chesscom_username: str | None,
+        status: dict,
+    ) -> int:
         db = SessionLocal()
         try:
             total = 0
 
-            # Sync Chess.com
-            status["message"] = "Fetching Chess.com games..."
-            try:
-                chesscom_games = await self.chesscom.fetch_games(username)
-                inserted = self._insert_games(db, chesscom_games)
-                total += inserted
-                status["games_fetched"] = total
-                status["message"] = f"Chess.com: {inserted} new games"
-            except Exception as e:
-                status["message"] = f"Chess.com error: {e}. Trying Lichess..."
+            # Sync Chess.com (only if username is linked)
+            if chesscom_username:
+                status["message"] = "Fetching Chess.com games..."
+                try:
+                    chesscom_games = await self.chesscom.fetch_games(chesscom_username)
+                    inserted = self._insert_games(db, user_id, chesscom_games)
+                    total += inserted
+                    status["games_fetched"] = total
+                    status["message"] = f"Chess.com: {inserted} new games"
+                except Exception as e:
+                    status["message"] = f"Chess.com error: {e}. Trying Lichess..."
 
-            # Sync Lichess
-            status["message"] = f"Fetching Lichess games... ({total} so far)"
-            try:
-                lichess_games = await self.lichess.fetch_games(username)
-                inserted = self._insert_games(db, lichess_games)
-                total += inserted
-                status["games_fetched"] = total
-            except Exception as e:
-                status["message"] = f"Lichess error: {e}"
+            # Sync Lichess (only if username is linked)
+            if lichess_username:
+                status["message"] = f"Fetching Lichess games... ({total} so far)"
+                try:
+                    lichess_games = await self.lichess.fetch_games(lichess_username)
+                    inserted = self._insert_games(db, user_id, lichess_games)
+                    total += inserted
+                    status["games_fetched"] = total
+                except Exception as e:
+                    status["message"] = f"Lichess error: {e}"
 
-            # Update sync state
-            for platform in ("chesscom", "lichess"):
-                state = db.query(SyncState).filter(SyncState.platform == platform).first()
+            # Update sync state keyed by (user_id, platform)
+            platforms = []
+            if chesscom_username:
+                platforms.append("chesscom")
+            if lichess_username:
+                platforms.append("lichess")
+
+            for platform in platforms:
+                state = (
+                    db.query(SyncState)
+                    .filter_by(user_id=user_id, platform=platform)
+                    .first()
+                )
                 if not state:
-                    state = SyncState(platform=platform)
+                    state = SyncState(user_id=user_id, platform=platform)
                     db.add(state)
                 state.last_synced_at = datetime.utcnow()
             db.commit()
@@ -53,15 +71,22 @@ class SyncService:
         finally:
             db.close()
 
-    def _insert_games(self, db: Session, games: list[dict]) -> int:
+    def _insert_games(self, db: Session, user_id, games: list[dict]) -> int:
         inserted = 0
         for g in games:
-            game_id = f"{g['platform']}_{g['platform_id']}"
-            existing = db.query(Game).filter(Game.id == game_id).first()
+            existing = (
+                db.query(Game)
+                .filter_by(
+                    user_id=user_id,
+                    platform=g["platform"],
+                    platform_id=g["platform_id"],
+                )
+                .first()
+            )
             if existing:
                 continue
 
-            game = Game(id=game_id, **g)
+            game = Game(id=str(uuid.uuid4()), user_id=user_id, **g)
             db.add(game)
             inserted += 1
 

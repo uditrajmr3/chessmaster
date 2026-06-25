@@ -4,7 +4,7 @@ import pytest
 
 from app.services.peer_comparison import PeerComparisonService, _get_rating_band
 
-from .conftest import make_game, make_move_analysis
+from .conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 class TestRatingBand:
@@ -51,7 +51,7 @@ class TestPeerComparison:
     def test_returns_comparison(self, db):
         self._setup_games(db)
 
-        service = PeerComparisonService(db)
+        service = PeerComparisonService(db, user_id=TEST_USER_ID)
         report = service.get_comparison()
 
         assert report["rating_band"] == "1000-1200"
@@ -69,7 +69,7 @@ class TestPeerComparison:
                 classification="good",
             )
 
-        service = PeerComparisonService(db)
+        service = PeerComparisonService(db, user_id=TEST_USER_ID)
         report = service.get_comparison()
 
         # With 0% blunder rate and 5 CPL, should have strengths
@@ -86,7 +86,7 @@ class TestPeerComparison:
                 classification="blunder",
             )
 
-        service = PeerComparisonService(db)
+        service = PeerComparisonService(db, user_id=TEST_USER_ID)
         report = service.get_comparison()
 
         assert len(report["weaknesses"]) > 0
@@ -94,7 +94,7 @@ class TestPeerComparison:
     def test_not_enough_games(self, db):
         make_game(db, id="g0", platform_id="g0", player_rating=1100)
 
-        service = PeerComparisonService(db)
+        service = PeerComparisonService(db, user_id=TEST_USER_ID)
         report = service.get_comparison()
 
         assert report["games_analyzed"] == 0
@@ -103,7 +103,7 @@ class TestPeerComparison:
     def test_recommendations_generated(self, db):
         self._setup_games(db)
 
-        service = PeerComparisonService(db)
+        service = PeerComparisonService(db, user_id=TEST_USER_ID)
         report = service.get_comparison()
 
         assert len(report["recommendations"]) > 0
@@ -119,7 +119,7 @@ class TestPeerComparison:
                 classification="good",
             )
 
-        service = PeerComparisonService(db)
+        service = PeerComparisonService(db, user_id=TEST_USER_ID)
         report = service.get_comparison()
 
         cpl_comp = next(c for c in report["comparisons"] if c["metric"] == "Average CPL")
@@ -139,7 +139,7 @@ class TestPeerFilters:
             make_move_analysis(db, game_id=f"li{i}", move_number=5,
                               game_phase="opening", centipawn_loss=20.0)
 
-        service = PeerComparisonService(db)
+        service = PeerComparisonService(db, user_id=TEST_USER_ID)
         cc = service.get_comparison(platform="chesscom")
         li = service.get_comparison(platform="lichess")
 
@@ -148,33 +148,35 @@ class TestPeerFilters:
 
 
 class TestPeerAPI:
-    def test_get_comparison_empty(self, client):
-        resp = client.get("/api/peer-comparison")
+    def test_get_comparison_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/peer-comparison")
         assert resp.status_code == 200
         data = resp.json()
         assert data["games_analyzed"] == 0
 
-    def test_get_comparison_with_data(self, client, db):
+    def test_get_comparison_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
         for i in range(6):
             gid = f"g{i}"
-            make_game(db, id=gid, platform_id=gid, player_rating=1100)
+            make_game(db, id=gid, platform_id=gid, player_rating=1100, user_id=uid)
             make_move_analysis(db, game_id=gid, move_number=5,
                               game_phase="opening", centipawn_loss=20.0)
 
-        resp = client.get("/api/peer-comparison")
+        resp = verified_user_client.get("/api/peer-comparison")
         assert resp.status_code == 200
         data = resp.json()
         assert data["rating_band"] == "1000-1200"
         assert len(data["comparisons"]) == 7
 
-    def test_get_comparison_with_filters(self, client, db):
+    def test_get_comparison_with_filters(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
         for i in range(6):
             gid = f"g{i}"
             make_game(db, id=gid, platform_id=gid, player_rating=1100,
-                      time_class="blitz")
+                      time_class="blitz", user_id=uid)
             make_move_analysis(db, game_id=gid, move_number=5,
                               game_phase="opening", centipawn_loss=20.0)
 
-        resp = client.get("/api/peer-comparison?time_class=rapid")
+        resp = verified_user_client.get("/api/peer-comparison?time_class=rapid")
         assert resp.status_code == 200
         assert resp.json()["games_analyzed"] == 0

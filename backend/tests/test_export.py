@@ -8,7 +8,7 @@ import pytest
 
 from app.services.export_service import ExportService
 
-from .conftest import make_game, make_move_analysis
+from .conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 class TestExportGamesCsv:
@@ -16,7 +16,7 @@ class TestExportGamesCsv:
         make_game(db, id="g1", platform_id="g1")
         make_game(db, id="g2", platform_id="g2", result="loss")
 
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         csv_data = service.export_games_csv()
 
         reader = csv.reader(io.StringIO(csv_data))
@@ -29,7 +29,7 @@ class TestExportGamesCsv:
         make_game(db, id="g1", platform_id="g1", platform="chesscom")
         make_game(db, id="g2", platform_id="g2", platform="lichess")
 
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         csv_data = service.export_games_csv(platform="chesscom")
 
         reader = csv.reader(io.StringIO(csv_data))
@@ -37,7 +37,7 @@ class TestExportGamesCsv:
         assert len(rows) == 2  # header + 1 game
 
     def test_empty_export(self, db):
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         csv_data = service.export_games_csv()
 
         reader = csv.reader(io.StringIO(csv_data))
@@ -53,7 +53,7 @@ class TestExportAnalysisCsv:
         make_move_analysis(db, game_id="g1", move_number=2,
                           classification="blunder", centipawn_loss=200.0)
 
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         csv_data = service.export_analysis_csv()
 
         reader = csv.reader(io.StringIO(csv_data))
@@ -66,7 +66,7 @@ class TestExportAnalysisCsv:
         make_move_analysis(db, game_id="g1", move_number=1)
         make_move_analysis(db, game_id="g2", move_number=1)
 
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         csv_data = service.export_analysis_csv(game_id="g1")
 
         reader = csv.reader(io.StringIO(csv_data))
@@ -78,7 +78,7 @@ class TestExportGamesJson:
     def test_exports_json(self, db):
         make_game(db, id="g1", platform_id="g1")
 
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         data = service.export_games_json()
 
         assert len(data) == 1
@@ -94,7 +94,7 @@ class TestExportSummary:
         make_move_analysis(db, game_id="g2", move_number=1,
                           centipawn_loss=200.0, classification="blunder")
 
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         summary = service.export_summary()
 
         assert summary["total_games"] == 2
@@ -104,48 +104,53 @@ class TestExportSummary:
         assert summary["avg_cpl"] > 0
 
     def test_empty_summary(self, db):
-        service = ExportService(db)
+        service = ExportService(db, user_id=TEST_USER_ID)
         summary = service.export_summary()
         assert summary["total_games"] == 0
 
 
 class TestExportAPI:
-    def test_export_games_csv(self, client, db):
-        make_game(db, id="g1", platform_id="g1")
+    def test_export_games_csv(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", user_id=uid)
 
-        resp = client.get("/api/export/games/csv")
+        resp = verified_user_client.get("/api/export/games/csv")
         assert resp.status_code == 200
         assert "text/csv" in resp.headers["content-type"]
         assert "g1" in resp.text
 
-    def test_export_analysis_csv(self, client, db):
-        make_game(db, id="g1", platform_id="g1")
+    def test_export_analysis_csv(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", user_id=uid)
         make_move_analysis(db, game_id="g1", move_number=1)
 
-        resp = client.get("/api/export/analysis/csv")
+        resp = verified_user_client.get("/api/export/analysis/csv")
         assert resp.status_code == 200
         assert "text/csv" in resp.headers["content-type"]
 
-    def test_export_games_json(self, client, db):
-        make_game(db, id="g1", platform_id="g1")
+    def test_export_games_json(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", user_id=uid)
 
-        resp = client.get("/api/export/games/json")
+        resp = verified_user_client.get("/api/export/games/json")
         assert resp.status_code == 200
         data = resp.json()
         assert len(data) == 1
 
-    def test_export_summary(self, client, db):
-        make_game(db, id="g1", platform_id="g1")
+    def test_export_summary(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", user_id=uid)
 
-        resp = client.get("/api/export/summary")
+        resp = verified_user_client.get("/api/export/summary")
         assert resp.status_code == 200
         data = resp.json()
         assert data["total_games"] == 1
 
-    def test_export_with_filters(self, client, db):
-        make_game(db, id="g1", platform_id="g1", time_class="blitz")
+    def test_export_with_filters(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", time_class="blitz", user_id=uid)
 
-        resp = client.get("/api/export/games/csv?time_class=rapid")
+        resp = verified_user_client.get("/api/export/games/csv?time_class=rapid")
         assert resp.status_code == 200
         # Should only have header (no games match)
         lines = resp.text.strip().split("\n")

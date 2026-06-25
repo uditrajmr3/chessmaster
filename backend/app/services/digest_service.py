@@ -10,8 +10,11 @@ from ..models import Game, MoveAnalysis
 
 
 class DigestService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
 
     def get_digest(
         self,
@@ -50,7 +53,7 @@ class DigestService:
         platform: str | None,
         time_class: str | None,
     ) -> list:
-        q = self.db.query(Game).filter(Game.played_at >= cutoff)
+        q = self.db.query(Game).filter(Game.played_at >= cutoff, Game.user_id == self._user_id)
         if platform:
             q = q.filter(Game.platform == platform)
         if time_class:

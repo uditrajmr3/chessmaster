@@ -8,15 +8,18 @@ from ..models import Game, MoveAnalysis
 
 
 class OpeningBookService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
 
     def get_book_analysis(
         self,
         game_id: str,
     ) -> dict:
         """Analyze a single game's opening against the player's own book (most common moves)."""
-        game = self.db.query(Game).filter(Game.id == game_id).first()
+        game = self.db.query(Game).filter(Game.id == game_id, Game.user_id == self._user_id).first()
         if not game:
             return {"error": "Game not found", "moves": []}
 
@@ -168,16 +171,16 @@ class OpeningBookService:
         q = (
             self.db.query(MoveAnalysis)
             .filter(MoveAnalysis.game_phase == "opening")
+            .join(Game, MoveAnalysis.game_id == Game.id)
+            .filter(Game.user_id == self._user_id)
         )
 
-        if platform or time_class or color:
-            q = q.join(Game, MoveAnalysis.game_id == Game.id)
-            if platform:
-                q = q.filter(Game.platform == platform)
-            if time_class:
-                q = q.filter(Game.time_class == time_class)
-            if color:
-                q = q.filter(Game.player_color == color)
+        if platform:
+            q = q.filter(Game.platform == platform)
+        if time_class:
+            q = q.filter(Game.time_class == time_class)
+        if color:
+            q = q.filter(Game.player_color == color)
 
         moves = q.all()
 

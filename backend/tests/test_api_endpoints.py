@@ -172,17 +172,18 @@ class TestPatternsEndpoint:
 
 
 class TestOpeningsEndpoint:
-    def test_openings_empty(self, client):
-        resp = client.get("/api/openings/tree")
+    def test_openings_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/openings/tree")
         assert resp.status_code == 200
         assert resp.json() == []
 
-    def test_openings_tree(self, client, db):
-        make_game(db, id="g1", platform_id="g1", opening_eco="B12", result="win")
-        make_game(db, id="g2", platform_id="g2", opening_eco="B12", result="loss")
-        make_game(db, id="g3", platform_id="g3", opening_eco="C50", result="win")
+    def test_openings_tree(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", opening_eco="B12", result="win", user_id=uid)
+        make_game(db, id="g2", platform_id="g2", opening_eco="B12", result="loss", user_id=uid)
+        make_game(db, id="g3", platform_id="g3", opening_eco="C50", result="win", user_id=uid)
 
-        resp = client.get("/api/openings/tree")
+        resp = verified_user_client.get("/api/openings/tree")
         data = resp.json()
         assert len(data) == 2
         b12 = next(o for o in data if o["eco"] == "B12")

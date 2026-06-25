@@ -6,7 +6,7 @@ import pytest
 
 from app.services.digest_service import DigestService
 
-from .conftest import make_game, make_move_analysis
+from .conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 def _recent_date(days_ago=0):
@@ -23,7 +23,7 @@ class TestDigestSummary:
                 player_rating=1000 + i * 5,
             )
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert digest["summary"]["total_games"] == 5
@@ -37,7 +37,7 @@ class TestDigestSummary:
         make_game(db, id="g1", platform_id="g1", played_at=_recent_date(1),
                   player_rating=1050)
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert digest["summary"]["rating_start"] == 1000
@@ -45,7 +45,7 @@ class TestDigestSummary:
         assert digest["summary"]["rating_change"] == 50
 
     def test_empty_digest(self, db):
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert digest["summary"]["total_games"] == 0
@@ -55,7 +55,7 @@ class TestDigestSummary:
         make_game(db, id="g0", platform_id="g0", played_at=_recent_date(10))
         make_game(db, id="g1", platform_id="g1", played_at=_recent_date(2))
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert digest["summary"]["total_games"] == 1
@@ -71,7 +71,7 @@ class TestDigestOpenings:
                   opening_eco="C50", opening_name="Italian",
                   played_at=_recent_date(1))
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert len(digest["openings"]) == 2
@@ -89,7 +89,7 @@ class TestDigestAccuracy:
         make_move_analysis(db, game_id="g0", move_number=3,
                           centipawn_loss=80.0, classification="mistake")
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert digest["accuracy"]["blunders"] == 1
@@ -108,7 +108,7 @@ class TestDigestImprovement:
             make_game(db, id=f"curr{i}", platform_id=f"curr{i}",
                       played_at=_recent_date(i + 1), result="win")
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert digest["improvement"]["has_comparison"] is True
@@ -117,7 +117,7 @@ class TestDigestImprovement:
     def test_no_comparison_without_previous(self, db):
         make_game(db, id="g0", platform_id="g0", played_at=_recent_date(1))
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert digest["improvement"]["has_comparison"] is False
@@ -130,7 +130,7 @@ class TestDigestHighlights:
         make_game(db, id="g1", platform_id="g1", played_at=_recent_date(2),
                   result="win", opponent_rating=1600, player_rating=1500)
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         best_wins = [h for h in digest["highlights"] if h["type"] == "best_win"]
@@ -141,7 +141,7 @@ class TestDigestHighlights:
         make_game(db, id="g0", platform_id="g0", played_at=_recent_date(1),
                   result="win", opponent_rating=1700, player_rating=1500)
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         upsets = [h for h in digest["highlights"] if h["type"] == "upset"]
@@ -156,7 +156,7 @@ class TestDigestText:
                       played_at=_recent_date(i + 1), result="win",
                       player_rating=1000 + i * 10)
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         digest = service.get_digest(days=7)
 
         assert "7-Day Chess Digest" in digest["digest_text"]
@@ -171,7 +171,7 @@ class TestDigestFilters:
         make_game(db, id="g1", platform_id="g1", played_at=_recent_date(1),
                   platform="lichess")
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         cc = service.get_digest(days=7, platform="chesscom")
         li = service.get_digest(days=7, platform="lichess")
 
@@ -182,7 +182,7 @@ class TestDigestFilters:
         make_game(db, id="g0", platform_id="g0", played_at=_recent_date(20))
         make_game(db, id="g1", platform_id="g1", played_at=_recent_date(5))
 
-        service = DigestService(db)
+        service = DigestService(db, user_id=TEST_USER_ID)
         d7 = service.get_digest(days=7)
         d30 = service.get_digest(days=30)
 
@@ -191,37 +191,40 @@ class TestDigestFilters:
 
 
 class TestDigestAPI:
-    def test_get_digest_empty(self, client):
-        resp = client.get("/api/digest")
+    def test_get_digest_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/digest")
         assert resp.status_code == 200
         data = resp.json()
         assert data["summary"]["total_games"] == 0
 
-    def test_get_digest_with_data(self, client, db):
+    def test_get_digest_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
         for i in range(3):
             make_game(db, id=f"g{i}", platform_id=f"g{i}",
-                      played_at=_recent_date(i + 1))
+                      played_at=_recent_date(i + 1), user_id=uid)
 
-        resp = client.get("/api/digest")
+        resp = verified_user_client.get("/api/digest")
         assert resp.status_code == 200
         data = resp.json()
         assert data["summary"]["total_games"] == 3
 
-    def test_get_digest_custom_days(self, client, db):
-        make_game(db, id="g0", platform_id="g0", played_at=_recent_date(20))
+    def test_get_digest_custom_days(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g0", platform_id="g0", played_at=_recent_date(20), user_id=uid)
 
-        resp = client.get("/api/digest?days=30")
+        resp = verified_user_client.get("/api/digest?days=30")
         assert resp.status_code == 200
         assert resp.json()["summary"]["total_games"] == 1
 
-        resp = client.get("/api/digest?days=7")
+        resp = verified_user_client.get("/api/digest?days=7")
         assert resp.status_code == 200
         assert resp.json()["summary"]["total_games"] == 0
 
-    def test_get_digest_with_filters(self, client, db):
+    def test_get_digest_with_filters(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
         make_game(db, id="g0", platform_id="g0", played_at=_recent_date(1),
-                  time_class="blitz")
+                  time_class="blitz", user_id=uid)
 
-        resp = client.get("/api/digest?time_class=rapid")
+        resp = verified_user_client.get("/api/digest?time_class=rapid")
         assert resp.status_code == 200
         assert resp.json()["summary"]["total_games"] == 0

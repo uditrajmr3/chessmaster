@@ -11,8 +11,11 @@ from ..models import Game, MoveAnalysis
 
 
 class ExportService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
 
     def export_games_csv(
         self,
@@ -53,6 +56,10 @@ class ExportService:
         q = self.db.query(MoveAnalysis).filter(MoveAnalysis.is_player_move == 1)
 
         if game_id:
+            # Verify the game belongs to this user
+            game = self.db.query(Game).filter(Game.id == game_id, Game.user_id == self._user_id).first()
+            if not game:
+                return ""
             q = q.filter(MoveAnalysis.game_id == game_id)
         elif platform or time_class:
             game_ids = [
@@ -173,7 +180,7 @@ class ExportService:
         platform: str | None,
         time_class: str | None,
     ) -> list:
-        q = self.db.query(Game)
+        q = self.db.query(Game).filter(Game.user_id == self._user_id)
         if platform:
             q = q.filter(Game.platform == platform)
         if time_class:

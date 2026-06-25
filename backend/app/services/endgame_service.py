@@ -77,8 +77,11 @@ def _count_pieces(board: chess.Board, color: chess.Color) -> dict:
 
 
 class EndgameService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
 
     def get_report(
         self,
@@ -112,21 +115,21 @@ class EndgameService:
                 MoveAnalysis.game_phase == "endgame",
                 MoveAnalysis.is_player_move == 1,
             )
+            .join(Game, MoveAnalysis.game_id == Game.id)
+            .filter(Game.user_id == self._user_id)
             .distinct()
         )
 
-        if platform or time_class:
-            q = q.join(Game, MoveAnalysis.game_id == Game.id)
-            if platform:
-                q = q.filter(Game.platform == platform)
-            if time_class:
-                q = q.filter(Game.time_class == time_class)
+        if platform:
+            q = q.filter(Game.platform == platform)
+        if time_class:
+            q = q.filter(Game.time_class == time_class)
 
         game_ids = [gid for (gid,) in q.all()]
 
         failures = []
         for game_id in game_ids:
-            game = self.db.query(Game).filter(Game.id == game_id).first()
+            game = self.db.query(Game).filter(Game.id == game_id, Game.user_id == self._user_id).first()
             if not game:
                 continue
 
@@ -252,30 +255,36 @@ class EndgameService:
         time_class: str | None = None,
     ) -> dict:
         """Overall endgame statistics."""
-        q = self.db.query(func.count(func.distinct(MoveAnalysis.game_id))).filter(
-            MoveAnalysis.game_phase == "endgame",
-            MoveAnalysis.is_player_move == 1,
+        q = (
+            self.db.query(func.count(func.distinct(MoveAnalysis.game_id)))
+            .filter(
+                MoveAnalysis.game_phase == "endgame",
+                MoveAnalysis.is_player_move == 1,
+            )
+            .join(Game, MoveAnalysis.game_id == Game.id)
+            .filter(Game.user_id == self._user_id)
         )
-        if platform or time_class:
-            q = q.join(Game, MoveAnalysis.game_id == Game.id)
-            if platform:
-                q = q.filter(Game.platform == platform)
-            if time_class:
-                q = q.filter(Game.time_class == time_class)
+        if platform:
+            q = q.filter(Game.platform == platform)
+        if time_class:
+            q = q.filter(Game.time_class == time_class)
 
         total_endgame_games = q.scalar() or 0
 
         # Average CPL in endgames
-        cpl_q = self.db.query(func.avg(MoveAnalysis.centipawn_loss)).filter(
-            MoveAnalysis.game_phase == "endgame",
-            MoveAnalysis.is_player_move == 1,
+        cpl_q = (
+            self.db.query(func.avg(MoveAnalysis.centipawn_loss))
+            .filter(
+                MoveAnalysis.game_phase == "endgame",
+                MoveAnalysis.is_player_move == 1,
+            )
+            .join(Game, MoveAnalysis.game_id == Game.id)
+            .filter(Game.user_id == self._user_id)
         )
-        if platform or time_class:
-            cpl_q = cpl_q.join(Game, MoveAnalysis.game_id == Game.id)
-            if platform:
-                cpl_q = cpl_q.filter(Game.platform == platform)
-            if time_class:
-                cpl_q = cpl_q.filter(Game.time_class == time_class)
+        if platform:
+            cpl_q = cpl_q.filter(Game.platform == platform)
+        if time_class:
+            cpl_q = cpl_q.filter(Game.time_class == time_class)
 
         avg_cpl = cpl_q.scalar()
 

@@ -118,8 +118,11 @@ def _get_rating_band(rating: int) -> str:
 
 
 class PeerComparisonService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id=None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
+        self._user_id = user_id
 
     def get_comparison(
         self,
@@ -157,7 +160,7 @@ class PeerComparisonService:
         time_class: str | None,
     ) -> dict:
         """Compute the user's actual stats from their games."""
-        q = self.db.query(Game)
+        q = self.db.query(Game).filter(Game.user_id == self._user_id)
         if platform:
             q = q.filter(Game.platform == platform)
         if time_class:

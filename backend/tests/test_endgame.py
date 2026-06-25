@@ -6,7 +6,7 @@ import pytest
 
 from app.services.endgame_service import EndgameService, classify_endgame
 
-from .conftest import make_game, make_move_analysis
+from .conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 class TestClassifyEndgame:
@@ -69,7 +69,7 @@ class TestEndgameService:
         # Game with advantage that was won
         self._make_endgame_game(db, "g2", result="win", eval_before=300.0)
 
-        service = EndgameService(db)
+        service = EndgameService(db, user_id=TEST_USER_ID)
         report = service.get_report()
         assert report["overall"]["games_with_endgame"] == 2
         assert len(report["worst_games"]) == 1
@@ -85,7 +85,7 @@ class TestEndgameService:
             fen="8/8/4k3/8/8/8/4PK2/8 w - - 0 1",
         )
 
-        service = EndgameService(db)
+        service = EndgameService(db, user_id=TEST_USER_ID)
         report = service.get_report()
         types = {t["type"]: t for t in report["by_type"]}
         assert "Rook Endgame" in types
@@ -98,7 +98,7 @@ class TestEndgameService:
         # Game without advantage that was lost
         self._make_endgame_game(db, "g1", result="loss", eval_before=50.0)
 
-        service = EndgameService(db)
+        service = EndgameService(db, user_id=TEST_USER_ID)
         report = service.get_report()
         assert len(report["worst_games"]) == 0
         assert report["by_type"][0]["failed"] == 0
@@ -109,7 +109,7 @@ class TestEndgameService:
             self._make_endgame_game(db, f"gf{i}", result="loss", eval_before=300.0)
         self._make_endgame_game(db, "gw1", result="win", eval_before=300.0)
 
-        service = EndgameService(db)
+        service = EndgameService(db, user_id=TEST_USER_ID)
         report = service.get_report()
         assert any("rook endgame" in r.lower() for r in report["recommendations"])
 
@@ -120,12 +120,12 @@ class TestEndgameService:
                 cpl=200.0, classification="blunder",
             )
 
-        service = EndgameService(db)
+        service = EndgameService(db, user_id=TEST_USER_ID)
         report = service.get_report()
         assert any("blunder" in r.lower() for r in report["recommendations"])
 
     def test_empty_report(self, db):
-        service = EndgameService(db)
+        service = EndgameService(db, user_id=TEST_USER_ID)
         report = service.get_report()
         assert report["overall"]["games_with_endgame"] == 0
         assert report["by_type"] == []
@@ -135,7 +135,7 @@ class TestEndgameService:
     def test_platform_filter(self, db):
         self._make_endgame_game(db, "g1", result="loss", eval_before=300.0)
 
-        service = EndgameService(db)
+        service = EndgameService(db, user_id=TEST_USER_ID)
         # Our test games use platform="chesscom"
         report_cc = service.get_report(platform="chesscom")
         assert report_cc["overall"]["games_with_endgame"] == 1
@@ -145,35 +145,37 @@ class TestEndgameService:
 
 
 class TestEndgameAPI:
-    def test_get_endgame_report_empty(self, client):
-        resp = client.get("/api/endgame")
+    def test_get_endgame_report_empty(self, verified_user_client):
+        resp = verified_user_client.get("/api/endgame")
         assert resp.status_code == 200
         data = resp.json()
         assert data["overall"]["games_with_endgame"] == 0
 
-    def test_get_endgame_report_with_data(self, client, db):
-        make_game(db, id="g1", platform_id="g1", result="loss")
+    def test_get_endgame_report_with_data(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", result="loss", user_id=uid)
         make_move_analysis(
             db, game_id="g1", move_number=40,
             game_phase="endgame", eval_before=300.0,
             centipawn_loss=200.0, classification="blunder",
         )
 
-        resp = client.get("/api/endgame")
+        resp = verified_user_client.get("/api/endgame")
         assert resp.status_code == 200
         data = resp.json()
         assert data["overall"]["games_with_endgame"] == 1
         assert len(data["by_type"]) > 0
         assert len(data["worst_games"]) > 0
 
-    def test_get_endgame_report_with_filters(self, client, db):
-        make_game(db, id="g1", platform_id="g1", result="loss", time_class="blitz")
+    def test_get_endgame_report_with_filters(self, verified_user_client, db):
+        uid = verified_user_client.get("/api/users/me").json()["id"]
+        make_game(db, id="g1", platform_id="g1", result="loss", time_class="blitz", user_id=uid)
         make_move_analysis(
             db, game_id="g1", move_number=40,
             game_phase="endgame", eval_before=300.0,
         )
 
-        resp = client.get("/api/endgame?time_class=rapid")
+        resp = verified_user_client.get("/api/endgame?time_class=rapid")
         assert resp.status_code == 200
         data = resp.json()
         assert data["overall"]["games_with_endgame"] == 0

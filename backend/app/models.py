@@ -1,3 +1,4 @@
+from .auth.models import User  # noqa: F401
 from datetime import datetime
 
 from sqlalchemy import (

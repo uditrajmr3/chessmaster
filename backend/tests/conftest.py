@@ -92,7 +92,13 @@ def client(db):
 
 @pytest.fixture()
 def verified_user_client(client, db):
-    """Register, verify, and log in a user; return the authenticated TestClient."""
+    """Register, verify, and log in a user; return a DISTINCT authenticated TestClient.
+
+    Uses `client` only for the registration step (dependency overrides are already
+    in place on `app` at that point).  The actual authenticated session is held by a
+    separate TestClient instance so that tests taking both `client` and
+    `verified_user_client` see an unauthenticated client vs. an authenticated one.
+    """
     r = client.post("/api/auth/register", json={"email": "a@test.com", "password": "pw12345678"})
     assert r.status_code == 201, r.text
 
@@ -109,9 +115,13 @@ def verified_user_client(client, db):
 
     asyncio.run(_verify_user())
 
-    login = client.post("/api/auth/login", data={"username": "a@test.com", "password": "pw12345678"})
-    assert login.status_code in (200, 204), login.text
-    return client
+    # Create a SEPARATE TestClient so its cookie jar is independent of `client`.
+    # The app.dependency_overrides set by the `client` fixture are still in effect
+    # on the shared `app` object, so the new client uses the same in-memory DB.
+    with TestClient(app) as authed_client:
+        login = authed_client.post("/api/auth/login", data={"username": "a@test.com", "password": "pw12345678"})
+        assert login.status_code in (200, 204), login.text
+        yield authed_client
 
 
 # ── Factory helpers ──────────────────────────────────────────────────────────

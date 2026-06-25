@@ -35,9 +35,9 @@ class TimeManagementService:
         platform: str | None = None,
         time_class: str | None = None,
     ) -> dict:
+        """Build a complete time management profile from analyzed games."""
         self._platform = platform
         self._time_class = time_class
-        """Build a complete time management profile from analyzed games."""
         return {
             "time_per_move_by_phase": self._time_per_move_by_phase(),
             "time_vs_move_number": self._time_vs_move_number(),

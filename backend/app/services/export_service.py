@@ -56,19 +56,18 @@ class ExportService:
         q = self.db.query(MoveAnalysis).filter(MoveAnalysis.is_player_move == 1)
 
         if game_id:
-            # Verify the game belongs to this user
+            # Verify the game belongs to this user before using its id
             game = self.db.query(Game).filter(Game.id == game_id, Game.user_id == self._user_id).first()
             if not game:
                 return ""
             q = q.filter(MoveAnalysis.game_id == game_id)
-        elif platform or time_class:
-            game_ids = [
-                g.id for g in self._get_games(platform, time_class)
-            ]
-            if game_ids:
-                q = q.filter(MoveAnalysis.game_id.in_(game_ids))
-            else:
+        else:
+            # Always scope to the user's games — pass through any platform/time_class filters.
+            # This also covers the no-filter default path, preventing a cross-tenant leak.
+            game_ids = [g.id for g in self._get_games(platform, time_class)]
+            if not game_ids:
                 return ""
+            q = q.filter(MoveAnalysis.game_id.in_(game_ids))
 
         moves = q.order_by(MoveAnalysis.game_id, MoveAnalysis.move_number).all()
 

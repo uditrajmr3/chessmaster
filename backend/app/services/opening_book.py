@@ -17,11 +17,14 @@ class OpeningBookService:
     def get_book_analysis(
         self,
         game_id: str,
-    ) -> dict:
-        """Analyze a single game's opening against the player's own book (most common moves)."""
+    ) -> dict | None:
+        """Analyze a single game's opening against the player's own book (most common moves).
+
+        Returns None when the game is missing or not owned by this user.
+        """
         game = self.db.query(Game).filter(Game.id == game_id, Game.user_id == self._user_id).first()
         if not game:
-            return {"error": "Game not found", "moves": []}
+            return None
 
         moves = (
             self.db.query(MoveAnalysis)

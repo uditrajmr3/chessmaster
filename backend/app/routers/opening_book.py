@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from ..auth.deps import current_verified_user
@@ -17,7 +17,10 @@ def get_book_analysis(
 ):
     """Analyze a game's opening moves against the player's own book."""
     service = OpeningBookService(db, user_id=str(user.id))
-    return service.get_book_analysis(game_id)
+    result = service.get_book_analysis(game_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    return result
 
 
 @router.get("/opening-book")

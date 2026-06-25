@@ -71,7 +71,7 @@ class TestBookAnalysis:
         service = OpeningBookService(db, user_id=TEST_USER_ID)
         result = service.get_book_analysis("nonexistent")
 
-        assert "error" in result
+        assert result is None
 
     def test_includes_alternatives(self, db):
         self._setup_game_with_opening(db)
@@ -119,9 +119,7 @@ class TestOpeningBookAPI:
 
     def test_get_book_analysis_not_found(self, verified_user_client):
         resp = verified_user_client.get("/api/opening-book/nonexistent")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert "error" in data
+        assert resp.status_code == 404
 
     def test_get_repertoire(self, verified_user_client, db):
         uid = verified_user_client.get("/api/users/me").json()["id"]

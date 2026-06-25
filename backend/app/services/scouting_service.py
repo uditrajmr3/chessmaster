@@ -1,4 +1,5 @@
 from collections import Counter, defaultdict
+from uuid import UUID
 
 from sqlalchemy.orm import Session
 
@@ -8,8 +9,11 @@ from .lichess_client import LichessClient
 
 
 class ScoutingService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user_id: UUID | None = None):
+        if user_id is None:
+            raise ValueError("user_id is required (fail-closed: cannot scope cross-reference queries)")
         self.db = db
+        self.user_id = user_id
         self._chesscom = ChessComClient()
         self._lichess = LichessClient()
 
@@ -116,7 +120,11 @@ class ScoutingService:
         results = []
         for opp_opening in opponent_openings:
             eco = opp_opening["eco"]
-            user_games = self.db.query(Game).filter(Game.opening_eco == eco).all()
+            user_games = (
+                self.db.query(Game)
+                .filter(Game.opening_eco == eco, Game.user_id == self.user_id)
+                .all()
+            )
 
             if user_games:
                 user_wins = sum(1 for g in user_games if g.result == "win")

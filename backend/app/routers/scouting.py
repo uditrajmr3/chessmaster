@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 
 import httpx
 
+from ..auth.deps import current_verified_user
+from ..auth.models import User
 from ..database import get_db
 from ..schemas import ScoutReport, ScoutRequest
 from ..services.scouting_service import ScoutingService
@@ -11,11 +13,15 @@ router = APIRouter(tags=["scouting"])
 
 
 @router.post("/scouting/scout", response_model=ScoutReport)
-async def scout_opponent(body: ScoutRequest, db: Session = Depends(get_db)):
+async def scout_opponent(
+    body: ScoutRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_verified_user),
+):
     if body.platform not in ("chesscom", "lichess"):
         raise HTTPException(status_code=422, detail="Platform must be 'chesscom' or 'lichess'")
 
-    service = ScoutingService(db)
+    service = ScoutingService(db, user_id=user.id)
     try:
         report = await service.scout_opponent(
             opponent_username=body.opponent_username,

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef, type ElementType } from "react";
 import { API_BASE } from "@/lib/api";
+import { runAnalysis } from "@/lib/analyze";
+import { emitDataRefresh } from "@/lib/useDataRefresh";
 import {
   LayoutDashboard,
   Swords,
@@ -282,6 +284,8 @@ export default function Sidebar() {
 
 function SyncButton() {
   const [syncing, setSyncing] = useState(false);
+  const [analysisDone, setAnalysisDone] = useState(0);
+  const [analysisTotal, setAnalysisTotal] = useState(0);
   const [analyzing, setAnalyzing] = useState(false);
 
   return (
@@ -312,19 +316,30 @@ function SyncButton() {
       <button
         onClick={async () => {
           setAnalyzing(true);
+          setAnalysisDone(0);
+          setAnalysisTotal(0);
           try {
-            await fetch(`${API_BASE}/analyze`, {
-              method: "POST",
+            await runAnalysis((done, total) => {
+              setAnalysisDone(done);
+              setAnalysisTotal(total);
+              if (done === total && total > 0) {
+                emitDataRefresh();
+              }
             });
-          } catch {
-            alert("Backend not running.");
+          } catch (err) {
+            console.error("Analysis error:", err);
+            alert("Analysis failed. Check the console for details.");
           }
           setAnalyzing(false);
         }}
         disabled={analyzing}
         className="w-full px-4 py-2.5 border border-accent-600 text-accent-400 hover:bg-accent-600/10 disabled:opacity-50 text-sm font-medium rounded-lg btn-press"
       >
-        {analyzing ? "Starting..." : "Analyze Games"}
+        {analyzing
+          ? analysisTotal > 0
+            ? `Analyzing… ${analysisDone}/${analysisTotal}`
+            : "Starting…"
+          : "Analyze Games"}
       </button>
     </div>
   );

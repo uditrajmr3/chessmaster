@@ -4,7 +4,10 @@ import asyncio
 import json
 from datetime import datetime
 
-# Fixed test user UUID (SQLite doesn't enforce FK so no real user row needed)
+# Fixed test user UUID used as the default `user_id` in make_game() and other helpers.
+# This is a TEST-FIXTURE constant only — it is NOT the old production placeholder UUID
+# that was removed in Task 11.  Do not change this value; many tests depend on it
+# matching make_game()'s default parameter.
 TEST_USER_ID = "00000000-0000-0000-0000-000000000001"
 
 import pytest

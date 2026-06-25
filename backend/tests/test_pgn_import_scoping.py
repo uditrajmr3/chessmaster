@@ -3,10 +3,12 @@
 These tests are written FIRST (RED), then the implementation is wired up (GREEN).
 """
 import uuid
+from unittest.mock import patch
 
 import pytest
 
 from app.models import Game
+from app.services.pgn_import import import_pgn
 
 SAMPLE_PGN = """[Event "Casual Game"]
 [Site "OTB"]
@@ -140,23 +142,29 @@ class TestImportedGamesBelongToUser:
 
 
 class TestDedupePerUser:
-    def test_dedupe_by_user_platform_platform_id(self, verified_user_client, db):
-        """Importing the same PGN content twice: second import is skipped (deduplicated)."""
-        resp1 = verified_user_client.post(
-            "/api/import/pgn-text",
-            json={"pgn": SAMPLE_PGN},
-        )
-        assert resp1.status_code == 200
-        assert resp1.json()["imported"] == 1
+    def test_dedupe_by_user_platform_platform_id(self, db):
+        """Service-layer dedup: inserting the same (user_id, platform, platform_id) twice
+        results in exactly one Game row; the second insert is skipped.
 
-        # Import same content again — should be skipped
-        # Note: pgn import uses random platform_id so repeated imports of the same
-        # PGN file content won't deduplicate unless the implementation hashes content.
-        # The dedup requirement here is that user_id + platform + platform_id are unique.
-        # Since platform_id is random per import in PGN, two separate calls DO produce
-        # two records. However the constraint is that the same (user, platform, id)
-        # does NOT produce duplicates — tested indirectly via sync service.
-        # For the PGN import dedup: assert the first import succeeded.
-        games = db.query(Game).all()
-        assert len(games) == 1
-        assert str(games[0].user_id) == verified_user_client.get("/api/users/me").json()["id"]
+        Strategy: pin uuid.uuid4 to a fixed value so both import_pgn calls generate
+        the same platform_id, exercising the filter_by(user_id, platform, platform_id)
+        dedup branch in _import_single_game.  Without that branch the second call would
+        produce a duplicate row and the len==1 assertion would fail.
+        """
+        FIXED_UUID = "aaaabbbbcccc-dddd-eeee-ffff-000000000001"
+        FIXED_USER_ID = uuid.UUID("11111111-1111-1111-1111-111111111111")
+
+        with patch("app.services.pgn_import.uuid.uuid4", return_value=FIXED_UUID):
+            result1 = import_pgn(db, SAMPLE_PGN, ["testuser"], FIXED_USER_ID)
+            result2 = import_pgn(db, SAMPLE_PGN, ["testuser"], FIXED_USER_ID)
+
+        assert result1["imported"] == 1, "first import must succeed"
+        assert result1["skipped"] == 0
+
+        assert result2["imported"] == 0, "second import with same platform_id must be deduped"
+        assert result2["skipped"] == 1, "second import must be reported as skipped"
+
+        games = db.query(Game).filter_by(user_id=FIXED_USER_ID, platform="pgn").all()
+        assert len(games) == 1, (
+            "dedup guard must prevent duplicate (user_id, platform, platform_id) rows"
+        )

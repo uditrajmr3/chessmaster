@@ -458,6 +458,42 @@ export interface DigestReport {
   digest_text: string;
 }
 
+// ── Auth & User ──
+
+export interface User {
+  id: string;
+  email: string;
+  is_verified: boolean;
+  is_active: boolean;
+  lichess_username: string | null;
+  chesscom_username: string | null;
+}
+
+// ── Client-side Analysis ──
+
+export interface PendingGame {
+  game_id: string;
+  pgn: string;
+  player_color: string;
+}
+
+export interface MoveEval {
+  move_number: number;
+  is_player_move: boolean;
+  fen_before: string;
+  move_uci: string;
+  move_san: string;
+  eval_before: number | null;
+  eval_after: number | null;
+  best_move_uci: string | null;
+}
+
+export interface AnalyzeResultsPayload {
+  game_id: string;
+  depth: number;
+  moves: MoveEval[];
+}
+
 // ── Peer Comparison ──
 
 export interface PeerMetric {

@@ -1,13 +1,42 @@
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
+export class AuthError extends Error {
+  constructor(message = "Unauthorized") {
+    super(message);
+    this.name = "AuthError";
+  }
+}
+
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...options?.headers,
     },
   });
+  if (res.status === 401) {
+    throw new AuthError(`API error: ${res.status} ${res.statusText}`);
+  }
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status} ${res.statusText}`);
+  }
+  return res.json();
+}
+
+async function fetchFormAPI<T>(path: string, body: Record<string, string>): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams(body).toString(),
+  });
+  if (res.status === 401) {
+    throw new AuthError(`API error: ${res.status} ${res.statusText}`);
+  }
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
   }
@@ -15,11 +44,53 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  // Auth
+  register: ({ email, password }: { email: string; password: string }) =>
+    fetchAPI<import("./types").User>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    }),
+  login: ({ email, password }: { email: string; password: string }) =>
+    fetchFormAPI<import("./types").User>("/auth/login", {
+      username: email,
+      password,
+    }),
+  logout: () =>
+    fetchAPI<void>("/auth/logout", { method: "POST" }),
+  requestVerify: (email: string) =>
+    fetchAPI<void>("/auth/request-verify-token", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+  verifyEmail: (token: string) =>
+    fetchAPI<void>("/auth/verify", {
+      method: "POST",
+      body: JSON.stringify({ token }),
+    }),
+  forgotPassword: (email: string) =>
+    fetchAPI<void>("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+  resetPassword: (token: string, password: string) =>
+    fetchAPI<void>("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({ token, password }),
+    }),
+
+  // Users
+  getMe: () =>
+    fetchAPI<import("./types").User>("/users/me"),
+  updateMe: (data: { lichess_username?: string; chesscom_username?: string }) =>
+    fetchAPI<import("./types").User>("/users/me", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
   // Sync
-  startSync: (username: string) =>
+  startSync: () =>
     fetchAPI("/sync", {
       method: "POST",
-      body: JSON.stringify({ username }),
     }),
   getSyncStatus: () =>
     fetchAPI<import("./types").SyncStatus>("/sync/status"),
@@ -37,6 +108,13 @@ export const api = {
     fetchAPI("/analyze", { method: "POST" }),
   getAnalysisStatus: () =>
     fetchAPI<import("./types").AnalyzeStatus>("/analyze/status"),
+  getPending: () =>
+    fetchAPI<import("./types").PendingGame[]>("/analyze/pending"),
+  postAnalysisResults: (payload: import("./types").AnalyzeResultsPayload) =>
+    fetchAPI<void>("/analyze/results", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 
   // Stats
   getOverview: () =>
@@ -137,10 +215,10 @@ export const api = {
     }),
 
   // Import
-  importPgnText: (pgn: string, username: string) =>
+  importPgnText: (pgn: string) =>
     fetchAPI<{ imported: number; skipped: number; errors: string[] }>("/import/pgn-text", {
       method: "POST",
-      body: JSON.stringify({ pgn, username }),
+      body: JSON.stringify({ pgn }),
     }),
 
   // Export

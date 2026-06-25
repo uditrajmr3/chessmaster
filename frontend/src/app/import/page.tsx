@@ -6,7 +6,6 @@ import { api } from "@/lib/api";
 
 export default function ImportPage() {
   const [pgnText, setPgnText] = useState("");
-  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
     imported: number;
@@ -29,7 +28,7 @@ export default function ImportPage() {
     setResult(null);
 
     try {
-      const res = await api.importPgnText(pgnText, username || "Player");
+      const res = await api.importPgnText(pgnText);
       setResult(res);
     } catch {
       setResult({ imported: 0, skipped: 0, errors: ["Failed to connect to backend"] });
@@ -44,21 +43,6 @@ export default function ImportPage() {
         <h2 className="text-3xl font-bold">Import PGN</h2>
         <p className="text-gray-400 text-sm">
           Import games from PGN files — for OTB games or other platforms
-        </p>
-      </div>
-
-      {/* Username input */}
-      <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
-        <label className="block text-sm text-gray-400 mb-2">Your Username</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter your name as it appears in the PGN"
-          className="w-full bg-[#1a1d27] border border-gray-700 rounded-lg px-4 py-2.5 text-gray-200 text-sm focus:outline-none focus:border-accent-500"
-        />
-        <p className="text-xs text-gray-600 mt-1">
-          Used to determine which side you played. Leave blank to default to White.
         </p>
       </div>
 

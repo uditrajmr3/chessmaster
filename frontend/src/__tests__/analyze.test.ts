@@ -7,7 +7,8 @@
 
 import { runAnalysis } from "@/lib/analyze";
 import { api } from "@/lib/api";
-import type { Engine, EvalResult } from "@/lib/engine";
+import { Engine } from "@/lib/engine";
+import type { EvalResult } from "@/lib/engine";
 import type { PendingGame, MoveEval } from "@/lib/types";
 
 // ── Mock the api module ──────────────────────────────────────────────────────
@@ -149,8 +150,9 @@ describe("runAnalysis — one game (3 half-moves)", () => {
     expect(capturedMoves[2].move_san).toBe("Nf3");
   });
 
-  it("engine.quit is called (via finally)", () => {
-    expect((fakeEngine.quit as jest.Mock)).toHaveBeenCalledTimes(1);
+  it("engine.quit is NOT called when engine is injected by caller", () => {
+    // runAnalysis does not own an injected engine; caller keeps it alive
+    expect((fakeEngine.quit as jest.Mock)).not.toHaveBeenCalled();
   });
 });
 
@@ -205,5 +207,71 @@ describe("runAnalysis — multiple games", () => {
     expect(mockPostResults).toHaveBeenCalledTimes(2);
     expect(onProgress).toHaveBeenNthCalledWith(1, 1, 2);
     expect(onProgress).toHaveBeenNthCalledWith(2, 2, 2);
+  });
+});
+
+describe("runAnalysis — engine ownership: quit is called only when owned", () => {
+  it("calls quit when runAnalysis constructs the engine itself", async () => {
+    // Mock the Engine class so we can capture the quit call without a real worker
+    const mockQuit = jest.fn();
+    const mockInit = jest.fn().mockResolvedValue(undefined);
+    const mockAnalyse = jest.fn().mockResolvedValue({ scoreCp: 0, bestMoveUci: null });
+    jest.spyOn(Engine.prototype, "init").mockImplementation(mockInit);
+    jest.spyOn(Engine.prototype, "quit").mockImplementation(mockQuit);
+    jest.spyOn(Engine.prototype, "analyse").mockImplementation(mockAnalyse);
+
+    // 2-move game
+    const pending: PendingGame[] = [
+      { game_id: "owned-test", pgn: "1. e4 e5 *", player_color: "white" },
+    ];
+    mockGetPending.mockResolvedValue(pending);
+
+    // No opts.engine → runAnalysis owns the engine
+    await runAnalysis(jest.fn());
+
+    expect(mockQuit).toHaveBeenCalledTimes(1);
+
+    // Restore spies
+    jest.restoreAllMocks();
+  });
+});
+
+describe("runAnalysis — custom-start FEN", () => {
+  // A legal mid-game FEN (after 1.e4 e5 2.Nf3) followed by two more moves:
+  //   Nc6 and Bb5 (Ruy Lopez-ish). FEN chosen so it's a valid, non-starting pos.
+  // PGN with [FEN] and [SetUp "1"] headers — chess.js requires both.
+  const CUSTOM_FEN =
+    "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3";
+  const CUSTOM_FEN_PGN = `[Event "Test"]
+[SetUp "1"]
+[FEN "${CUSTOM_FEN}"]
+
+1. Bb5 a6 *`;
+
+  it("uses the custom start FEN as fen_before for the first move (not standard startpos)", async () => {
+    // 2 moves in the PGN → 3 engine calls (startpos + after Bb5 + after a6)
+    const evalSeq: EvalResult[] = Array(3).fill({ scoreCp: 0, bestMoveUci: null });
+    const fakeEngine = makeFakeEngine(evalSeq);
+
+    let capturedMoves: MoveEval[] = [];
+    mockPostResults.mockImplementation(async (payload) => {
+      capturedMoves = payload.moves;
+      return undefined as unknown as void;
+    });
+
+    const pending: PendingGame[] = [
+      { game_id: "custom-fen-game", pgn: CUSTOM_FEN_PGN, player_color: "white" },
+    ];
+    mockGetPending.mockResolvedValue(pending);
+
+    await runAnalysis(jest.fn(), { engine: fakeEngine });
+
+    expect(capturedMoves.length).toBeGreaterThan(0);
+    // The first move's fen_before MUST be the custom FEN, not the standard start
+    expect(capturedMoves[0].fen_before).toBe(CUSTOM_FEN);
+    // Confirm it is NOT the standard starting position
+    expect(capturedMoves[0].fen_before).not.toBe(
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    );
   });
 });

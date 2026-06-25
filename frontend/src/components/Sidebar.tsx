@@ -328,6 +328,8 @@ function SyncButton() {
             });
           } catch (err) {
             console.error("Analysis error:", err);
+            // Refresh even on error so partially-analyzed games become visible
+            emitDataRefresh();
             alert("Analysis failed. Check the console for details.");
           }
           setAnalyzing(false);

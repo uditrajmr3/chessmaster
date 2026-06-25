@@ -33,6 +33,7 @@ export async function runAnalysis(
   }
 
   const depth = opts?.depth ?? DEFAULT_DEPTH;
+  const engineOwned = !opts?.engine;
   const engine = opts?.engine ?? new Engine();
 
   try {
@@ -45,22 +46,21 @@ export async function runAnalysis(
       const pendingGame = pending[gameIdx];
       const { game_id, pgn, player_color } = pendingGame;
 
-      // Parse the PGN
+      // Parse the PGN — capture headers and moves BEFORE resetting, so that
+      // custom-start FEN ([FEN "..."] / [SetUp "1"]) games are analysed from
+      // the correct starting position rather than the standard one.
       const chess = new Chess();
       chess.loadPgn(pgn);
 
-      // Replay from start: collect verbose move objects
+      // Capture moves while PGN is loaded (before any reset)
       const verboseMoves = chess.history({ verbose: true });
       const numMoves = verboseMoves.length;
 
-      // Reset to start position to replay move-by-move
-      chess.reset();
-      // If the PGN has a custom start FEN, load it:
-      const headers = chess.header();
-      const startFen: string | undefined = (headers as Record<string, string>)["FEN"];
-      if (startFen) {
-        chess.load(startFen);
-      }
+      // Capture the custom start FEN BEFORE resetting (reset() clears headers)
+      const startFen: string | undefined = (chess.header() as Record<string, string>)["FEN"];
+
+      // Build the replay board from the correct starting position
+      const replay = startFen ? new Chess(startFen) : new Chess();
 
       const moves: MoveEval[] = [];
 
@@ -70,18 +70,18 @@ export async function runAnalysis(
       let carryEvalCp: number | null;
       let carryBestMove: string | null;
 
-      if (chess.isGameOver()) {
-        carryEvalCp = chess.isDraw() ? 0 : chess.isCheckmate() ? (chess.turn() === "w" ? -10000 : 10000) : 0;
+      if (replay.isGameOver()) {
+        carryEvalCp = replay.isDraw() ? 0 : replay.isCheckmate() ? (replay.turn() === "w" ? -10000 : 10000) : 0;
         carryBestMove = null;
       } else {
-        const startResult = await engine.analyse(chess.fen(), depth);
+        const startResult = await engine.analyse(replay.fen(), depth);
         carryEvalCp = startResult.scoreCp;
         carryBestMove = startResult.bestMoveUci;
       }
 
       for (let i = 0; i < numMoves; i++) {
         const verboseMove = verboseMoves[i];
-        const fenBefore = chess.fen();
+        const fenBefore = replay.fen();
         const evalBefore = carryEvalCp;
         const bestMoveUci = carryBestMove;
 
@@ -92,23 +92,23 @@ export async function runAnalysis(
         // Apply the move
         const moveUci = verboseMove.lan; // long algebraic = UCI format
         const moveSan = verboseMove.san;
-        chess.move(verboseMove.san);
+        replay.move(verboseMove.san);
 
         // Evaluate the position AFTER the move (carry-forward: this becomes
         // eval_before for the next move)
         let evalAfter: number | null;
         let nextBestMove: string | null;
 
-        if (chess.isCheckmate()) {
+        if (replay.isCheckmate()) {
           // The side that just moved has mated the opponent.
           // movingColor won → white-POV: white win = +10000, black win = -10000
           evalAfter = movingColor === "w" ? 10000 : -10000;
           nextBestMove = null;
-        } else if (chess.isDraw()) {
+        } else if (replay.isDraw()) {
           evalAfter = 0;
           nextBestMove = null;
         } else {
-          const result = await engine.analyse(chess.fen(), depth);
+          const result = await engine.analyse(replay.fen(), depth);
           evalAfter = result.scoreCp;
           nextBestMove = result.bestMoveUci;
         }
@@ -133,6 +133,8 @@ export async function runAnalysis(
       onProgress(gameIdx + 1, total);
     }
   } finally {
-    engine.quit();
+    // Only quit the engine if runAnalysis created it; injected engines are
+    // owned by the caller and should remain alive after this call.
+    if (engineOwned) engine.quit();
   }
 }

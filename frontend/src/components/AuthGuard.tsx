@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
+import Sidebar from "@/components/Sidebar";
+import StatusBar from "@/components/StatusBar";
 
 const PUBLIC_ROUTES = [
   "/login",
@@ -74,6 +76,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Authenticated + verified
-  return <>{children}</>;
+  // Authenticated + verified — render full app chrome
+  return (
+    <>
+      <Sidebar />
+      <StatusBar />
+      <main className="flex-1 lg:ml-64 pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8 pb-8">{children}</main>
+    </>
+  );
 }

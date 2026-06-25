@@ -15,6 +15,18 @@ import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
+// ── Mock Sidebar and StatusBar so AuthGuard tests don't pull full implementations ──
+
+jest.mock("@/components/Sidebar", () => ({
+  __esModule: true,
+  default: () => <div data-testid="sidebar-mock">Sidebar</div>,
+}));
+
+jest.mock("@/components/StatusBar", () => ({
+  __esModule: true,
+  default: () => <div data-testid="statusbar-mock">StatusBar</div>,
+}));
+
 // ── Mock next/navigation ──────────────────────────────────────────────────────
 
 const mockReplace = jest.fn();
@@ -363,5 +375,90 @@ describe("AuthGuard", () => {
     });
 
     expect(mockRequestVerify).toHaveBeenCalledWith(unverifiedUser.email);
+  });
+
+  it("does NOT render Sidebar/StatusBar on a public route with no user", () => {
+    mockPathname = "/login";
+    setUseAuth({ user: null, loading: false });
+
+    render(
+      <AuthGuard>
+        <div>Login page</div>
+      </AuthGuard>
+    );
+
+    expect(screen.getByText("Login page")).toBeInTheDocument();
+    expect(screen.queryByTestId("sidebar-mock")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("statusbar-mock")).not.toBeInTheDocument();
+  });
+
+  it("renders Sidebar and StatusBar for an authenticated, verified user", () => {
+    mockPathname = "/dashboard";
+    setUseAuth({ user: verifiedUser, loading: false });
+
+    render(
+      <AuthGuard>
+        <div>Dashboard content</div>
+      </AuthGuard>
+    );
+
+    expect(screen.getByTestId("sidebar-mock")).toBeInTheDocument();
+    expect(screen.getByTestId("statusbar-mock")).toBeInTheDocument();
+    expect(screen.getByText("Dashboard content")).toBeInTheDocument();
+  });
+});
+
+// =============================================================================
+// useAuth outside AuthProvider
+// =============================================================================
+
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; onError: (err: Error) => void },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; onError: (err: Error) => void }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: Error) {
+    this.props.onError(error);
+  }
+  render() {
+    if (this.state.hasError) return <div>Error caught</div>;
+    return this.props.children;
+  }
+}
+
+describe("useAuth outside AuthProvider", () => {
+  beforeEach(() => {
+    // Ensure no spy from AuthGuard tests is still in place
+    jest.restoreAllMocks();
+  });
+
+  it("throws when called outside <AuthProvider>", () => {
+    const spy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    let caughtError: Error | null = null;
+
+    function BareConsumer() {
+      authModule.useAuth();
+      return null;
+    }
+
+    render(
+      <ErrorBoundary onError={(err) => { caughtError = err; }}>
+        <BareConsumer />
+      </ErrorBoundary>
+    );
+
+    expect(caughtError).not.toBeNull();
+    expect((caughtError as unknown as Error).message).toMatch(
+      /useAuth must be used within an AuthProvider/
+    );
+
+    spy.mockRestore();
   });
 });

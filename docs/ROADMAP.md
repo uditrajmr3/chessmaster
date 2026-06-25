@@ -57,7 +57,7 @@ Connect to ongoing games via Lichess/Chess.com API. After the game ends, immedia
 Show theoretical moves alongside the player's moves in the game viewer. Highlight where the player deviates from book and whether the deviation was good or bad.
 
 ### Game Import via PGN Upload
-Support uploading PGN files directly, for OTB games or games from other platforms.
+Import PGN files directly (basic version done; future work: better error reporting, OTB tagging).
 
 ### Export & Sharing
 Export analysis data as CSV/PDF. Share coaching reports with human coaches. Generate shareable progress summaries.

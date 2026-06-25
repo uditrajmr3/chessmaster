@@ -38,17 +38,23 @@ An online player who has never played over-the-board wants a rough estimate of t
 
 | Feature | Status | Description |
 |---------|--------|-------------|
-| Chess.com sync | Done | Fetch all games via public API |
-| Lichess sync | Done | Fetch all games via NDJSON API |
-| Stockfish analysis | Done | Depth 14 position evaluation |
+| Multi-user accounts | Done | Email+password auth, email verification, password reset |
+| Chess.com sync | Done | Fetch all games via public API (linked username per account) |
+| Lichess sync | Done | Fetch all games via NDJSON API (linked username per account) |
+| Browser Stockfish analysis | Done | Stockfish WASM runs in the browser; evals posted to server |
 | Move classification | Done | Good/inaccuracy/mistake/blunder/brilliant |
 | Tactical detection | Done | Fork, pin, skewer, back-rank, discovered attack |
-| Pattern engine | Done | Cross-game weakness aggregation |
+| Pattern engine | Done | Cross-game weakness aggregation (per user) |
 | AI coaching report | Done | Claude-powered personalized report |
+| Puzzle trainer | Done | Spaced-repetition drills from your own blunders |
+| Tilt & streak detection | Done | Correlates loss streaks with blunder rate |
+| Opponent scouting | Done | Pre-game analysis of any opponent |
+| Time management profile | Done | Clock usage per move number |
 | FIDE estimate | Done | Approximate rating conversion |
 | Responsive UI | Done | Mobile-optimized layout |
 | Interactive game viewer | Done | Color-coded moves with eval details |
 | Rating chart | Done | Filtered by platform and time control |
+| Data isolation | Done | All data scoped to the authenticated user (fail-closed) |
 
 ## Metrics for Success
 
@@ -65,8 +71,6 @@ An online player who has never played over-the-board wants a rough estimate of t
 - Export analysis as PDF report
 
 ### Medium-term
-- Multi-user support with authentication
-- PostgreSQL for production deployment
 - Drill mode — practice positions similar to your weaknesses
 - Peer comparison — compare patterns with players at your level
 

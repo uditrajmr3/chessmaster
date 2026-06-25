@@ -4,8 +4,10 @@ import json
 from datetime import datetime
 
 import pytest
+import pytest_asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy import StaticPool, create_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
@@ -21,11 +23,33 @@ TEST_ENGINE = create_engine(
 )
 TestSession = sessionmaker(bind=TEST_ENGINE, autoflush=False, autocommit=False)
 
+# ── Async in-memory SQLite engine (for fastapi-users which needs async session) ─
+
+ASYNC_TEST_ENGINE = create_async_engine(
+    "sqlite+aiosqlite://",
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
+AsyncTestSession = sessionmaker(
+    bind=ASYNC_TEST_ENGINE, class_=AsyncSession, autoflush=False, autocommit=False
+)
+
 
 @pytest.fixture()
 def db():
     """Yield a fresh DB session with all tables created, torn down after each test."""
+    import asyncio
+
+    # Create tables in both the sync engine (for regular ORM access in tests)
+    # and the async engine (for fastapi-users which requires an async session).
     Base.metadata.create_all(bind=TEST_ENGINE)
+
+    async def _async_create():
+        async with ASYNC_TEST_ENGINE.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+    asyncio.get_event_loop().run_until_complete(_async_create())
+
     session = TestSession()
     try:
         yield session
@@ -33,10 +57,23 @@ def db():
         session.close()
         Base.metadata.drop_all(bind=TEST_ENGINE)
 
+        async def _async_drop():
+            async with ASYNC_TEST_ENGINE.begin() as conn:
+                await conn.run_sync(Base.metadata.drop_all)
+
+        asyncio.get_event_loop().run_until_complete(_async_drop())
+
 
 @pytest.fixture()
 def client(db):
-    """FastAPI TestClient wired to the in-memory DB."""
+    """FastAPI TestClient wired to the in-memory DB.
+
+    Also overrides get_user_db to use an async SQLite session (fastapi-users
+    requires an async SQLAlchemy session; our regular DB uses sync).
+    """
+    from app.auth.users import get_user_db
+    from fastapi_users.db import SQLAlchemyUserDatabase
+    from app.auth.models import User
 
     def _override_get_db():
         try:
@@ -44,7 +81,12 @@ def client(db):
         finally:
             pass
 
+    async def _override_get_user_db():
+        async with AsyncTestSession() as session:
+            yield SQLAlchemyUserDatabase(session, User)
+
     app.dependency_overrides[get_db] = _override_get_db
+    app.dependency_overrides[get_user_db] = _override_get_user_db
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()

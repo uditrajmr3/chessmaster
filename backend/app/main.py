@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .routers import analysis, digest, endgame, export, games, opening_book, openings, patterns, peer_comparison, pgn_import, puzzles, rating_predictor, report, scouting, stats, sync, tilt, time_management
+from .auth.users import fastapi_users, auth_backend
+from .auth.schemas import UserRead, UserCreate, UserUpdate
 
 
 @asynccontextmanager
@@ -41,6 +43,13 @@ app.include_router(peer_comparison.router, prefix="/api")
 app.include_router(pgn_import.router, prefix="/api")
 app.include_router(export.router, prefix="/api")
 app.include_router(opening_book.router, prefix="/api")
+
+# Auth routers
+app.include_router(fastapi_users.get_auth_router(auth_backend), prefix="/api/auth", tags=["auth"])
+app.include_router(fastapi_users.get_register_router(UserRead, UserCreate), prefix="/api/auth", tags=["auth"])
+app.include_router(fastapi_users.get_verify_router(UserRead), prefix="/api/auth", tags=["auth"])
+app.include_router(fastapi_users.get_reset_password_router(), prefix="/api/auth", tags=["auth"])
+app.include_router(fastapi_users.get_users_router(UserRead, UserUpdate), prefix="/api/users", tags=["users"])
 
 
 @app.get("/api/health")

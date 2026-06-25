@@ -4,12 +4,12 @@ from datetime import datetime, timedelta
 
 from app.services.tilt_detector import TiltDetector
 
-from .conftest import make_blunder, make_game, make_move_analysis
+from .conftest import TEST_USER_ID, make_blunder, make_game, make_move_analysis
 
 
 class TestStreaks:
     def test_empty_games(self, db):
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert report["streaks"]["max_win_streak"] == 0
         assert report["streaks"]["max_loss_streak"] == 0
@@ -20,7 +20,7 @@ class TestStreaks:
             make_game(db, id=f"g{i}", platform_id=f"g{i}", result="win",
                       played_at=base + timedelta(minutes=i * 10))
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert report["streaks"]["max_win_streak"] == 5
 
@@ -30,7 +30,7 @@ class TestStreaks:
             make_game(db, id=f"g{i}", platform_id=f"g{i}", result="loss",
                       played_at=base + timedelta(minutes=i * 10))
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert report["streaks"]["max_loss_streak"] == 4
 
@@ -41,7 +41,7 @@ class TestStreaks:
             make_game(db, id=f"g{i}", platform_id=f"g{i}", result=r,
                       played_at=base + timedelta(minutes=i * 10))
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert report["streaks"]["max_win_streak"] == 3
         assert report["streaks"]["max_loss_streak"] == 2
@@ -53,7 +53,7 @@ class TestStreaks:
             make_game(db, id=f"g{i}", platform_id=f"g{i}", result=r,
                       played_at=base + timedelta(minutes=i * 10))
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert report["streaks"]["max_win_streak"] == 2
 
@@ -78,7 +78,7 @@ class TestBlunderByStreak:
                            centipawn_loss=200)
         make_move_analysis(db, game_id="g1", move_number=4, classification="good")
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
 
         data = report["blunder_by_losing_streak"]
@@ -105,7 +105,7 @@ class TestBlunderByStreak:
                   played_at=base + timedelta(minutes=20))
         make_move_analysis(db, game_id="g2", move_number=0)
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         data = report["blunder_by_losing_streak"]
         # g0 had 0 prior losses, g1 had 1 prior loss, g2 had 0 (reset by win)
@@ -129,7 +129,7 @@ class TestSessions:
                       result="loss", played_at=base + timedelta(hours=2, minutes=i * 10))
             make_move_analysis(db, game_id=f"s2g{i}", move_number=0)
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
 
         # Should have 2 sessions (single-game sessions are excluded from summary)
@@ -148,7 +148,7 @@ class TestSessions:
                   player_rating=960, played_at=base + timedelta(minutes=10))
         make_move_analysis(db, game_id="g2", move_number=0)
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert report["sessions"][0]["rating_change"] == -40
 
@@ -162,7 +162,7 @@ class TestRatingDrops:
             make_game(db, id=f"g{i}", platform_id=f"g{i}", result=result,
                       player_rating=rating, played_at=base + timedelta(minutes=i * 5))
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert len(report["rating_drops"]) == 1
         assert report["rating_drops"][0]["rating_drop"] == 70
@@ -174,7 +174,7 @@ class TestRatingDrops:
             make_game(db, id=f"g{i}", platform_id=f"g{i}", result="loss",
                       player_rating=rating, played_at=base + timedelta(minutes=i * 5))
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert len(report["rating_drops"]) == 0
 
@@ -191,7 +191,7 @@ class TestRecommendations:
             make_move_analysis(db, game_id=f"g{i}", move_number=0,
                                classification="blunder", centipawn_loss=200)
 
-        detector = TiltDetector(db)
+        detector = TiltDetector(db, user_id=TEST_USER_ID)
         report = detector.analyze()
         assert len(report["recommendations"]) > 0
 

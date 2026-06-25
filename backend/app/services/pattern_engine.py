@@ -9,6 +9,8 @@ from ..models import Game, MoveAnalysis
 
 class PatternEngine:
     def __init__(self, db: Session, user_id=None):
+        if user_id is None:
+            raise ValueError("user_id is required for tenant scoping")
         self.db = db
         self._user_id = user_id
         self._platform: str | None = None
@@ -38,19 +40,12 @@ class PatternEngine:
         }
 
     def _base_game_query(self):
-        """Return a Game query pre-filtered by the authenticated user (if set)."""
-        q = self.db.query(Game)
-        if self._user_id is not None:
-            q = q.filter(Game.user_id == self._user_id)
-        return q
+        """Return a Game query pre-filtered by the authenticated user (always applied)."""
+        return self.db.query(Game).filter(Game.user_id == self._user_id)
 
-    def _filtered_game_ids(self) -> list[str] | None:
-        """Return game IDs matching user/platform/time_class filters, or None if no filters apply."""
-        if self._user_id is None and not self._platform and not self._time_class:
-            return None
-        q = self.db.query(Game.id)
-        if self._user_id is not None:
-            q = q.filter(Game.user_id == self._user_id)
+    def _filtered_game_ids(self) -> list[str]:
+        """Return game IDs matching user/platform/time_class filters. user_id is always applied."""
+        q = self.db.query(Game.id).filter(Game.user_id == self._user_id)
         if self._platform:
             q = q.filter(Game.platform == self._platform)
         if self._time_class:
@@ -60,9 +55,7 @@ class PatternEngine:
     def _apply_move_filter(self, query):
         """Apply game-level filters to a MoveAnalysis query."""
         game_ids = self._filtered_game_ids()
-        if game_ids is not None:
-            return query.filter(MoveAnalysis.game_id.in_(game_ids))
-        return query
+        return query.filter(MoveAnalysis.game_id.in_(game_ids))
 
     def _opening_stats(self) -> list[dict]:
         """Win/loss/draw and avg CPL per opening."""
@@ -238,7 +231,7 @@ class PatternEngine:
 
             if first_endgame and first_endgame.eval_before and first_endgame.eval_before >= 200:
                 had_advantage += 1
-                game = self.db.query(Game).filter(Game.id == game_id).first()
+                game = self.db.query(Game).filter(Game.id == game_id, Game.user_id == self._user_id).first()
                 if game and game.result == "win":
                     won_from_advantage += 1
 
@@ -288,7 +281,7 @@ class PatternEngine:
 
         examples = []
         for b in blunders:
-            game = self.db.query(Game).filter(Game.id == b.game_id).first()
+            game = self.db.query(Game).filter(Game.id == b.game_id, Game.user_id == self._user_id).first()
             motifs = json.loads(b.tactical_motifs) if b.tactical_motifs else []
             examples.append({
                 "game_id": b.game_id,

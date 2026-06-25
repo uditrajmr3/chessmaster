@@ -6,7 +6,7 @@ import pytest
 
 from app.services.rating_predictor import RatingPredictor
 
-from .conftest import make_game, make_move_analysis
+from .conftest import TEST_USER_ID, make_game, make_move_analysis
 
 
 def _make_games_over_time(db, count=10, start_rating=1000, rating_step=5,
@@ -34,7 +34,7 @@ class TestTrajectory:
     def test_computes_basic_trajectory(self, db):
         _make_games_over_time(db, count=10, start_rating=1000, rating_step=10)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
         t = report["trajectory"]
 
@@ -47,7 +47,7 @@ class TestTrajectory:
     def test_peak_and_valley(self, db):
         _make_games_over_time(db, count=10, start_rating=1000, rating_step=10)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
         t = report["trajectory"]
 
@@ -57,7 +57,7 @@ class TestTrajectory:
     def test_declining_trajectory(self, db):
         _make_games_over_time(db, count=10, start_rating=1500, rating_step=-10)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
         t = report["trajectory"]
 
@@ -67,7 +67,7 @@ class TestTrajectory:
     def test_not_enough_games(self, db):
         _make_games_over_time(db, count=3)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
 
         assert report["trajectory"]["games_played"] == 0
@@ -79,7 +79,7 @@ class TestMilestones:
     def test_projects_milestones(self, db):
         _make_games_over_time(db, count=20, start_rating=1100, rating_step=5)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
 
         assert len(report["milestones"]) > 0
@@ -91,7 +91,7 @@ class TestMilestones:
     def test_no_milestones_when_declining(self, db):
         _make_games_over_time(db, count=10, start_rating=1500, rating_step=-10)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
 
         assert report["milestones"] == []
@@ -117,7 +117,7 @@ class TestWeaknessTrends:
                 game_phase="middlegame", centipawn_loss=50.0 - i * 3,
             )
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
         trends = report["weakness_trends"]
 
@@ -143,7 +143,7 @@ class TestMonthlyPerformance:
             result="win",
         )
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
         monthly = report["monthly_performance"]
 
@@ -160,7 +160,7 @@ class TestRecommendations:
     def test_positive_trend_recommendation(self, db):
         _make_games_over_time(db, count=10, start_rating=1000, rating_step=10)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
 
         assert any("gaining" in r.lower() for r in report["recommendations"])
@@ -168,7 +168,7 @@ class TestRecommendations:
     def test_declining_trend_recommendation(self, db):
         _make_games_over_time(db, count=10, start_rating=1500, rating_step=-10)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
 
         assert any("declining" in r.lower() for r in report["recommendations"])
@@ -176,7 +176,7 @@ class TestRecommendations:
     def test_near_peak_recommendation(self, db):
         _make_games_over_time(db, count=10, start_rating=1000, rating_step=10)
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         report = predictor.get_prediction()
 
         assert any("peak" in r.lower() for r in report["recommendations"])
@@ -196,7 +196,7 @@ class TestFilters:
                 platform="lichess",
             )
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         cc_report = predictor.get_prediction(platform="chesscom")
         li_report = predictor.get_prediction(platform="lichess")
 
@@ -206,7 +206,7 @@ class TestFilters:
     def test_time_class_filter(self, db):
         _make_games_over_time(db, count=6, time_class="blitz")
 
-        predictor = RatingPredictor(db)
+        predictor = RatingPredictor(db, user_id=TEST_USER_ID)
         blitz = predictor.get_prediction(time_class="blitz")
         rapid = predictor.get_prediction(time_class="rapid")
 

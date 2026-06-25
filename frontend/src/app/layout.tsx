@@ -3,6 +3,8 @@ import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import StatusBar from "@/components/StatusBar";
+import { AuthProvider } from "@/lib/auth";
+import AuthGuard from "@/components/AuthGuard";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -31,9 +33,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${dmSans.variable} ${jetbrainsMono.variable}`}>
       <body className="flex min-h-screen">
-        <Sidebar />
-        <StatusBar />
-        <main className="flex-1 lg:ml-64 pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8 pb-8">{children}</main>
+        <AuthProvider>
+          <AuthGuard>
+            <Sidebar />
+            <StatusBar />
+            <main className="flex-1 lg:ml-64 pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8 pb-8">{children}</main>
+          </AuthGuard>
+        </AuthProvider>
       </body>
     </html>
   );

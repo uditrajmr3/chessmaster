@@ -14,11 +14,11 @@ def import_pgn(
     db: Session,
     pgn_text: str,
     username: str,
-    user_id: str | None = None,
+    user_id: uuid.UUID | None = None,
 ) -> dict:
     """Parse a PGN string (potentially multi-game) and import games."""
-    # Placeholder user_id for pre-auth compatibility; Task 10 will pass real user_id
-    effective_user_id = user_id or "00000000-0000-0000-0000-000000000001"
+    # Placeholder user_id for pre-auth compatibility; Task 11 will pass real user_id
+    effective_user_id = user_id or uuid.UUID("00000000-0000-0000-0000-000000000001")
     stream = io.StringIO(pgn_text)
     imported = 0
     skipped = 0
@@ -51,7 +51,7 @@ def import_pgn(
     }
 
 
-def _import_single_game(db: Session, game: chess.pgn.Game, username: str, user_id: str) -> str:
+def _import_single_game(db: Session, game: chess.pgn.Game, username: str, user_id: uuid.UUID) -> str:
     """Import a single parsed PGN game. Returns 'imported', 'skipped', or error string."""
     headers = game.headers
 

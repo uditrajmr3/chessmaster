@@ -35,8 +35,11 @@ class PuzzleService:
         for ma in new_blunders:
             # Derive user_id from the parent Game row
             game = self.db.query(Game).filter(Game.id == ma.game_id).first()
-            puzzle_user_id = game.user_id if game else None
-            self.db.add(PuzzleProgress(move_analysis_id=ma.id, user_id=puzzle_user_id))
+            if game is None:
+                # Skip orphaned MoveAnalysis rows to avoid writing NULL into
+                # PuzzleProgress.user_id (NOT NULL on Postgres)
+                continue
+            self.db.add(PuzzleProgress(move_analysis_id=ma.id, user_id=game.user_id))
 
         if new_blunders:
             self.db.commit()

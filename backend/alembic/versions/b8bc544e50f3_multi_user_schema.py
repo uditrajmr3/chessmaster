@@ -1,20 +1,20 @@
-"""add users table + user_id scoping
+"""multi_user_schema
 
-Revision ID: 27ba4ca3941b
-Revises: 86d162045657
-Create Date: 2026-06-25 10:27:55.840988
+Revision ID: b8bc544e50f3
+Revises: 
+Create Date: 2026-06-26 11:34:57.594649
 
 """
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-import fastapi_users_db_sqlalchemy.generics
+import fastapi_users_db_sqlalchemy
 
 
 # revision identifiers, used by Alembic.
-revision: str = '27ba4ca3941b'
-down_revision: Union[str, Sequence[str], None] = '86d162045657'
+revision: str = 'b8bc544e50f3'
+down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

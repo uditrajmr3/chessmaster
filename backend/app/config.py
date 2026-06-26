@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     access_token_lifetime: int = 3600
     resend_api_key: str = ""
     email_from: str = "ChessInt <noreply@example.com>"
+    # Resend published-template id. When set, transactional emails render via the
+    # Resend template instead of inline HTML. Empty = use the inline HTML fallback.
+    email_template_id: str = ""
     frontend_url: str = "http://localhost:3000"
     cookie_secure: bool = False
     cookie_samesite: str = "lax"

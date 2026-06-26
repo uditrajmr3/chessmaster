@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FileText } from "lucide-react";
 import { api } from "@/lib/api";
 import type { ReportData } from "@/lib/types";
+import { PageHeader, EmptyState } from "@/components/ui/page-kit";
 
 export default function ReportPage() {
   const [report, setReport] = useState<ReportData | null>(null);
@@ -50,54 +51,80 @@ export default function ReportPage() {
 
   return (
     <div className="space-y-6">
-      {/* Zone 3 — Page header, no animation on title */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold mb-1">AI Coach Report</h2>
-          <p className="text-gray-400 text-sm">
-            Personalized analysis of your recurring patterns and weaknesses
-          </p>
-        </div>
-        <button
-          onClick={handleGenerate}
-          disabled={generating}
-          className="px-6 py-2 bg-accent-600 hover:bg-accent-700 disabled:opacity-50 text-white rounded-lg btn-press"
-        >
-          {generating ? "Generating..." : report ? "Regenerate Report" : "Generate Report"}
-        </button>
-      </div>
+      <PageHeader
+        title="AI Coach Report"
+        subtitle="Personalized analysis of your recurring patterns and weaknesses."
+        action={
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="px-6 py-2.5 bg-accent-600 hover:bg-accent-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg btn-press"
+          >
+            {generating ? "Generating..." : report ? "Regenerate Report" : "Generate Report"}
+          </button>
+        }
+      />
 
-      {!report ? (
-        <div className="flex flex-col items-center justify-center h-80 gap-6 animate-fade-in-up">
-          <FileText className="w-10 h-10 text-gray-500" />
-          <div className="text-center space-y-2">
-            <h3 className="text-xl font-bold">Your coaching report starts here</h3>
-            <p className="text-gray-400 text-center max-w-md">
-              Sync and analyze your games, then generate a report to get
-              personalized coaching insights powered by AI.
-            </p>
-          </div>
-          <p className="text-gray-500 text-xs">
-            Requires ANTHROPIC_API_KEY in backend/.env
-          </p>
-        </div>
+      {generating ? (
+        <ReportGenerating />
+      ) : !report ? (
+        <EmptyState
+          icon={FileText}
+          title="Your coaching report starts here"
+          description="Sync and analyze your games, then generate a report to get personalized coaching insights powered by AI. Requires ANTHROPIC_API_KEY in backend/.env."
+          action={
+            <button
+              onClick={handleGenerate}
+              className="px-6 py-2.5 bg-accent-600 hover:bg-accent-500 text-white text-sm font-medium rounded-lg btn-press"
+            >
+              Generate Report
+            </button>
+          }
+        />
       ) : (
         <div className="space-y-4 animate-fade-in-up">
-          <div className="flex items-center gap-4 text-sm text-gray-400">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/45">
             <span>
-              Generated: {new Date(report.generated_at).toLocaleString()}
+              Generated{" "}
+              <span className="text-white/70">
+                {new Date(report.generated_at).toLocaleString()}
+              </span>
             </span>
-            <span>·</span>
-            <span>{report.games_count} games analyzed</span>
+            <span aria-hidden="true">·</span>
+            <span>
+              <span className="font-mono text-white/70">{report.games_count}</span>{" "}
+              games analyzed
+            </span>
           </div>
 
-          <div className="surface-card p-8 card-hover">
-            <div className="max-w-none">
+          <div className="surface-card p-6 sm:p-8">
+            <div className="max-w-[72ch]">
               <MarkdownRenderer text={report.report_text} />
             </div>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function ReportGenerating() {
+  return (
+    <div className="space-y-4 animate-fade-in-up" aria-busy="true">
+      <div className="flex items-center gap-3 text-sm text-white/55">
+        <span className="flex h-2 w-2 shrink-0 rounded-full bg-accent-400 animate-pulse" aria-hidden="true" />
+        <span>Analyzing your games and writing your coaching report. This can take up to a minute.</span>
+      </div>
+      <div className="surface-card p-6 sm:p-8">
+        <div className="skeleton" style={{ height: 28, width: 300, borderRadius: 6 }} />
+        <div className="skeleton mt-4" style={{ height: 16, width: "100%", borderRadius: 4 }} />
+        <div className="skeleton mt-2" style={{ height: 16, width: "90%", borderRadius: 4 }} />
+        <div className="skeleton mt-2" style={{ height: 16, width: "95%", borderRadius: 4 }} />
+        <div className="skeleton mt-6" style={{ height: 24, width: 240, borderRadius: 6 }} />
+        <div className="skeleton mt-4" style={{ height: 16, width: "100%", borderRadius: 4 }} />
+        <div className="skeleton mt-2" style={{ height: 16, width: "85%", borderRadius: 4 }} />
+        <div className="skeleton mt-2" style={{ height: 16, width: "92%", borderRadius: 4 }} />
+      </div>
     </div>
   );
 }
@@ -113,7 +140,7 @@ function ReportSkeleton() {
         <div className="skeleton" style={{ height: 40, width: 160, borderRadius: 8 }} />
       </div>
       <div className="skeleton" style={{ height: 16, width: 280, borderRadius: 4 }} />
-      <div className="surface-card p-8">
+      <div className="surface-card p-6 sm:p-8">
         <div className="skeleton" style={{ height: 28, width: 300, borderRadius: 6 }} />
         <div className="skeleton mt-4" style={{ height: 16, width: "100%", borderRadius: 4 }} />
         <div className="skeleton mt-2" style={{ height: 16, width: "90%", borderRadius: 4 }} />
@@ -143,14 +170,14 @@ function renderInline(text: string) {
     }
     if (part.startsWith("*") && part.endsWith("*") && !part.startsWith("**")) {
       return (
-        <em key={i} className="text-gray-200 italic">
+        <em key={i} className="text-white/80 italic">
           {part.slice(1, -1)}
         </em>
       );
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
-        <code key={i} className="text-accent-300 bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono">
+        <code key={i} className="text-accent-300 bg-ink-800 border border-white/10 px-1.5 py-0.5 rounded text-sm font-mono">
           {part.slice(1, -1)}
         </code>
       );
@@ -198,8 +225,8 @@ function MarkdownRenderer({ text }: { text: string }) {
       elements.push(
         <ul key={`ul-${block.index}`} className="space-y-1.5 my-3 ml-1">
           {items.map((item) => (
-            <li key={item.index} className="text-gray-300 leading-relaxed flex gap-2">
-              <span className="text-accent-500 mt-1.5 shrink-0">&#8226;</span>
+            <li key={item.index} className="text-white/80 leading-relaxed flex gap-2">
+              <span className="text-accent-400 mt-1.5 shrink-0">&#8226;</span>
               <span>{renderInline(item.content)}</span>
             </li>
           ))}
@@ -218,8 +245,8 @@ function MarkdownRenderer({ text }: { text: string }) {
       elements.push(
         <ol key={`ol-${block.index}`} className="space-y-2 my-3 ml-1 list-none counter-reset-item">
           {items.map((item, idx) => (
-            <li key={item.index} className="text-gray-300 leading-relaxed flex gap-3">
-              <span className="text-accent-400 font-semibold font-mono text-sm mt-0.5 shrink-0 w-5 text-right">
+            <li key={item.index} className="text-white/80 leading-relaxed flex gap-3">
+              <span className="text-accent-300 font-semibold font-mono text-sm mt-0.5 shrink-0 w-5 text-right">
                 {idx + 1}.
               </span>
               <span>{renderInline(item.content)}</span>
@@ -240,7 +267,7 @@ function MarkdownRenderer({ text }: { text: string }) {
       elements.push(
         <pre
           key={`code-${block.index}`}
-          className="text-xs font-mono text-gray-400 bg-gray-800/60 border border-gray-700/50 p-3 rounded-lg my-3 overflow-x-auto"
+          className="text-xs font-mono text-white/70 bg-ink-800 border border-white/10 p-3 rounded-lg my-3 overflow-x-auto"
         >
           {codeLines.map((cl) => cl.content.replace(/^`|`$/g, "")).join("\n")}
         </pre>
@@ -268,7 +295,7 @@ function MarkdownRenderer({ text }: { text: string }) {
       );
     } else if (block.type === "h2") {
       elements.push(
-        <h2 key={block.index} className="text-xl font-bold mt-8 mb-3 text-accent-400 border-b border-gray-700/50 pb-2">
+        <h2 key={block.index} className="text-xl font-bold mt-8 mb-3 text-white border-b border-white/10 pb-2">
           {renderInline(block.content)}
         </h2>
       );
@@ -286,7 +313,7 @@ function MarkdownRenderer({ text }: { text: string }) {
       );
     } else if (block.type === "paragraph") {
       elements.push(
-        <p key={block.index} className="text-gray-300 leading-relaxed my-1.5">
+        <p key={block.index} className="text-white/80 leading-relaxed my-1.5">
           {renderInline(block.content)}
         </p>
       );

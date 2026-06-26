@@ -6,6 +6,10 @@ import { Swords, Check, Minus } from "lucide-react";
 import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { GameSummary } from "@/lib/types";
+import { PageHeader, EmptyState, ResultBadge } from "@/components/ui/page-kit";
+
+const selectClass =
+  "bg-ink-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-white/20 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30";
 
 export default function GamesPage() {
   const [games, setGames] = useState<GameSummary[]>([]);
@@ -34,41 +38,48 @@ export default function GamesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold mb-1">Games</h2>
-        <p className="text-gray-400 text-sm">Browse and review your game history</p>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        <select
-          value={platform}
-          onChange={(e) => setPlatform(e.target.value)}
-          className="bg-[#16242f] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
-        >
-          <option value="">All Platforms</option>
-          <option value="chesscom">Chess.com</option>
-          <option value="lichess">Lichess</option>
-        </select>
-        <select
-          value={result}
-          onChange={(e) => setResult(e.target.value)}
-          className="bg-[#16242f] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
-        >
-          <option value="">All Results</option>
-          <option value="win">Wins</option>
-          <option value="loss">Losses</option>
-          <option value="draw">Draws</option>
-        </select>
-      </div>
+      <PageHeader
+        title="Games"
+        subtitle="Browse and review your game history."
+        action={
+          <div className="flex flex-wrap gap-2.5">
+            <select
+              value={platform}
+              onChange={(e) => setPlatform(e.target.value)}
+              className={selectClass}
+              aria-label="Filter by platform"
+            >
+              <option value="">All platforms</option>
+              <option value="chesscom">Chess.com</option>
+              <option value="lichess">Lichess</option>
+            </select>
+            <select
+              value={result}
+              onChange={(e) => setResult(e.target.value)}
+              className={selectClass}
+              aria-label="Filter by result"
+            >
+              <option value="">All results</option>
+              <option value="win">Wins</option>
+              <option value="loss">Losses</option>
+              <option value="draw">Draws</option>
+            </select>
+          </div>
+        }
+      />
 
       {loading ? (
         <GamesTableSkeleton />
       ) : games.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
-          <Swords className="w-10 h-10 text-gray-500" />
-          <p className="text-gray-400 text-center">No games found. Sync your games first.</p>
-        </div>
+        <EmptyState
+          icon={Swords}
+          title={platform || result ? "No games match these filters" : "No games yet"}
+          description={
+            platform || result
+              ? "Try clearing the filters, or sync more games to widen the pool."
+              : "Link a Chess.com or Lichess account in Settings, then Sync Games from the sidebar to pull in your history."
+          }
+        />
       ) : (
         <>
           {/* Desktop table */}
@@ -181,18 +192,3 @@ function GamesTableSkeleton() {
   );
 }
 
-function ResultBadge({ result }: { result: string }) {
-  return (
-    <span
-      className={`px-2.5 py-1 rounded-md text-xs font-semibold uppercase tracking-wide ${
-        result === "win"
-          ? "bg-green-500/15 text-green-400"
-          : result === "loss"
-          ? "bg-red-500/15 text-red-400"
-          : "bg-yellow-500/15 text-yellow-400"
-      }`}
-    >
-      {result}
-    </span>
-  );
-}

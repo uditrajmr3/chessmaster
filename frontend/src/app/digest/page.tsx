@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { DigestReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
+import { PageHeader, EmptyState, Section, Stat } from "@/components/ui/page-kit";
 
 export default function DigestPage() {
   const [report, setReport] = useState<DigestReport | null>(null);
@@ -29,20 +30,21 @@ export default function DigestPage() {
   if (loading) return <DigestSkeleton />;
   if (!report || report.summary.total_games === 0) return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold">Weekly Digest</h2>
-          <p className="text-gray-400 text-sm">Your recent chess performance at a glance</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <PeriodSelector days={days} onChange={setDays} />
-          <GameFilterBar filters={filters} onChange={setFilters} />
-        </div>
-      </div>
-      <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
-        <Mail className="w-10 h-10 text-gray-500" />
-        <p className="text-gray-400 text-center">No games in the last {days} days. Try a longer period.</p>
-      </div>
+      <PageHeader
+        title="Weekly Digest"
+        subtitle="Your recent chess performance at a glance."
+        action={
+          <div className="flex items-center gap-3">
+            <PeriodSelector days={days} onChange={setDays} />
+            <GameFilterBar filters={filters} onChange={setFilters} />
+          </div>
+        }
+      />
+      <EmptyState
+        icon={Mail}
+        title="No games in this period"
+        description={`We found no games in the last ${days} days. Try a longer period, or sync more games from the sidebar.`}
+      />
     </div>
   );
 
@@ -52,87 +54,90 @@ export default function DigestPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold">Weekly Digest</h2>
-          <p className="text-gray-400 text-sm">
-            {report.period_start} to {report.period_end}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <PeriodSelector days={days} onChange={setDays} />
-          <GameFilterBar filters={filters} onChange={setFilters} />
-        </div>
-      </div>
+      <PageHeader
+        title="Weekly Digest"
+        subtitle={`${report.period_start} to ${report.period_end}`}
+        action={
+          <div className="flex items-center gap-3">
+            <PeriodSelector days={days} onChange={setDays} />
+            <GameFilterBar filters={filters} onChange={setFilters} />
+          </div>
+        }
+      />
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 stagger-children">
-        <StatCard label="Games Played" value={s.total_games} />
-        <StatCard
+        <Stat label="Games Played" value={s.total_games} />
+        <Stat
           label="Win Rate"
           value={`${s.win_rate}%`}
-          color={s.win_rate >= 50 ? "text-green-400" : "text-red-400"}
+          valueClassName={s.win_rate >= 50 ? "text-green-400" : "text-red-400"}
         />
-        <StatCard
+        <Stat
           label="Rating Change"
           value={`${s.rating_change >= 0 ? "+" : ""}${s.rating_change}`}
-          color={s.rating_change >= 0 ? "text-green-400" : "text-red-400"}
+          valueClassName={s.rating_change >= 0 ? "text-green-400" : "text-red-400"}
         />
-        <StatCard
+        <Stat
           label="Avg CPL"
           value={a.avg_cpl}
-          color={a.avg_cpl > 40 ? "text-red-400" : "text-green-400"}
+          valueClassName={a.avg_cpl > 40 ? "text-red-400" : "text-green-400"}
         />
-        <StatCard label="Blunders" value={a.blunders} color={a.blunders > 0 ? "text-red-400" : "text-green-400"} />
-        <StatCard label="Missed Tactics" value={a.missed_tactics} color={a.missed_tactics > 0 ? "text-yellow-400" : "text-green-400"} />
+        <Stat
+          label="Blunders"
+          value={a.blunders}
+          valueClassName={a.blunders > 0 ? "text-red-400" : "text-green-400"}
+        />
+        <Stat
+          label="Missed Tactics"
+          value={a.missed_tactics}
+          valueClassName={a.missed_tactics > 0 ? "text-yellow-400" : "text-green-400"}
+        />
       </div>
 
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Results breakdown */}
         <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">Results</h3>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex-1">
-              <div className="flex h-4 rounded-full overflow-hidden bg-gray-700">
-                {s.total_games > 0 && (
-                  <>
-                    <div
-                      className="bg-green-500"
-                      style={{ width: `${(s.wins / s.total_games) * 100}%` }}
-                    />
-                    <div
-                      className="bg-gray-400"
-                      style={{ width: `${(s.draws / s.total_games) * 100}%` }}
-                    />
-                    <div
-                      className="bg-red-500"
-                      style={{ width: `${(s.losses / s.total_games) * 100}%` }}
-                    />
-                  </>
-                )}
-              </div>
+          <h3 className="text-base font-semibold text-white mb-4">Results</h3>
+          <div className="mb-4">
+            <div className="flex h-2.5 rounded-full overflow-hidden bg-ink-700">
+              {s.total_games > 0 && (
+                <>
+                  <div
+                    className="bg-green-500"
+                    style={{ width: `${(s.wins / s.total_games) * 100}%` }}
+                  />
+                  <div
+                    className="bg-yellow-500"
+                    style={{ width: `${(s.draws / s.total_games) * 100}%` }}
+                  />
+                  <div
+                    className="bg-red-500"
+                    style={{ width: `${(s.losses / s.total_games) * 100}%` }}
+                  />
+                </>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <p className="text-2xl font-bold text-green-400">{s.wins}</p>
-              <p className="text-xs text-gray-500">Wins</p>
+              <p className="text-2xl font-bold font-mono text-green-400">{s.wins}</p>
+              <p className="text-xs text-white/45 mt-0.5">Wins</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-400">{s.draws}</p>
-              <p className="text-xs text-gray-500">Draws</p>
+              <p className="text-2xl font-bold font-mono text-yellow-400">{s.draws}</p>
+              <p className="text-xs text-white/45 mt-0.5">Draws</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-red-400">{s.losses}</p>
-              <p className="text-xs text-gray-500">Losses</p>
+              <p className="text-2xl font-bold font-mono text-red-400">{s.losses}</p>
+              <p className="text-xs text-white/45 mt-0.5">Losses</p>
             </div>
           </div>
           {s.rating_change !== 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-700 text-center">
-              <p className="text-gray-500 text-xs">Rating</p>
-              <p className="text-lg font-mono text-gray-300">
+            <div className="mt-4 pt-4 border-t border-white/5 text-center">
+              <p className="text-xs text-white/45">Rating</p>
+              <p className="mt-1 text-lg font-mono text-white/90">
                 {s.rating_start} → {s.rating_end}{" "}
                 <span className={s.rating_change >= 0 ? "text-green-400" : "text-red-400"}>
                   ({s.rating_change >= 0 ? "+" : ""}{s.rating_change})
@@ -145,7 +150,7 @@ export default function DigestPage() {
         {/* vs Previous Period */}
         {imp.has_comparison ? (
           <div className="surface-card p-5 animate-fade-in-up">
-            <h3 className="text-xl font-semibold mb-4">vs. Previous {days} Days</h3>
+            <h3 className="text-base font-semibold text-white mb-4">vs. Previous {days} Days</h3>
             <div className="space-y-4">
               <ComparisonRow
                 label="Win Rate"
@@ -172,27 +177,29 @@ export default function DigestPage() {
           </div>
         ) : (
           <div className="surface-card p-5 animate-fade-in-up flex items-center justify-center">
-            <p className="text-gray-500 text-sm">No previous period data for comparison</p>
+            <p className="text-sm text-white/45">No previous period data for comparison.</p>
           </div>
         )}
 
         {/* Top openings */}
         {report.openings.length > 0 && (
-          <div className="surface-card p-5 animate-fade-in-up">
-            <h3 className="text-xl font-semibold mb-4">Top Openings</h3>
-            <div className="space-y-2">
+          <div className="surface-card overflow-hidden animate-fade-in-up">
+            <h3 className="text-base font-semibold text-white px-5 pt-5 pb-3">Top Openings</h3>
+            <div className="divide-y divide-white/5">
               {report.openings.map((o) => (
                 <div
                   key={o.eco}
-                  className="flex items-center justify-between bg-[#101c27] rounded-lg px-4 py-3 card-hover"
+                  className="flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.02] transition-colors"
                 >
-                  <div>
-                    <p className="text-sm text-gray-200 font-medium">{o.name}</p>
-                    <p className="text-xs text-gray-500">{o.eco} · {o.games} games</p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-white/90 truncate">{o.name}</p>
+                    <p className="text-xs text-white/45">
+                      <span className="font-mono">{o.eco}</span> · {o.games} games
+                    </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0 ml-3">
                     <span className="text-green-400 text-sm font-mono">{o.wins}W</span>
-                    <span className="text-gray-600 mx-1">/</span>
+                    <span className="text-white/30 mx-1">/</span>
                     <span className="text-red-400 text-sm font-mono">{o.losses}L</span>
                   </div>
                 </div>
@@ -203,26 +210,21 @@ export default function DigestPage() {
 
         {/* Highlights */}
         {report.highlights.length > 0 && (
-          <div className="surface-card p-5 animate-fade-in-up">
-            <h3 className="text-xl font-semibold mb-4">Highlights</h3>
-            <div className="space-y-2">
+          <div className="surface-card overflow-hidden animate-fade-in-up">
+            <h3 className="text-base font-semibold text-white px-5 pt-5 pb-3">Highlights</h3>
+            <div className="divide-y divide-white/5">
               {report.highlights.map((h, i) => (
-                <div
-                  key={i}
-                  className="bg-[#101c27] rounded-lg px-4 py-3 card-hover"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      h.type === "best_win" ? "bg-green-500/20 text-green-400" :
-                      h.type === "upset" ? "bg-yellow-500/20 text-yellow-400" :
-                      "bg-blue-500/20 text-blue-400"
-                    }`}>
-                      {h.type === "best_win" ? "Best Win" :
-                       h.type === "upset" ? "Upset" :
-                       h.type === "longest_game" ? "Marathon" : h.type}
-                    </span>
-                    <p className="text-sm text-gray-300">{h.description}</p>
-                  </div>
+                <div key={i} className="flex items-center gap-3 px-5 py-3.5">
+                  <span className={`shrink-0 text-xs px-2.5 py-1 rounded-md font-semibold uppercase tracking-wide ${
+                    h.type === "best_win" ? "bg-green-500/15 text-green-400" :
+                    h.type === "upset" ? "bg-yellow-500/15 text-yellow-400" :
+                    "bg-accent-500/15 text-accent-300"
+                  }`}>
+                    {h.type === "best_win" ? "Best Win" :
+                     h.type === "upset" ? "Upset" :
+                     h.type === "longest_game" ? "Marathon" : h.type}
+                  </span>
+                  <p className="text-sm text-white/80">{h.description}</p>
                 </div>
               ))}
             </div>
@@ -231,12 +233,13 @@ export default function DigestPage() {
       </div>
 
       {/* Full text digest */}
-      <div className="surface-card p-5 animate-fade-in-up">
-        <h3 className="text-xl font-semibold mb-4">Full Digest</h3>
-        <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono leading-relaxed bg-[#101c27] rounded-lg p-4">
-          {report.digest_text}
-        </pre>
-      </div>
+      <Section title="Full Digest">
+        <div className="surface-card p-5 animate-fade-in-up">
+          <pre className="text-sm text-white/80 whitespace-pre-wrap font-mono leading-relaxed bg-ink-900 rounded-lg p-4 border border-white/5">
+            {report.digest_text}
+          </pre>
+        </div>
+      </Section>
     </div>
   );
 }
@@ -246,7 +249,8 @@ function PeriodSelector({ days, onChange }: { days: number; onChange: (d: number
     <select
       value={days}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="bg-[#16242f] border border-gray-700 text-gray-300 text-sm rounded-lg px-3 py-2"
+      aria-label="Digest time period"
+      className="bg-ink-800 border border-white/10 text-white/80 text-sm rounded-lg px-3 py-2 transition-colors hover:border-white/20 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
     >
       <option value={7}>Last 7 days</option>
       <option value={14}>Last 14 days</option>
@@ -275,35 +279,14 @@ function ComparisonRow({
   return (
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm text-gray-400">{label}</p>
-        <p className="text-lg font-mono text-gray-200">{current}</p>
+        <p className="text-sm text-white/55">{label}</p>
+        <p className="mt-0.5 text-lg font-mono text-white/90">{current}</p>
       </div>
-      <div className={`text-right px-3 py-1 rounded-lg ${
-        isGood ? "bg-green-500/10" : change === 0 ? "bg-gray-700/30" : "bg-red-500/10"
+      <span className={`rounded-md px-3 py-1 text-sm font-mono font-medium ${
+        isGood ? "bg-green-500/10 text-green-400" : change === 0 ? "bg-white/5 text-white/55" : "bg-red-500/10 text-red-400"
       }`}>
-        <p className={`text-sm font-mono font-medium ${
-          isGood ? "text-green-400" : change === 0 ? "text-gray-400" : "text-red-400"
-        }`}>
-          {sign}{change}{suffix}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  color = "text-white",
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <div className="surface-card p-4 card-hover">
-      <p className="text-gray-400 text-xs font-medium">{label}</p>
-      <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
+        {sign}{change}{suffix}
+      </span>
     </div>
   );
 }
@@ -311,23 +294,26 @@ function StatCard({
 function DigestSkeleton() {
   return (
     <div className="space-y-6">
-      <div>
-        <div className="skeleton" style={{ height: 32, width: 180, borderRadius: 6 }} />
-        <div className="skeleton mt-2" style={{ height: 16, width: 300, borderRadius: 4 }} />
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="skeleton h-8 w-48 rounded-md" />
+          <div className="skeleton mt-2 h-4 w-72 rounded" />
+        </div>
+        <div className="skeleton h-9 w-72 rounded-lg" />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="surface-card p-4">
-            <div className="skeleton" style={{ height: 12, width: 80, borderRadius: 4 }} />
-            <div className="skeleton mt-2" style={{ height: 32, width: 48, borderRadius: 6 }} />
+          <div key={i} className="surface-card p-5">
+            <div className="skeleton h-3 w-20 rounded" />
+            <div className="skeleton mt-3 h-8 w-12 rounded-md" />
           </div>
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
           <div key={i} className="surface-card p-5">
-            <div className="skeleton" style={{ height: 20, width: 120, borderRadius: 4 }} />
-            <div className="skeleton mt-4" style={{ height: 150, width: "100%", borderRadius: 8 }} />
+            <div className="skeleton h-5 w-32 rounded" />
+            <div className="skeleton mt-4 h-[150px] w-full rounded-lg" />
           </div>
         ))}
       </div>

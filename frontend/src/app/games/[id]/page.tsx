@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
+import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
+import { ArrowLeft, Swords } from "lucide-react";
 
 const CLASSIFICATION_COLORS: Record<string, string> = {
   brilliant: "text-cyan-400",
@@ -45,8 +48,32 @@ export default function GameDetailPage() {
     setLoading(false);
   }
 
-  if (loading) return <div className="text-gray-400">Loading game...</div>;
-  if (!game) return <div className="text-gray-400">Game not found</div>;
+  if (loading) return <GameDetailSkeleton />;
+  if (!game)
+    return (
+      <div className="space-y-6">
+        <Link
+          href="/games"
+          className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
+          Back to games
+        </Link>
+        <EmptyState
+          icon={Swords}
+          title="Game not found"
+          description="This game may have been removed, or the link is incorrect. Head back to your games list to pick another."
+          action={
+            <Link
+              href="/games"
+              className="inline-flex items-center gap-2 bg-accent-600 hover:bg-accent-500 text-white font-medium rounded-lg btn-press px-4 py-2 text-sm"
+            >
+              View all games
+            </Link>
+          }
+        />
+      </div>
+    );
 
   const selected = selectedMove !== null ? game.moves[selectedMove] : null;
 
@@ -66,126 +93,125 @@ export default function GameDetailPage() {
 
   return (
     <div className="space-y-6">
+      <Link
+        href="/games"
+        className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white transition-colors"
+      >
+        <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
+        Back to games
+      </Link>
+
       {/* Game header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-bold">
+      <header className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-[1.75rem] font-bold tracking-tight text-white">
             vs {game.opponent_name}
-          </h2>
-          <p className="text-gray-400 text-sm">
+          </h1>
+          <p className="mt-1 text-sm text-white/55">
             {new Date(game.played_at).toLocaleDateString()} · {game.opening_name || game.opening_eco || "Unknown opening"} · {game.time_class}
           </p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-gray-400 text-sm">
+        <div className="flex items-center gap-3 flex-wrap shrink-0">
+          <span className="text-xs uppercase tracking-wider text-white/45 font-medium">
             {game.player_color}
           </span>
-          <span
-            className={`px-3 py-1 rounded font-medium text-sm ${
-              game.result === "win"
-                ? "bg-green-900/40 text-green-400"
-                : game.result === "loss"
-                ? "bg-red-900/40 text-red-400"
-                : "bg-yellow-900/40 text-yellow-400"
-            }`}
-          >
-            {game.result.toUpperCase()}
-          </span>
-          <span className="text-gray-300 font-mono text-sm">
+          <ResultBadge result={game.result} />
+          <span className="text-white/55 font-mono text-sm">
             {game.player_rating} vs {game.opponent_rating}
           </span>
         </div>
-      </div>
+      </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Move list */}
-        <div className="lg:col-span-2 surface-card p-4 max-h-[600px] overflow-y-auto">
-          <h3 className="text-xl font-semibold mb-3">Moves</h3>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-gray-500 border-b border-gray-700">
-                <th className="p-2 w-12">#</th>
-                <th className="p-2 text-left">White</th>
-                <th className="p-2 text-left">Black</th>
-              </tr>
-            </thead>
-            <tbody>
-              {movePairs.map((pair) => (
-                <tr key={pair.number} className="border-b border-gray-800/50">
-                  <td className="p-2 text-gray-500 text-center">{pair.number}</td>
-                  <td className="p-2">
-                    {pair.white && (
-                      <MoveCell
-                        move={pair.white}
-                        index={pair.white.move_number}
-                        isSelected={selectedMove === pair.white.move_number}
-                        onClick={() => setSelectedMove(pair.white!.move_number)}
-                      />
-                    )}
-                  </td>
-                  <td className="p-2">
-                    {pair.black && (
-                      <MoveCell
-                        move={pair.black}
-                        index={pair.black.move_number}
-                        isSelected={selectedMove === pair.black.move_number}
-                        onClick={() => setSelectedMove(pair.black!.move_number)}
-                      />
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="lg:col-span-2 surface-card overflow-hidden animate-fade-in-up">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
+            <h2 className="text-base font-semibold text-white">Moves</h2>
+            <span className="text-xs text-white/45 font-mono">
+              {game.moves.length} ply
+            </span>
+          </div>
+          <div className="max-h-[600px] overflow-y-auto divide-y divide-white/5">
+            {movePairs.map((pair) => (
+              <div
+                key={pair.number}
+                className="grid grid-cols-[2.5rem_1fr_1fr] items-stretch hover:bg-white/[0.02] transition-colors"
+              >
+                <div className="flex items-center justify-center text-xs text-white/40 font-mono">
+                  {pair.number}.
+                </div>
+                <div className="py-0.5 pr-1">
+                  {pair.white && (
+                    <MoveCell
+                      move={pair.white}
+                      index={pair.white.move_number}
+                      isSelected={selectedMove === pair.white.move_number}
+                      onClick={() => setSelectedMove(pair.white!.move_number)}
+                    />
+                  )}
+                </div>
+                <div className="py-0.5 pr-1">
+                  {pair.black && (
+                    <MoveCell
+                      move={pair.black}
+                      index={pair.black.move_number}
+                      isSelected={selectedMove === pair.black.move_number}
+                      onClick={() => setSelectedMove(pair.black!.move_number)}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Move detail panel */}
-        <div className="surface-card p-5">
-          <h3 className="text-xl font-semibold mb-3">Move Details</h3>
+        <div className="surface-card p-5 h-fit animate-slide-in-right">
+          <h2 className="text-base font-semibold text-white mb-4">Move Details</h2>
           {selected ? (
             <div className="space-y-4">
               <div>
-                <span className="text-gray-400 text-sm">Move</span>
-                <p className={`text-xl font-bold ${CLASSIFICATION_COLORS[selected.classification]}`}>
+                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Move</span>
+                <p className={`text-xl font-bold font-mono mt-0.5 ${CLASSIFICATION_COLORS[selected.classification]}`}>
                   {selected.move_san}
                   {CLASSIFICATION_SYMBOLS[selected.classification]}
                 </p>
               </div>
               <div>
-                <span className="text-gray-400 text-sm">Classification</span>
-                <p className={`font-medium capitalize ${CLASSIFICATION_COLORS[selected.classification]}`}>
+                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Classification</span>
+                <p className={`font-medium capitalize mt-0.5 ${CLASSIFICATION_COLORS[selected.classification]}`}>
                   {selected.classification}
                 </p>
               </div>
               <div>
-                <span className="text-gray-400 text-sm">Centipawn Loss</span>
-                <p className="font-mono">{selected.centipawn_loss.toFixed(0)}</p>
+                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Centipawn Loss</span>
+                <p className="font-mono mt-0.5">{selected.centipawn_loss.toFixed(0)}</p>
               </div>
               {selected.best_move_san && selected.best_move_san !== selected.move_san && (
                 <div>
-                  <span className="text-gray-400 text-sm">Best Move</span>
-                  <p className="text-green-400 font-bold">{selected.best_move_san}</p>
+                  <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Best Move</span>
+                  <p className="text-green-400 font-bold font-mono mt-0.5">{selected.best_move_san}</p>
                 </div>
               )}
               <div>
-                <span className="text-gray-400 text-sm">Evaluation</span>
-                <p className="font-mono">
+                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Evaluation</span>
+                <p className="font-mono mt-0.5">
                   {selected.eval_before !== null ? (selected.eval_before / 100).toFixed(2) : "?"} →{" "}
                   {selected.eval_after !== null ? (selected.eval_after / 100).toFixed(2) : "?"}
                 </p>
               </div>
               <div>
-                <span className="text-gray-400 text-sm">Phase</span>
-                <p className="capitalize">{selected.game_phase}</p>
+                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Phase</span>
+                <p className="capitalize mt-0.5">{selected.game_phase}</p>
               </div>
               {selected.tactical_motifs && selected.tactical_motifs.length > 0 && (
                 <div>
-                  <span className="text-gray-400 text-sm">Missed Tactics</span>
-                  <div className="flex gap-2 mt-1">
+                  <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Missed Tactics</span>
+                  <div className="flex gap-2 mt-1.5 flex-wrap">
                     {selected.tactical_motifs.map((t) => (
                       <span
                         key={t}
-                        className="px-2 py-1 bg-red-900/30 text-red-400 rounded text-xs capitalize"
+                        className="px-2 py-1 bg-red-500/15 text-red-400 rounded-md text-xs capitalize font-medium"
                       >
                         {t.replace("_", " ")}
                       </span>
@@ -195,21 +221,21 @@ export default function GameDetailPage() {
               )}
               {selected.time_remaining !== null && (
                 <div>
-                  <span className="text-gray-400 text-sm">Time Remaining</span>
-                  <p className="font-mono">
+                  <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Time Remaining</span>
+                  <p className="font-mono mt-0.5">
                     {Math.floor(selected.time_remaining / 60)}:{String(Math.floor(selected.time_remaining % 60)).padStart(2, "0")}
                   </p>
                 </div>
               )}
-              <div className="pt-3 border-t border-gray-700">
-                <span className="text-gray-400 text-sm">FEN</span>
-                <p className="text-xs font-mono text-gray-500 break-all mt-1">
+              <div className="pt-3 border-t border-white/5">
+                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">FEN</span>
+                <p className="text-xs font-mono text-white/45 break-all mt-1">
                   {selected.fen_before}
                 </p>
               </div>
             </div>
           ) : (
-            <p className="text-gray-500">Click a move to see details</p>
+            <p className="text-white/45 text-sm">Select a move from the list to see its evaluation, best move, and missed tactics.</p>
           )}
         </div>
       </div>
@@ -234,9 +260,11 @@ function MoveCell({
   return (
     <button
       onClick={onClick}
-      className={`px-2 py-1 rounded text-left w-full transition-colors ${
-        isSelected ? "bg-accent-900/40" : "hover:bg-gray-700/50"
-      } ${move.is_player_move ? color : "text-gray-400"}`}
+      className={`px-2 py-1 rounded-md text-left w-full font-mono text-sm transition-colors btn-press ${
+        isSelected
+          ? "bg-accent-500/15 ring-1 ring-accent-500/30"
+          : "hover:bg-white/5"
+      } ${move.is_player_move ? color : "text-white/45"}`}
     >
       {move.move_san}
       <span className="text-xs">{symbol}</span>
@@ -246,5 +274,38 @@ function MoveCell({
         </span>
       )}
     </button>
+  );
+}
+
+function GameDetailSkeleton() {
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div className="skeleton h-4 w-28" />
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div className="space-y-2">
+          <div className="skeleton h-7 w-48" />
+          <div className="skeleton h-4 w-64" />
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="skeleton h-6 w-16" />
+          <div className="skeleton h-6 w-24" />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 surface-card p-4 space-y-2">
+          {[...Array(12)].map((_, i) => (
+            <div key={i} className="skeleton h-7 w-full" />
+          ))}
+        </div>
+        <div className="surface-card p-5 space-y-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i}>
+              <div className="skeleton h-3 w-20 mb-1.5" />
+              <div className="skeleton h-5 w-32" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

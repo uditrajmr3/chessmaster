@@ -10,6 +10,7 @@ import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { EndgameReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
+import { PageHeader, EmptyState, Stat } from "@/components/ui/page-kit";
 
 const tooltipStyle = {
   backgroundColor: "#101c27",
@@ -38,10 +39,11 @@ export default function EndgamePage() {
 
   if (loading) return <EndgameSkeleton />;
   if (!report || report.overall.games_with_endgame === 0) return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
-      <Trophy className="w-10 h-10 text-gray-500" />
-      <p className="text-gray-400 text-center">No endgame data available. Sync and analyze your games first.</p>
-    </div>
+    <EmptyState
+      icon={Trophy}
+      title="No endgame data yet"
+      description="Sync and analyze your games to track how often you convert winning endgames and spot the positions where advantages slip away."
+    />
   );
 
   const conversionData = report.by_type
@@ -63,15 +65,11 @@ export default function EndgamePage() {
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold">Endgame Drills</h2>
-          <p className="text-gray-400 text-sm">
-            Track your endgame conversion and find where you squander advantages
-          </p>
-        </div>
-        <GameFilterBar filters={filters} onChange={setFilters} />
-      </div>
+      <PageHeader
+        title="Endgame Drills"
+        subtitle="Track your endgame conversion and find where you squander advantages."
+        action={<GameFilterBar filters={filters} onChange={setFilters} />}
+      />
 
       {/* Recommendations */}
       {report.recommendations.length > 0 && (
@@ -79,7 +77,7 @@ export default function EndgamePage() {
           {report.recommendations.map((rec, i) => (
             <div
               key={i}
-              className="bg-yellow-500/10 border border-yellow-800/50 rounded-lg px-4 py-3"
+              className="bg-yellow-500/10 border border-yellow-500/25 rounded-lg px-4 py-3"
             >
               <p className="text-yellow-300 text-sm">{rec}</p>
             </div>
@@ -89,31 +87,31 @@ export default function EndgamePage() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
-        <StatCard
+        <Stat
           label="Endgame Games"
           value={report.overall.games_with_endgame}
         />
-        <StatCard
+        <Stat
           label="Avg Endgame CPL"
           value={report.overall.avg_endgame_cpl}
-          color={report.overall.avg_endgame_cpl > 40 ? "text-red-400" : "text-green-400"}
+          valueClassName={report.overall.avg_endgame_cpl > 40 ? "text-red-400" : "text-green-400"}
         />
-        <StatCard
+        <Stat
           label="Endgame Types"
           value={report.by_type.length}
         />
-        <StatCard
+        <Stat
           label="Conversion Failures"
           value={report.worst_games.length}
-          color={report.worst_games.length > 0 ? "text-red-400" : "text-green-400"}
+          valueClassName={report.worst_games.length > 0 ? "text-red-400" : "text-green-400"}
         />
       </div>
 
       {/* Conversion rate chart */}
       {conversionData.length > 0 && (
         <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-1">Conversion Rate by Endgame Type</h3>
-          <p className="text-gray-500 text-xs mb-4">
+          <h2 className="text-base font-semibold text-white mb-1">Conversion Rate by Endgame Type</h2>
+          <p className="text-white/45 text-xs mb-4">
             How often you win from a winning endgame position
           </p>
           <ResponsiveContainer width="100%" height={300}>
@@ -145,35 +143,35 @@ export default function EndgamePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Endgame type breakdown */}
         <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-1">Endgame Type Breakdown</h3>
-          <p className="text-gray-500 text-xs mb-4">
+          <h2 className="text-base font-semibold text-white mb-1">Endgame Type Breakdown</h2>
+          <p className="text-white/45 text-xs mb-4">
             Performance statistics by endgame type
           </p>
           <div className="space-y-2">
             {report.by_type.map((t) => (
               <div
                 key={t.type}
-                className="bg-[#101c27] rounded-lg px-4 py-3 card-hover"
+                className="bg-ink-800 rounded-lg px-4 py-3"
               >
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm text-gray-200 font-medium">{t.type}</p>
-                  <p className="text-xs text-gray-500">{t.games} games</p>
+                  <p className="text-xs text-white/45"><span className="font-mono">{t.games}</span> games</p>
                 </div>
                 <div className="grid grid-cols-4 gap-2 text-center">
                   <div>
-                    <p className="text-xs text-gray-500">Advantage</p>
+                    <p className="text-xs text-white/45">Advantage</p>
                     <p className="text-sm font-mono text-gray-300">{t.had_advantage}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Converted</p>
+                    <p className="text-xs text-white/45">Converted</p>
                     <p className="text-sm font-mono text-green-400">{t.converted}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Failed</p>
+                    <p className="text-xs text-white/45">Failed</p>
                     <p className="text-sm font-mono text-red-400">{t.failed}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Avg CPL</p>
+                    <p className="text-xs text-white/45">Avg CPL</p>
                     <p className={`text-sm font-mono ${t.avg_cpl > 40 ? "text-red-400" : "text-gray-300"}`}>
                       {t.avg_cpl}
                     </p>
@@ -182,15 +180,15 @@ export default function EndgamePage() {
                 {t.conversion_rate !== null && (
                   <div className="mt-2">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-500">Conversion</span>
-                      <span className={
+                      <span className="text-white/45">Conversion</span>
+                      <span className={`font-mono ${
                         t.conversion_rate >= 60 ? "text-green-400" :
                         t.conversion_rate >= 40 ? "text-yellow-400" : "text-red-400"
-                      }>
+                      }`}>
                         {t.conversion_rate}%
                       </span>
                     </div>
-                    <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
                           t.conversion_rate >= 60 ? "bg-green-500" :
@@ -209,25 +207,25 @@ export default function EndgamePage() {
         {/* Worst endgame games */}
         {report.worst_games.length > 0 && (
           <div className="surface-card p-5 animate-fade-in-up">
-            <h3 className="text-xl font-semibold mb-1">Worst Conversion Failures</h3>
-            <p className="text-gray-500 text-xs mb-4">
+            <h2 className="text-base font-semibold text-white mb-1">Worst Conversion Failures</h2>
+            <p className="text-white/45 text-xs mb-4">
               Games where you had a winning endgame but failed to convert
             </p>
             <div className="space-y-2">
               {report.worst_games.map((g) => (
                 <div
                   key={g.game_id}
-                  className="bg-[#101c27] rounded-lg px-4 py-3 card-hover"
+                  className="bg-ink-800 rounded-lg px-4 py-3"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <div>
                       <p className="text-sm text-gray-200 font-medium">{g.endgame_type}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-white/45">
                         vs {g.opponent} · {g.played_at ? new Date(g.played_at).toLocaleDateString() : ""}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className={`text-sm font-medium ${
+                      <p className={`text-sm font-medium capitalize ${
                         g.result === "loss" ? "text-red-400" : "text-yellow-400"
                       }`}>
                         {g.result}
@@ -236,19 +234,19 @@ export default function EndgamePage() {
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center mt-2">
                     <div>
-                      <p className="text-xs text-gray-500">Entering Eval</p>
+                      <p className="text-xs text-white/45">Entering Eval</p>
                       <p className="text-sm font-mono text-green-400">
                         +{(g.entering_eval / 100).toFixed(1)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Avg CPL</p>
+                      <p className="text-xs text-white/45">Avg CPL</p>
                       <p className={`text-sm font-mono ${g.avg_cpl > 40 ? "text-red-400" : "text-gray-300"}`}>
                         {g.avg_cpl}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Blunders</p>
+                      <p className="text-xs text-white/45">Blunders</p>
                       <p className={`text-sm font-mono ${g.blunders > 0 ? "text-red-400" : "text-gray-300"}`}>
                         {g.blunders}
                       </p>
@@ -264,8 +262,8 @@ export default function EndgamePage() {
       {/* Blunders by type chart */}
       {blunderData.length > 0 && (
         <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-1">Endgame Blunders by Type</h3>
-          <p className="text-gray-500 text-xs mb-4">
+          <h2 className="text-base font-semibold text-white mb-1">Endgame Blunders by Type</h2>
+          <p className="text-white/45 text-xs mb-4">
             Where you make the most mistakes in the endgame
           </p>
           <ResponsiveContainer width="100%" height={250}>
@@ -289,41 +287,24 @@ export default function EndgamePage() {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  color = "text-white",
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <div className="surface-card p-4 card-hover">
-      <p className="text-gray-400 text-xs font-medium">{label}</p>
-      <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
-    </div>
-  );
-}
-
 function EndgameSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div>
-        <div className="skeleton" style={{ height: 32, width: 180, borderRadius: 6 }} />
-        <div className="skeleton mt-2" style={{ height: 16, width: 360, borderRadius: 4 }} />
+        <div className="skeleton h-7 w-48 mb-2" />
+        <div className="skeleton h-4 w-80" />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="surface-card p-4">
-            <div className="skeleton" style={{ height: 12, width: 100, borderRadius: 4 }} />
-            <div className="skeleton mt-2" style={{ height: 32, width: 48, borderRadius: 6 }} />
+          <div key={i} className="surface-card p-5">
+            <div className="skeleton h-3 w-24" />
+            <div className="skeleton h-7 w-12 mt-3" />
           </div>
         ))}
       </div>
       <div className="surface-card p-5">
-        <div className="skeleton" style={{ height: 20, width: 300, borderRadius: 4 }} />
-        <div className="skeleton mt-4" style={{ height: 300, width: "100%", borderRadius: 8 }} />
+        <div className="skeleton h-5 w-72 mb-4" />
+        <div className="skeleton h-75 w-full" />
       </div>
     </div>
   );

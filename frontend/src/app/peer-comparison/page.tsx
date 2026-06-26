@@ -3,13 +3,14 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Cell, ReferenceLine,
+  ResponsiveContainer,
 } from "recharts";
 import { Users } from "lucide-react";
 import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { PeerComparisonReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
+import { PageHeader, EmptyState, Section, Stat } from "@/components/ui/page-kit";
 
 const tooltipStyle = {
   backgroundColor: "#101c27",
@@ -38,9 +39,17 @@ export default function PeerComparisonPage() {
 
   if (loading) return <PeerSkeleton />;
   if (!report || report.games_analyzed === 0) return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
-      <Users className="w-10 h-10 text-gray-500" />
-      <p className="text-gray-400 text-center">Not enough data for peer comparison. Analyze at least 5 games.</p>
+    <div className="space-y-6">
+      <PageHeader
+        title="Peer Comparison"
+        subtitle="See how your play stacks up against players in your rating band."
+        action={<GameFilterBar filters={filters} onChange={setFilters} />}
+      />
+      <EmptyState
+        icon={Users}
+        title="Not enough data yet"
+        description="Analyze at least 5 games to unlock a peer comparison. Sync more games, then run analysis from the sidebar."
+      />
     </div>
   );
 
@@ -55,16 +64,11 @@ export default function PeerComparisonPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold">Peer Comparison</h2>
-          <p className="text-gray-400 text-sm">
-            How you compare to typical {report.rating_band} rated players
-          </p>
-        </div>
-        <GameFilterBar filters={filters} onChange={setFilters} />
-      </div>
+      <PageHeader
+        title="Peer Comparison"
+        subtitle={`How you compare to typical ${report.rating_band} rated players.`}
+        action={<GameFilterBar filters={filters} onChange={setFilters} />}
+      />
 
       {/* Recommendations */}
       {report.recommendations.length > 0 && (
@@ -72,9 +76,9 @@ export default function PeerComparisonPage() {
           {report.recommendations.map((rec, i) => (
             <div
               key={i}
-              className="bg-blue-500/10 border border-blue-800/50 rounded-lg px-4 py-3"
+              className="rounded-lg border border-accent-500/20 bg-accent-500/10 px-4 py-3"
             >
-              <p className="text-blue-300 text-sm">{rec}</p>
+              <p className="text-sm text-accent-200">{rec}</p>
             </div>
           ))}
         </div>
@@ -82,174 +86,146 @@ export default function PeerComparisonPage() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
-        <StatCard label="Rating Band" value={report.rating_band} />
-        <StatCard label="Avg Rating" value={report.avg_rating} />
-        <StatCard
+        <Stat label="Rating Band" value={report.rating_band} />
+        <Stat label="Avg Rating" value={report.avg_rating} />
+        <Stat
           label="Strengths"
           value={report.strengths.length}
-          color="text-green-400"
+          valueClassName="text-green-400"
         />
-        <StatCard
+        <Stat
           label="Weaknesses"
           value={report.weaknesses.length}
-          color={report.weaknesses.length > 0 ? "text-red-400" : "text-green-400"}
+          valueClassName={report.weaknesses.length > 0 ? "text-red-400" : "text-green-400"}
         />
       </div>
 
       {/* Comparison chart */}
-      <div className="surface-card p-5 animate-fade-in-up">
-        <h3 className="text-xl font-semibold mb-1">You vs. Peers</h3>
-        <p className="text-gray-500 text-xs mb-4">
-          Your stats compared to the {report.rating_band} average
-        </p>
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={chartData} barGap={4}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
-            <XAxis dataKey="name" stroke="#90a2b1" fontSize={11} interval={0} />
-            <YAxis stroke="#90a2b1" fontSize={12} />
-            <Tooltip
-              contentStyle={tooltipStyle}
-              formatter={(value, name) => {
-                if (name === "yours") return [`${value ?? 0}`, "You"];
-                return [`${value ?? 0}`, "Peer Average"];
-              }}
-            />
-            <Bar dataKey="yours" name="yours" radius={[4, 4, 0, 0]} fill="#6366f1" />
-            <Bar dataKey="peers" name="peers" radius={[4, 4, 0, 0]} fill="#4b5563" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <Section
+        title="You vs. Peers"
+        description={`Your stats compared to the ${report.rating_band} average`}
+      >
+        <div className="surface-card p-5 animate-fade-in-up">
+          <ResponsiveContainer width="100%" height={350}>
+            <BarChart data={chartData} barGap={4}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+              <XAxis dataKey="name" stroke="#90a2b1" fontSize={11} interval={0} />
+              <YAxis stroke="#90a2b1" fontSize={12} />
+              <Tooltip
+                cursor={{ fill: "rgba(255,255,255,0.04)" }}
+                contentStyle={tooltipStyle}
+                formatter={(value, name) => {
+                  if (name === "yours") return [`${value ?? 0}`, "You"];
+                  return [`${value ?? 0}`, "Peer Average"];
+                }}
+              />
+              <Bar dataKey="yours" name="yours" radius={[4, 4, 0, 0]} fill="#a78368" />
+              <Bar dataKey="peers" name="peers" radius={[4, 4, 0, 0]} fill="#33495a" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </Section>
 
       {/* Metric cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Strengths */}
-        <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">
-            <span className="text-green-400">Strengths</span> vs. Peers
-          </h3>
+        <Section title={<><span className="text-green-400">Strengths</span> vs. Peers</>}>
           {report.strengths.length > 0 ? (
-            <div className="space-y-2">
+            <div className="surface-card divide-y divide-white/5 animate-fade-in-up">
               {report.comparisons
                 .filter((c) => report.strengths.includes(c.metric))
                 .map((c) => (
-                  <MetricCard key={c.metric} metric={c} />
+                  <MetricRow key={c.metric} metric={c} />
                 ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-sm">No significant strengths detected yet.</p>
+            <p className="text-sm text-white/45">No significant strengths detected yet.</p>
           )}
-        </div>
+        </Section>
 
         {/* Weaknesses */}
-        <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">
-            <span className="text-red-400">Weaknesses</span> vs. Peers
-          </h3>
+        <Section title={<><span className="text-red-400">Weaknesses</span> vs. Peers</>}>
           {report.weaknesses.length > 0 ? (
-            <div className="space-y-2">
+            <div className="surface-card divide-y divide-white/5 animate-fade-in-up">
               {report.comparisons
                 .filter((c) => report.weaknesses.includes(c.metric))
                 .map((c) => (
-                  <MetricCard key={c.metric} metric={c} />
+                  <MetricRow key={c.metric} metric={c} />
                 ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-sm">No significant weaknesses detected. Nice!</p>
+            <p className="text-sm text-white/45">No significant weaknesses detected. Nice work.</p>
           )}
-        </div>
+        </Section>
       </div>
 
       {/* All metrics table */}
-      <div className="surface-card p-5 animate-fade-in-up">
-        <h3 className="text-xl font-semibold mb-4">Full Comparison</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-gray-500 text-xs border-b border-gray-700">
-                <th className="text-left py-2 px-3">Metric</th>
-                <th className="text-center py-2 px-3">You</th>
-                <th className="text-center py-2 px-3">Peer Avg</th>
-                <th className="text-center py-2 px-3">Difference</th>
-                <th className="text-center py-2 px-3">Verdict</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.comparisons.map((c) => (
-                <tr key={c.metric} className="border-b border-gray-800 hover:bg-white/[0.02]">
-                  <td className="py-2 px-3 text-gray-300 font-medium">{c.metric}</td>
-                  <td className="py-2 px-3 text-center font-mono text-gray-300">
-                    {c.your_value}{c.suffix}
-                  </td>
-                  <td className="py-2 px-3 text-center font-mono text-gray-500">
-                    {c.peer_average}{c.suffix}
-                  </td>
-                  <td className={`py-2 px-3 text-center font-mono ${
-                    c.verdict === "better" ? "text-green-400" :
-                    c.verdict === "worse" ? "text-red-400" : "text-gray-400"
-                  }`}>
-                    {c.difference_pct > 0 ? "+" : ""}{c.difference_pct}%
-                  </td>
-                  <td className="py-2 px-3 text-center">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      c.verdict === "better" ? "bg-green-500/20 text-green-400" :
-                      c.verdict === "worse" ? "bg-red-500/20 text-red-400" :
-                      "bg-gray-500/20 text-gray-400"
-                    }`}>
-                      {c.verdict === "better" ? "Better" :
-                       c.verdict === "worse" ? "Worse" : "Average"}
-                    </span>
-                  </td>
+      <Section title="Full Comparison">
+        <div className="surface-card overflow-hidden animate-fade-in-up">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/5 text-xs uppercase tracking-wider text-white/45">
+                  <th className="text-left py-3 px-4 font-medium">Metric</th>
+                  <th className="text-center py-3 px-4 font-medium">You</th>
+                  <th className="text-center py-3 px-4 font-medium">Peer Avg</th>
+                  <th className="text-center py-3 px-4 font-medium">Difference</th>
+                  <th className="text-center py-3 px-4 font-medium">Verdict</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {report.comparisons.map((c) => (
+                  <tr key={c.metric} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
+                    <td className="py-3 px-4 font-medium text-white/90">{c.metric}</td>
+                    <td className="py-3 px-4 text-center font-mono text-white/90">
+                      {c.your_value}{c.suffix}
+                    </td>
+                    <td className="py-3 px-4 text-center font-mono text-white/45">
+                      {c.peer_average}{c.suffix}
+                    </td>
+                    <td className={`py-3 px-4 text-center font-mono ${
+                      c.verdict === "better" ? "text-green-400" :
+                      c.verdict === "worse" ? "text-red-400" : "text-white/55"
+                    }`}>
+                      {c.difference_pct > 0 ? "+" : ""}{c.difference_pct}%
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <span className={`text-xs px-2.5 py-1 rounded-md font-semibold uppercase tracking-wide ${
+                        c.verdict === "better" ? "bg-green-500/15 text-green-400" :
+                        c.verdict === "worse" ? "bg-red-500/15 text-red-400" :
+                        "bg-white/10 text-white/55"
+                      }`}>
+                        {c.verdict === "better" ? "Better" :
+                         c.verdict === "worse" ? "Worse" : "Average"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </Section>
     </div>
   );
 }
 
-function MetricCard({ metric }: { metric: PeerComparisonReport["comparisons"][0] }) {
+function MetricRow({ metric }: { metric: PeerComparisonReport["comparisons"][0] }) {
   const isBetter = metric.verdict === "better";
 
   return (
-    <div className="bg-[#101c27] rounded-lg px-4 py-3 card-hover">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-200 font-medium">{metric.metric}</p>
-          <p className="text-xs text-gray-500">
-            You: {metric.your_value}{metric.suffix} · Peers: {metric.peer_average}{metric.suffix}
-          </p>
-        </div>
-        <div className={`text-right px-3 py-1 rounded-lg ${
-          isBetter ? "bg-green-500/10" : "bg-red-500/10"
-        }`}>
-          <p className={`text-sm font-mono font-bold ${
-            isBetter ? "text-green-400" : "text-red-400"
-          }`}>
-            {metric.difference_pct > 0 ? "+" : ""}{metric.difference_pct}%
-          </p>
-        </div>
+    <div className="flex items-center justify-between px-5 py-3.5">
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-white/90">{metric.metric}</p>
+        <p className="mt-0.5 text-xs text-white/45">
+          You: <span className="font-mono">{metric.your_value}{metric.suffix}</span> · Peers: <span className="font-mono">{metric.peer_average}{metric.suffix}</span>
+        </p>
       </div>
-    </div>
-  );
-}
-
-type PeerMetricType = PeerComparisonReport["comparisons"][0];
-
-function StatCard({
-  label,
-  value,
-  color = "text-white",
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <div className="surface-card p-4 card-hover">
-      <p className="text-gray-400 text-xs font-medium">{label}</p>
-      <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
+      <span className={`shrink-0 rounded-md px-3 py-1 text-sm font-mono font-bold ${
+        isBetter ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"
+      }`}>
+        {metric.difference_pct > 0 ? "+" : ""}{metric.difference_pct}%
+      </span>
     </div>
   );
 }
@@ -257,21 +233,24 @@ function StatCard({
 function PeerSkeleton() {
   return (
     <div className="space-y-6">
-      <div>
-        <div className="skeleton" style={{ height: 32, width: 200, borderRadius: 6 }} />
-        <div className="skeleton mt-2" style={{ height: 16, width: 360, borderRadius: 4 }} />
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="skeleton h-8 w-56 rounded-md" />
+          <div className="skeleton mt-2 h-4 w-80 rounded" />
+        </div>
+        <div className="skeleton h-9 w-64 rounded-lg" />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="surface-card p-4">
-            <div className="skeleton" style={{ height: 12, width: 100, borderRadius: 4 }} />
-            <div className="skeleton mt-2" style={{ height: 32, width: 60, borderRadius: 6 }} />
+          <div key={i} className="surface-card p-5">
+            <div className="skeleton h-3 w-24 rounded" />
+            <div className="skeleton mt-3 h-8 w-16 rounded-md" />
           </div>
         ))}
       </div>
       <div className="surface-card p-5">
-        <div className="skeleton" style={{ height: 20, width: 200, borderRadius: 4 }} />
-        <div className="skeleton mt-4" style={{ height: 350, width: "100%", borderRadius: 8 }} />
+        <div className="skeleton h-5 w-48 rounded" />
+        <div className="skeleton mt-4 h-[350px] w-full rounded-lg" />
       </div>
     </div>
   );

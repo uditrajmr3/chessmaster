@@ -6,6 +6,7 @@ import { Chess, Square } from "chess.js";
 import { Puzzle as PuzzleIcon } from "lucide-react";
 import { api } from "@/lib/api";
 import type { Puzzle, PuzzleResult, PuzzleStats } from "@/lib/types";
+import { PageHeader, EmptyState, Stat } from "@/components/ui/page-kit";
 
 type Arrow = { startSquare: string; endSquare: string; color: string };
 
@@ -181,78 +182,79 @@ export default function PuzzlesPage() {
     loadPuzzle();
   }
 
-  const selectClass = "bg-[#16242f] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30";
+  const selectClass = "bg-ink-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-white/20 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30";
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 className="text-3xl font-bold">Puzzle Trainer</h2>
-          <p className="text-gray-400 text-sm">
-            Practice positions from your own blunders
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="Puzzle Trainer"
+        subtitle="Practice positions drawn from your own blunders, then drill the ones you keep missing."
+        action={
+          <div className="flex flex-wrap gap-2.5">
+            <select
+              value={phaseFilter}
+              onChange={(e) => setPhaseFilter(e.target.value)}
+              className={selectClass}
+              aria-label="Filter by game phase"
+            >
+              <option value="">All phases</option>
+              <option value="opening">Opening</option>
+              <option value="middlegame">Middlegame</option>
+              <option value="endgame">Endgame</option>
+            </select>
+            <select
+              value={motifFilter}
+              onChange={(e) => setMotifFilter(e.target.value)}
+              className={selectClass}
+              aria-label="Filter by tactical motif"
+            >
+              <option value="">All tactics</option>
+              <option value="fork">Fork</option>
+              <option value="pin">Pin</option>
+              <option value="skewer">Skewer</option>
+              <option value="back_rank">Back Rank</option>
+              <option value="discovered_attack">Discovered Attack</option>
+            </select>
+          </div>
+        }
+      />
 
       {/* Stats bar */}
       {stats && stats.total_puzzles > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
-          <StatCard label="Total Puzzles" value={stats.total_puzzles} />
-          <StatCard label="Attempted" value={stats.attempted} />
-          <StatCard label="Mastered" value={stats.mastered} />
-          <StatCard
+          <Stat label="Total Puzzles" value={stats.total_puzzles} />
+          <Stat label="Attempted" value={stats.attempted} />
+          <Stat label="Mastered" value={stats.mastered} />
+          <Stat
             label="Accuracy"
             value={`${stats.accuracy}%`}
-            color={stats.accuracy >= 70 ? "text-green-400" : stats.accuracy >= 40 ? "text-yellow-400" : "text-red-400"}
+            valueClassName={stats.accuracy >= 70 ? "text-green-400" : stats.accuracy >= 40 ? "text-yellow-400" : "text-red-400"}
           />
         </div>
       )}
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        <select
-          value={phaseFilter}
-          onChange={(e) => setPhaseFilter(e.target.value)}
-          className={selectClass}
-        >
-          <option value="">All Phases</option>
-          <option value="opening">Opening</option>
-          <option value="middlegame">Middlegame</option>
-          <option value="endgame">Endgame</option>
-        </select>
-        <select
-          value={motifFilter}
-          onChange={(e) => setMotifFilter(e.target.value)}
-          className={selectClass}
-        >
-          <option value="">All Tactics</option>
-          <option value="fork">Fork</option>
-          <option value="pin">Pin</option>
-          <option value="skewer">Skewer</option>
-          <option value="back_rank">Back Rank</option>
-          <option value="discovered_attack">Discovered Attack</option>
-        </select>
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chessboard */}
         <div className="lg:col-span-2 flex flex-col items-center gap-4">
           {state === "loading" && (
-            <div className="w-full max-w-[560px] aspect-square surface-card flex items-center justify-center animate-fade-in">
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-8 h-8 border-2 border-gray-600 border-t-accent-400 rounded-full animate-spin" />
-                <p className="text-gray-400 text-sm">Loading puzzle...</p>
-              </div>
-            </div>
+            <div className="w-full max-w-[560px] aspect-square skeleton rounded-xl animate-fade-in" />
           )}
 
           {state === "empty" && (
-            <div className="w-full max-w-[560px] aspect-square surface-card flex items-center justify-center flex-col gap-3 p-8 text-center animate-fade-in-up">
-              <PuzzleIcon className="w-10 h-10 text-gray-500" />
-              <p className="text-gray-400 text-lg font-medium">No puzzles available</p>
-              <p className="text-gray-500 text-sm">
-                Sync and analyze your games first. Puzzles are generated from your blunders and mistakes.
-              </p>
+            <div className="w-full max-w-[560px] surface-card">
+              <EmptyState
+                icon={PuzzleIcon}
+                title={
+                  phaseFilter || motifFilter
+                    ? "No puzzles match these filters"
+                    : "No puzzles yet"
+                }
+                description={
+                  phaseFilter || motifFilter
+                    ? "Try clearing the filters above, or analyze more games to widen the pool."
+                    : "Sync your games from the sidebar, then run Analyze. Puzzles are generated automatically from the blunders and mistakes in your own games."
+                }
+              />
             </div>
           )}
 
@@ -268,10 +270,10 @@ export default function PuzzlesPage() {
                 <div className="w-full max-w-[560px] bg-red-500/10 border border-red-700/50 rounded-lg px-4 py-3 text-center animate-scale-in">
                   <p className="text-red-400 font-medium">
                     Incorrect. The best move was{" "}
-                    <span className="font-bold">{result.best_move_san}</span>
+                    <span className="font-bold font-mono">{result.best_move_san}</span>
                   </p>
                   <p className="text-gray-400 text-sm mt-1">
-                    You played <span className="text-orange-400">{puzzle.player_move_san}</span> in the original game (CPL: {result.centipawn_loss.toFixed(0)})
+                    You played <span className="text-orange-400 font-mono">{puzzle.player_move_san}</span> in the original game (CPL: <span className="font-mono">{result.centipawn_loss.toFixed(0)}</span>)
                   </p>
                 </div>
               )}
@@ -303,7 +305,7 @@ export default function PuzzlesPage() {
               {state !== "solving" && (
                 <button
                   onClick={handleNext}
-                  className="px-8 py-3 bg-accent-600 hover:bg-accent-500 text-white rounded-lg font-medium btn-press"
+                  className="px-8 py-3 bg-accent-600 hover:bg-accent-500 text-white font-medium rounded-lg btn-press"
                 >
                   Next Puzzle
                 </button>
@@ -369,11 +371,11 @@ export default function PuzzlesPage() {
                 <p className="text-sm mt-0.5">
                   {puzzle.attempts === 0
                     ? "New puzzle"
-                    : `${puzzle.successes}/${puzzle.attempts} correct`}
+                    : <><span className="font-mono">{puzzle.successes}/{puzzle.attempts}</span> correct</>}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-gray-700/50">
+              <div className="pt-3 border-t border-white/5">
                 <span className="text-gray-400 text-xs uppercase tracking-wider font-medium">Centipawn Loss</span>
                 <p className="text-red-400 font-mono text-lg font-bold mt-0.5">
                   {puzzle.centipawn_loss.toFixed(0)}
@@ -384,8 +386,8 @@ export default function PuzzlesPage() {
               </div>
             </div>
           ) : state === "empty" ? (
-            <p className="text-gray-500 text-sm">
-              No puzzles yet. Analyze some games to generate puzzles from your blunders.
+            <p className="text-white/45 text-sm leading-relaxed">
+              No puzzle loaded. Analyze some games to generate puzzles from your blunders.
             </p>
           ) : (
             <div className="space-y-3">
@@ -400,7 +402,7 @@ export default function PuzzlesPage() {
 
           {/* Stats summary */}
           {stats && stats.total_puzzles > 0 && (
-            <div className="mt-6 pt-4 border-t border-gray-700/50">
+            <div className="mt-6 pt-4 border-t border-white/5">
               <h4 className="text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">Breakdown</h4>
 
               {Object.keys(stats.by_phase).length > 0 && (
@@ -444,23 +446,6 @@ export default function PuzzlesPage() {
           )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  color = "text-white",
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <div className="surface-card p-4 card-hover">
-      <p className="text-gray-400 text-xs font-medium">{label}</p>
-      <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
   );
 }

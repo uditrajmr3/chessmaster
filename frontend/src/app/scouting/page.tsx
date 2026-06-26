@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Crosshair } from "lucide-react";
 import { api } from "@/lib/api";
 import type { ScoutReport, OpponentOpening, CrossReferenceEntry } from "@/lib/types";
+import { PageHeader, EmptyState, Stat } from "@/components/ui/page-kit";
 
 export default function ScoutingPage() {
   const [username, setUsername] = useState("");
@@ -31,12 +33,10 @@ export default function ScoutingPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold">Opponent Scout</h2>
-        <p className="text-gray-400 text-sm">
-          Analyze your opponent&apos;s opening repertoire and find your edge
-        </p>
-      </div>
+      <PageHeader
+        title="Opponent Scout"
+        subtitle="Analyze an opponent's opening repertoire and find where you hold the edge."
+      />
 
       {/* Search form */}
       <div className="surface-card p-5">
@@ -47,12 +47,14 @@ export default function ScoutingPage() {
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleScout()}
             placeholder="Opponent username"
-            className="flex-1 bg-[#101c27] text-gray-200 text-sm rounded-lg px-4 py-2.5 border border-gray-700 focus:border-blue-500 focus:outline-none placeholder-gray-500"
+            aria-label="Opponent username"
+            className="flex-1 bg-ink-800 text-white text-sm rounded-lg px-4 py-2.5 border border-white/10 transition-colors placeholder-white/40 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
           />
           <select
             value={platform}
             onChange={(e) => setPlatform(e.target.value)}
-            className="bg-[#101c27] text-gray-300 text-sm rounded-lg px-3 py-2.5 border border-gray-700 focus:border-blue-500 focus:outline-none"
+            aria-label="Platform"
+            className="bg-ink-800 text-white/80 text-sm rounded-lg px-3 py-2.5 border border-white/10 transition-colors hover:border-white/20 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
           >
             <option value="chesscom">Chess.com</option>
             <option value="lichess">Lichess</option>
@@ -60,13 +62,13 @@ export default function ScoutingPage() {
           <button
             onClick={handleScout}
             disabled={loading || !username.trim()}
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:text-gray-500 text-white text-sm font-medium rounded-lg transition-colors"
+            className="px-6 py-2.5 bg-accent-600 hover:bg-accent-500 text-white text-sm font-medium rounded-lg btn-press disabled:bg-ink-700 disabled:text-white/40 disabled:cursor-not-allowed"
           >
             {loading ? "Scouting..." : "Scout"}
           </button>
         </div>
         {loading && (
-          <p className="text-gray-500 text-xs mt-3">
+          <p className="text-white/45 text-xs mt-3">
             Fetching games from {platform === "chesscom" ? "Chess.com" : "Lichess"}...
           </p>
         )}
@@ -76,6 +78,13 @@ export default function ScoutingPage() {
       </div>
 
       {/* Results */}
+      {!report && !loading && !error && (
+        <EmptyState
+          icon={Crosshair}
+          title="Scout an opponent"
+          description="Enter a Chess.com or Lichess username above to break down their openings, win rates, and how your record stacks up."
+        />
+      )}
       {report && <ScoutResults report={report} />}
     </div>
   );
@@ -86,9 +95,11 @@ function ScoutResults({ report }: { report: ScoutReport }) {
 
   if (opponent.games_analyzed === 0) {
     return (
-      <div className="text-gray-400 text-center py-10">
-        No games found for this opponent.
-      </div>
+      <EmptyState
+        icon={Crosshair}
+        title="No games found"
+        description="We could not find any games for this opponent. Check the username and platform, then try again."
+      />
     );
   }
 
@@ -96,34 +107,31 @@ function ScoutResults({ report }: { report: ScoutReport }) {
     <div className="space-y-6">
       {/* Recommendations */}
       {report.recommendations.length > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-2 stagger-children">
           {report.recommendations.map((rec, i) => (
             <div
               key={i}
-              className="bg-blue-500/10 border border-blue-800/50 rounded-lg px-4 py-3"
+              className="rounded-lg border border-accent-500/20 bg-accent-500/10 px-4 py-3"
             >
-              <p className="text-blue-300 text-sm">{rec}</p>
+              <p className="text-sm text-accent-200">{rec}</p>
             </div>
           ))}
         </div>
       )}
 
       {/* Opponent summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <StatCard label="Rating" value={opponent.rating} />
-        <StatCard
-          label="Games Analyzed"
-          value={opponent.games_analyzed}
-        />
-        <StatCard
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
+        <Stat label="Rating" value={opponent.rating} />
+        <Stat label="Games Analyzed" value={opponent.games_analyzed} />
+        <Stat
           label="White Win Rate"
           value={`${opponent.white_win_rate}%`}
-          color="text-green-400"
+          valueClassName="text-green-400"
         />
-        <StatCard
+        <Stat
           label="Black Win Rate"
           value={`${opponent.black_win_rate}%`}
-          color="text-green-400"
+          valueClassName="text-green-400"
         />
       </div>
 
@@ -155,9 +163,9 @@ function OpeningTable({
 }) {
   if (openings.length === 0) {
     return (
-      <div className="surface-card p-5">
-        <h3 className="text-xl font-semibold mb-3">{title}</h3>
-        <p className="text-gray-500 text-sm">No opening data</p>
+      <div className="surface-card p-5 animate-fade-in-up">
+        <h3 className="text-base font-semibold text-white mb-3">{title}</h3>
+        <p className="text-sm text-white/45">No opening data.</p>
       </div>
     );
   }
@@ -165,16 +173,16 @@ function OpeningTable({
   const xrefMap = new Map(crossRef.map((x) => [x.eco, x]));
 
   return (
-    <div className="surface-card p-5">
-      <h3 className="text-xl font-semibold mb-3">{title}</h3>
+    <div className="surface-card overflow-hidden animate-fade-in-up">
+      <h3 className="text-base font-semibold text-white px-5 pt-5 pb-3">{title}</h3>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-700 text-gray-400 text-xs">
-              <th className="text-left pb-2">Opening</th>
-              <th className="text-center pb-2">Freq</th>
-              <th className="text-center pb-2">W/L/D</th>
-              <th className="text-center pb-2">Your Record</th>
+            <tr className="border-b border-white/5 text-xs uppercase tracking-wider text-white/45">
+              <th className="text-left py-2.5 px-5 font-medium">Opening</th>
+              <th className="text-center py-2.5 px-3 font-medium">Freq</th>
+              <th className="text-center py-2.5 px-3 font-medium">W/L/D</th>
+              <th className="text-center py-2.5 px-5 font-medium">Your Record</th>
             </tr>
           </thead>
           <tbody>
@@ -183,7 +191,7 @@ function OpeningTable({
               const winRate = xref?.your_win_rate;
               const wrColor =
                 winRate === null || winRate === undefined
-                  ? "text-gray-500"
+                  ? "text-white/45"
                   : winRate >= 55
                   ? "text-green-400"
                   : winRate >= 40
@@ -191,32 +199,32 @@ function OpeningTable({
                   : "text-red-400";
 
               return (
-                <tr key={o.eco} className="border-b border-gray-800">
-                  <td className="py-2.5">
-                    <p className="text-gray-200 font-medium">{o.name}</p>
-                    <p className="text-gray-500 text-xs">{o.eco}</p>
+                <tr key={o.eco} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-5">
+                    <p className="font-medium text-white/90">{o.name}</p>
+                    <p className="text-xs text-white/45 font-mono">{o.eco}</p>
                   </td>
-                  <td className="text-center">
-                    <span className="text-gray-300">{o.frequency_pct}%</span>
-                    <p className="text-gray-500 text-xs">{o.games}g</p>
+                  <td className="text-center px-3">
+                    <span className="text-white/80 font-mono">{o.frequency_pct}%</span>
+                    <p className="text-white/45 text-xs font-mono">{o.games}g</p>
                   </td>
-                  <td className="text-center text-xs text-gray-400 font-mono">
+                  <td className="text-center px-3 text-xs text-white/55 font-mono">
                     {o.wins}/{o.losses}/{o.draws}
                   </td>
-                  <td className="text-center">
+                  <td className="text-center px-5">
                     {xref ? (
                       xref.your_games > 0 ? (
-                        <span className={`font-bold ${wrColor}`}>
+                        <span className={`font-mono font-bold ${wrColor}`}>
                           {winRate}%
-                          <span className="text-gray-500 text-xs font-normal ml-1">
+                          <span className="text-white/45 text-xs font-normal ml-1">
                             ({xref.your_games}g)
                           </span>
                         </span>
                       ) : (
-                        <span className="text-gray-500 text-xs">No data</span>
+                        <span className="text-white/45 text-xs">No data</span>
                       )
                     ) : (
-                      <span className="text-gray-500 text-xs">—</span>
+                      <span className="text-white/45 text-xs">—</span>
                     )}
                   </td>
                 </tr>
@@ -225,23 +233,6 @@ function OpeningTable({
           </tbody>
         </table>
       </div>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  color = "text-white",
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <div className="surface-card p-4">
-      <p className="text-gray-400 text-xs font-medium">{label}</p>
-      <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
   );
 }

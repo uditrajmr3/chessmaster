@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { PatternReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
+import { PageHeader, EmptyState } from "@/components/ui/page-kit";
 import {
   BarChart,
   Bar,
@@ -49,12 +50,11 @@ export default function WeaknessesPage() {
   if (loading) return <WeaknessesSkeleton />;
   if (!patterns)
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
-        <Target className="w-10 h-10 text-gray-500" />
-        <p className="text-gray-400 text-center">
-          No pattern data yet. Sync and analyze your games first.
-        </p>
-      </div>
+      <EmptyState
+        icon={Target}
+        title="No pattern data yet"
+        description="Sync and analyze your games to surface recurring mistakes, tactical blind spots, and the phases where you lose the most points."
+      />
     );
 
   const phaseData = Object.entries(patterns.phase_accuracy).map(
@@ -73,23 +73,19 @@ export default function WeaknessesPage() {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold mb-1">Weakness Analysis</h2>
-          <p className="text-gray-400 text-sm">
-            Recurring patterns and blind spots across your games
-          </p>
-        </div>
-        <GameFilterBar filters={filters} onChange={setFilters} />
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Weakness Analysis"
+        subtitle="Recurring patterns and blind spots across your games."
+        action={<GameFilterBar filters={filters} onChange={setFilters} />}
+      />
 
       {/* Phase accuracy */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="surface-card p-6 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">
+          <h2 className="text-base font-semibold text-white mb-4">
             Accuracy by Game Phase (Avg CPL)
-          </h3>
+          </h2>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={phaseData}>
@@ -104,9 +100,9 @@ export default function WeaknessesPage() {
         </div>
 
         <div className="surface-card p-6 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">
+          <h2 className="text-base font-semibold text-white mb-4">
             Blunder Rate by Move Number
-          </h3>
+          </h2>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={blunderBuckets}>
@@ -131,7 +127,7 @@ export default function WeaknessesPage() {
       {/* Tactical blind spots + Time trouble */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="surface-card p-6 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">Tactical Blind Spots</h3>
+          <h2 className="text-base font-semibold text-white mb-4">Tactical Blind Spots</h2>
           {tacticsData.length > 0 ? (
             <div className="space-y-3">
               {tacticsData
@@ -139,9 +135,9 @@ export default function WeaknessesPage() {
                 .map((t) => (
                   <div key={t.tactic} className="flex items-center gap-3 group">
                     <span className="text-gray-300 w-32 text-sm font-medium">{t.tactic}</span>
-                    <div className="flex-1 h-3 bg-gray-700/50 rounded-full overflow-hidden">
+                    <div className="flex-1 h-3 bg-white/10 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-red-600 to-red-400 rounded-full progress-animated"
+                        className="h-full bg-linear-to-r from-red-600 to-red-400 rounded-full progress-animated"
                         style={{
                           width: `${
                             (t.count /
@@ -158,54 +154,54 @@ export default function WeaknessesPage() {
                 ))}
             </div>
           ) : (
-            <p className="text-gray-500">No tactical data yet</p>
+            <p className="text-white/45 text-sm">No tactical data yet.</p>
           )}
         </div>
 
         <div className="surface-card p-6 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">Performance Breakdown</h3>
+          <h2 className="text-base font-semibold text-white mb-4">Performance Breakdown</h2>
           <div className="space-y-4">
             {/* Time trouble */}
             <div>
-              <h4 className="text-sm text-gray-400 mb-2 font-medium">Time Trouble Impact</h4>
+              <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Time Trouble Impact</h3>
               <div className="flex gap-3">
-                <div className="flex-1 bg-gray-800/70 rounded-lg p-3 text-center card-hover">
-                  <p className="text-2xl font-bold text-green-400">
+                <div className="flex-1 bg-ink-800 rounded-lg p-3 text-center">
+                  <p className="text-2xl font-bold font-mono text-green-400">
                     {patterns.blunder_rate_normal}%
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">Normal time</p>
+                  <p className="text-xs text-white/45 mt-0.5">Normal time</p>
                 </div>
-                <div className="flex-1 bg-gray-800/70 rounded-lg p-3 text-center card-hover">
-                  <p className="text-2xl font-bold text-red-400">
+                <div className="flex-1 bg-ink-800 rounded-lg p-3 text-center">
+                  <p className="text-2xl font-bold font-mono text-red-400">
                     {patterns.blunder_rate_time_trouble}%
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">Time trouble</p>
+                  <p className="text-xs text-white/45 mt-0.5">Time trouble</p>
                 </div>
               </div>
             </div>
 
             {/* Color performance */}
             <div>
-              <h4 className="text-sm text-gray-400 mb-2 font-medium">Color Performance</h4>
+              <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Color Performance</h3>
               <div className="flex gap-3">
-                <div className="flex-1 bg-gray-800/70 rounded-lg p-3 card-hover">
+                <div className="flex-1 bg-ink-800 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="w-3 h-3 bg-white rounded-sm shadow-sm" />
                     <span className="text-sm font-medium">White</span>
                   </div>
-                  <p className="font-bold">{patterns.white_stats.win_rate}% wins</p>
-                  <p className="text-xs text-gray-500">
-                    {patterns.white_stats.avg_cpl} avg CPL
+                  <p className="font-bold font-mono">{patterns.white_stats.win_rate}% wins</p>
+                  <p className="text-xs text-white/45">
+                    <span className="font-mono">{patterns.white_stats.avg_cpl}</span> avg CPL
                   </p>
                 </div>
-                <div className="flex-1 bg-gray-800/70 rounded-lg p-3 card-hover">
+                <div className="flex-1 bg-ink-800 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="w-3 h-3 bg-gray-500 rounded-sm" />
                     <span className="text-sm font-medium">Black</span>
                   </div>
-                  <p className="font-bold">{patterns.black_stats.win_rate}% wins</p>
-                  <p className="text-xs text-gray-500">
-                    {patterns.black_stats.avg_cpl} avg CPL
+                  <p className="font-bold font-mono">{patterns.black_stats.win_rate}% wins</p>
+                  <p className="text-xs text-white/45">
+                    <span className="font-mono">{patterns.black_stats.avg_cpl}</span> avg CPL
                   </p>
                 </div>
               </div>
@@ -213,12 +209,12 @@ export default function WeaknessesPage() {
 
             {/* Endgame conversion */}
             <div>
-              <h4 className="text-sm text-gray-400 mb-2 font-medium">Endgame Conversion</h4>
-              <div className="bg-gray-800/70 rounded-lg p-3 card-hover">
-                <p className="text-2xl font-bold">
+              <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Endgame Conversion</h3>
+              <div className="bg-ink-800 rounded-lg p-3">
+                <p className="text-2xl font-bold font-mono">
                   {patterns.endgame_conversion_rate}%
                 </p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-white/45 mt-0.5">
                   Won positions converted in endgame
                 </p>
               </div>
@@ -230,17 +226,17 @@ export default function WeaknessesPage() {
       {/* Worst blunders */}
       {patterns.example_positions.length > 0 && (
         <div className="surface-card p-6 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">
+          <h2 className="text-base font-semibold text-white mb-4">
             Worst Recurring Blunders
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {patterns.example_positions.slice(0, 6).map((pos, i) => (
               <div
                 key={i}
-                className="bg-gray-800/70 rounded-lg p-4 space-y-2 card-hover"
+                className="bg-ink-800 rounded-lg p-4 space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm">
+                  <span className="text-white/55 text-sm">
                     vs {pos.opponent} · {new Date(pos.date).toLocaleDateString()}
                   </span>
                   <span className="text-red-400 font-mono text-sm font-semibold">
@@ -256,7 +252,7 @@ export default function WeaknessesPage() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs text-gray-500 capitalize px-1.5 py-0.5 bg-gray-700/50 rounded">
+                  <span className="text-xs text-white/55 capitalize px-1.5 py-0.5 bg-white/5 rounded">
                     {pos.game_phase}
                   </span>
                   {pos.tactical_motifs.map((t) => (
@@ -268,7 +264,7 @@ export default function WeaknessesPage() {
                     </span>
                   ))}
                 </div>
-                <p className="text-xs font-mono text-gray-600 truncate">
+                <p className="text-xs font-mono text-white/45 truncate">
                   {pos.fen}
                 </p>
               </div>
@@ -282,9 +278,9 @@ export default function WeaknessesPage() {
 
 function WeaknessesSkeleton() {
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       <div>
-        <div className="skeleton h-8 w-48 mb-2" />
+        <div className="skeleton h-7 w-56 mb-2" />
         <div className="skeleton h-4 w-72" />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

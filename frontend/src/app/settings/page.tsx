@@ -47,7 +47,7 @@ export default function SettingsPage() {
         <h1 className="text-2xl font-bold text-white">Settings</h1>
       </div>
 
-      <div className="bg-[#1e2130] border border-gray-800/60 rounded-xl p-6 space-y-6">
+      <div className="surface-card p-6 space-y-6">
         {/* Email (read-only) */}
         <div>
           <label className="block text-sm font-medium text-gray-400 mb-1.5">

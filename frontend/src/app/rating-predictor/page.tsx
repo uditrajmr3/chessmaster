@@ -10,10 +10,11 @@ import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { RatingPredictionReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
+import { PageHeader, EmptyState, Stat } from "@/components/ui/page-kit";
 
 const tooltipStyle = {
   backgroundColor: "#101c27",
-  border: "1px solid #33495a",
+  border: "1px solid #263a49",
   borderRadius: "8px",
   color: "#eaf0f3",
 };
@@ -38,9 +39,16 @@ export default function RatingPredictorPage() {
 
   if (loading) return <PredictorSkeleton />;
   if (!report || report.trajectory.games_played === 0) return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
-      <TrendingUp className="w-10 h-10 text-gray-500" />
-      <p className="text-gray-400 text-center">Not enough data for predictions. Play at least 5 analyzed games.</p>
+    <div className="space-y-6">
+      <PageHeader
+        title="Rating Predictor"
+        subtitle="Track your improvement trajectory and projected milestones."
+      />
+      <EmptyState
+        icon={TrendingUp}
+        title="Not enough data yet"
+        description="Play and analyze at least 5 games so we can model your trajectory. The more analyzed games you have, the tighter the rating projection becomes."
+      />
     </div>
   );
 
@@ -77,16 +85,11 @@ export default function RatingPredictorPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold">Rating Predictor</h2>
-          <p className="text-gray-400 text-sm">
-            Track your improvement trajectory and projected milestones
-          </p>
-        </div>
-        <GameFilterBar filters={filters} onChange={setFilters} />
-      </div>
+      <PageHeader
+        title="Rating Predictor"
+        subtitle="Track your improvement trajectory and projected milestones."
+        action={<GameFilterBar filters={filters} onChange={setFilters} />}
+      />
 
       {/* Recommendations */}
       {report.recommendations.length > 0 && (
@@ -94,9 +97,9 @@ export default function RatingPredictorPage() {
           {report.recommendations.map((rec, i) => (
             <div
               key={i}
-              className="bg-blue-500/10 border border-blue-800/50 rounded-lg px-4 py-3"
+              className="bg-accent-500/10 border border-accent-500/20 rounded-lg px-4 py-3"
             >
-              <p className="text-blue-300 text-sm">{rec}</p>
+              <p className="text-accent-200 text-sm">{rec}</p>
             </div>
           ))}
         </div>
@@ -104,43 +107,43 @@ export default function RatingPredictorPage() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 stagger-children">
-        <StatCard label="Current Rating" value={t.current_rating} />
-        <StatCard
+        <Stat label="Current Rating" value={t.current_rating} />
+        <Stat
           label="Total Change"
           value={`${t.total_change >= 0 ? "+" : ""}${t.total_change}`}
-          color={t.total_change >= 0 ? "text-green-400" : "text-red-400"}
+          valueClassName={t.total_change >= 0 ? "text-green-400" : "text-red-400"}
         />
-        <StatCard
+        <Stat
           label="Rate / Month"
           value={`${t.rate_per_month >= 0 ? "+" : ""}${t.rate_per_month}`}
-          color={t.rate_per_month >= 0 ? "text-green-400" : "text-red-400"}
+          valueClassName={t.rate_per_month >= 0 ? "text-green-400" : "text-red-400"}
         />
-        <StatCard label="Peak Rating" value={t.peak_rating} color="text-yellow-400" />
-        <StatCard
+        <Stat label="Peak Rating" value={t.peak_rating} valueClassName="text-yellow-400" />
+        <Stat
           label="Recent Win Rate"
           value={`${t.recent_win_rate}%`}
-          color={t.recent_win_rate >= 50 ? "text-green-400" : "text-red-400"}
+          valueClassName={t.recent_win_rate >= 50 ? "text-green-400" : "text-red-400"}
         />
       </div>
 
       {/* Milestones */}
       {report.milestones.length > 0 && (
         <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-1">Projected Milestones</h3>
-          <p className="text-gray-500 text-xs mb-4">
-            Based on your current improvement rate of {t.rate_per_month > 0 ? "+" : ""}{t.rate_per_month} points/month
+          <h2 className="text-base font-semibold text-white">Projected Milestones</h2>
+          <p className="mt-0.5 mb-4 text-xs text-white/50">
+            Based on your current improvement rate of {t.rate_per_month > 0 ? "+" : ""}{t.rate_per_month} points/month.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {report.milestones.map((m) => (
               <div
                 key={m.target_rating}
-                className="bg-[#101c27] rounded-lg p-4 card-hover text-center"
+                className="bg-ink-800 rounded-lg p-4 card-hover text-center"
               >
                 <p className="text-2xl font-bold text-accent-400 font-mono">{m.target_rating}</p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-white/55 mt-1">
                   ~{m.months_away} months
                 </p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-white/45">
                   {m.projected_date}
                 </p>
               </div>
@@ -152,13 +155,13 @@ export default function RatingPredictorPage() {
       {/* Rating over time chart */}
       {monthlyChartData.length > 1 && (
         <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-1">Rating Over Time</h3>
-          <p className="text-gray-500 text-xs mb-4">
-            Monthly average and peak rating
+          <h2 className="text-base font-semibold text-white">Rating Over Time</h2>
+          <p className="mt-0.5 mb-4 text-xs text-white/50">
+            Monthly average and peak rating.
           </p>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyChartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#263a49" />
               <XAxis dataKey="month" stroke="#90a2b1" fontSize={11} />
               <YAxis stroke="#90a2b1" fontSize={12} domain={["auto", "auto"]} />
               <Tooltip
@@ -173,9 +176,9 @@ export default function RatingPredictorPage() {
               <Line
                 type="monotone"
                 dataKey="avg_rating"
-                stroke="#6366f1"
+                stroke="#a78368"
                 strokeWidth={2}
-                dot={{ fill: "#6366f1", r: 3 }}
+                dot={{ fill: "#a78368", r: 3 }}
                 name="avg_rating"
               />
               <Line
@@ -197,13 +200,13 @@ export default function RatingPredictorPage() {
         {/* Monthly performance */}
         {monthlyChartData.length > 1 && (
           <div className="surface-card p-5 animate-fade-in-up">
-            <h3 className="text-xl font-semibold mb-1">Monthly Win Rate</h3>
-            <p className="text-gray-500 text-xs mb-4">
-              Win percentage by month
+            <h2 className="text-base font-semibold text-white">Monthly Win Rate</h2>
+            <p className="mt-0.5 mb-4 text-xs text-white/50">
+              Win percentage by month.
             </p>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={monthlyChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#263a49" />
                 <XAxis dataKey="month" stroke="#90a2b1" fontSize={11} />
                 <YAxis stroke="#90a2b1" fontSize={12} unit="%" domain={[0, 100]} />
                 <Tooltip
@@ -213,7 +216,7 @@ export default function RatingPredictorPage() {
                     return [`${value ?? 0}`, "Games"];
                   }}
                 />
-                <Bar dataKey="win_rate" fill="#6366f1" radius={[4, 4, 0, 0]} name="win_rate" />
+                <Bar dataKey="win_rate" fill="#a78368" radius={[4, 4, 0, 0]} name="win_rate" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -222,13 +225,13 @@ export default function RatingPredictorPage() {
         {/* CPL trends */}
         {cplChartData.length > 1 && (
           <div className="surface-card p-5 animate-fade-in-up">
-            <h3 className="text-xl font-semibold mb-1">Weakness Trends</h3>
-            <p className="text-gray-500 text-xs mb-4">
-              Average CPL by game phase over time (lower is better)
+            <h2 className="text-base font-semibold text-white">Weakness Trends</h2>
+            <p className="mt-0.5 mb-4 text-xs text-white/50">
+              Average CPL by game phase over time. Lower is better.
             </p>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={cplChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#263a49" />
                 <XAxis dataKey="month" stroke="#90a2b1" fontSize={11} />
                 <YAxis stroke="#90a2b1" fontSize={12} />
                 <Tooltip
@@ -271,40 +274,40 @@ export default function RatingPredictorPage() {
       {/* Monthly breakdown table */}
       {report.monthly_performance.length > 0 && (
         <div className="surface-card p-5 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-1">Monthly Breakdown</h3>
-          <p className="text-gray-500 text-xs mb-4">
-            Detailed stats for each month
+          <h2 className="text-base font-semibold text-white">Monthly Breakdown</h2>
+          <p className="mt-0.5 mb-4 text-xs text-white/50">
+            Detailed stats for each month.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-500 text-xs border-b border-gray-700">
-                  <th className="text-left py-2 px-3">Month</th>
-                  <th className="text-center py-2 px-3">Games</th>
-                  <th className="text-center py-2 px-3">W/L/D</th>
-                  <th className="text-center py-2 px-3">Win Rate</th>
-                  <th className="text-center py-2 px-3">Avg Rating</th>
-                  <th className="text-center py-2 px-3">Rating Change</th>
+                <tr className="text-gray-400 text-xs uppercase tracking-wider border-b border-gray-700/50">
+                  <th className="text-left py-2 px-3 font-medium">Month</th>
+                  <th className="text-center py-2 px-3 font-medium">Games</th>
+                  <th className="text-center py-2 px-3 font-medium">W/L/D</th>
+                  <th className="text-center py-2 px-3 font-medium">Win Rate</th>
+                  <th className="text-center py-2 px-3 font-medium">Avg Rating</th>
+                  <th className="text-center py-2 px-3 font-medium">Rating Change</th>
                 </tr>
               </thead>
               <tbody>
                 {report.monthly_performance.slice().reverse().map((m) => (
-                  <tr key={m.month} className="border-b border-gray-800 hover:bg-white/[0.02]">
-                    <td className="py-2 px-3 text-gray-300 font-medium">{m.month}</td>
-                    <td className="py-2 px-3 text-center text-gray-400">{m.games}</td>
-                    <td className="py-2 px-3 text-center">
+                  <tr key={m.month} className="border-b border-gray-800/50 hover:bg-white/[0.02] transition-colors">
+                    <td className="py-2 px-3 text-white font-medium">{m.month}</td>
+                    <td className="py-2 px-3 text-center text-white/55 font-mono">{m.games}</td>
+                    <td className="py-2 px-3 text-center font-mono">
                       <span className="text-green-400">{m.wins}</span>
-                      /
+                      <span className="text-white/30">/</span>
                       <span className="text-red-400">{m.losses}</span>
-                      /
-                      <span className="text-gray-400">{m.draws}</span>
+                      <span className="text-white/30">/</span>
+                      <span className="text-yellow-400">{m.draws}</span>
                     </td>
                     <td className={`py-2 px-3 text-center font-mono ${
                       m.win_rate >= 50 ? "text-green-400" : "text-red-400"
                     }`}>
                       {m.win_rate}%
                     </td>
-                    <td className="py-2 px-3 text-center text-gray-300 font-mono">{m.avg_rating}</td>
+                    <td className="py-2 px-3 text-center text-white/80 font-mono">{m.avg_rating}</td>
                     <td className={`py-2 px-3 text-center font-mono ${
                       m.rating_change >= 0 ? "text-green-400" : "text-red-400"
                     }`}>
@@ -317,23 +320,6 @@ export default function RatingPredictorPage() {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  color = "text-white",
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <div className="surface-card p-4 card-hover">
-      <p className="text-gray-400 text-xs font-medium">{label}</p>
-      <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { OpeningNode, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
+import { PageHeader, EmptyState } from "@/components/ui/page-kit";
 
 export default function OpeningsPage() {
   const [openings, setOpenings] = useState<OpeningNode[]>([]);
@@ -30,21 +31,18 @@ export default function OpeningsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold mb-1">Opening Repertoire</h2>
-          <p className="text-gray-400 text-sm">
-            Your personal opening tree with win rates and accuracy
-          </p>
-        </div>
-        <GameFilterBar filters={filters} onChange={setFilters} />
-      </div>
+      <PageHeader
+        title="Opening Repertoire"
+        subtitle="Your personal opening tree with win rates and accuracy."
+        action={<GameFilterBar filters={filters} onChange={setFilters} />}
+      />
 
       {openings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4 animate-fade-in-up">
-          <BookOpen className="w-10 h-10 text-gray-500" />
-          <p className="text-gray-400 text-center">No opening data yet. Sync and analyze your games first.</p>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          title="No opening data yet"
+          description="Sync and analyze your games to see your opening repertoire here, with win rates and accuracy for every line you play."
+        />
       ) : (
         <>
           {/* Desktop table */}
@@ -74,7 +72,7 @@ export default function OpeningsPage() {
                   return (
                     <tr
                       key={o.eco}
-                      className="border-b border-gray-800/50 hover:bg-white/[0.02] transition-colors"
+                      className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
                     >
                       <td className="p-4 font-mono text-accent-400 font-medium">{o.eco}</td>
                       <td className="p-4 text-gray-300">{o.name}</td>
@@ -99,7 +97,7 @@ export default function OpeningsPage() {
                         {o.avg_cpl !== null ? o.avg_cpl.toFixed(1) : "—"}
                       </td>
                       <td className="p-4">
-                        <div className="w-full h-2 bg-gray-700/50 rounded-full overflow-hidden">
+                        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full progress-animated ${barColor}`}
                             style={{ width: `${winRate}%` }}
@@ -148,7 +146,7 @@ export default function OpeningsPage() {
                     <span className="font-mono">{o.wins}W / {o.losses}L / {o.draws}D</span>
                     {o.avg_cpl !== null && <span>{o.avg_cpl.toFixed(1)} CPL</span>}
                   </div>
-                  <div className="h-2 bg-gray-700/50 rounded-full overflow-hidden">
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full progress-animated ${barColor}`}
                       style={{ width: `${winRate}%` }}
@@ -168,7 +166,7 @@ function OpeningsSkeleton() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <div className="skeleton h-8 w-48 mb-2" />
+        <div className="skeleton h-7 w-56 mb-2" />
         <div className="skeleton h-4 w-72" />
       </div>
       <div className="surface-card overflow-hidden">

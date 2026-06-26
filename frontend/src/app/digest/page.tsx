@@ -91,7 +91,7 @@ export default function DigestPage() {
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Results breakdown */}
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Results</h3>
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-1">
@@ -144,7 +144,7 @@ export default function DigestPage() {
 
         {/* vs Previous Period */}
         {imp.has_comparison ? (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-4">vs. Previous {days} Days</h3>
             <div className="space-y-4">
               <ComparisonRow
@@ -171,20 +171,20 @@ export default function DigestPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up flex items-center justify-center">
+          <div className="surface-card p-5 animate-fade-in-up flex items-center justify-center">
             <p className="text-gray-500 text-sm">No previous period data for comparison</p>
           </div>
         )}
 
         {/* Top openings */}
         {report.openings.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-4">Top Openings</h3>
             <div className="space-y-2">
               {report.openings.map((o) => (
                 <div
                   key={o.eco}
-                  className="flex items-center justify-between bg-[#1a1d27] rounded-lg px-4 py-3 card-hover"
+                  className="flex items-center justify-between bg-[#101c27] rounded-lg px-4 py-3 card-hover"
                 >
                   <div>
                     <p className="text-sm text-gray-200 font-medium">{o.name}</p>
@@ -203,13 +203,13 @@ export default function DigestPage() {
 
         {/* Highlights */}
         {report.highlights.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-4">Highlights</h3>
             <div className="space-y-2">
               {report.highlights.map((h, i) => (
                 <div
                   key={i}
-                  className="bg-[#1a1d27] rounded-lg px-4 py-3 card-hover"
+                  className="bg-[#101c27] rounded-lg px-4 py-3 card-hover"
                 >
                   <div className="flex items-center gap-3">
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
@@ -231,9 +231,9 @@ export default function DigestPage() {
       </div>
 
       {/* Full text digest */}
-      <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+      <div className="surface-card p-5 animate-fade-in-up">
         <h3 className="text-xl font-semibold mb-4">Full Digest</h3>
-        <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono leading-relaxed bg-[#1a1d27] rounded-lg p-4">
+        <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono leading-relaxed bg-[#101c27] rounded-lg p-4">
           {report.digest_text}
         </pre>
       </div>
@@ -246,7 +246,7 @@ function PeriodSelector({ days, onChange }: { days: number; onChange: (d: number
     <select
       value={days}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="bg-[#222639] border border-gray-700 text-gray-300 text-sm rounded-lg px-3 py-2"
+      className="bg-[#16242f] border border-gray-700 text-gray-300 text-sm rounded-lg px-3 py-2"
     >
       <option value={7}>Last 7 days</option>
       <option value={14}>Last 14 days</option>
@@ -301,7 +301,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4 card-hover">
+    <div className="surface-card p-4 card-hover">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
@@ -317,7 +317,7 @@ function DigestSkeleton() {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-4">
+          <div key={i} className="surface-card p-4">
             <div className="skeleton" style={{ height: 12, width: 80, borderRadius: 4 }} />
             <div className="skeleton mt-2" style={{ height: 32, width: 48, borderRadius: 6 }} />
           </div>
@@ -325,7 +325,7 @@ function DigestSkeleton() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-5">
+          <div key={i} className="surface-card p-5">
             <div className="skeleton" style={{ height: 20, width: 120, borderRadius: 4 }} />
             <div className="skeleton mt-4" style={{ height: 150, width: "100%", borderRadius: 8 }} />
           </div>

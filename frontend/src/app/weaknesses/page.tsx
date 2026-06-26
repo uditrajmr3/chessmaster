@@ -21,10 +21,10 @@ import {
 } from "recharts";
 
 const tooltipStyle = {
-  backgroundColor: "#1a1d27",
-  border: "1px solid #374151",
+  backgroundColor: "#101c27",
+  border: "1px solid #33495a",
   borderRadius: "8px",
-  color: "#e8eaed",
+  color: "#eaf0f3",
 };
 
 export default function WeaknessesPage() {
@@ -86,34 +86,34 @@ export default function WeaknessesPage() {
 
       {/* Phase accuracy */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">
             Accuracy by Game Phase (Avg CPL)
           </h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={phaseData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="phase" stroke="#9ca3af" fontSize={12} />
-                <YAxis stroke="#9ca3af" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+                <XAxis dataKey="phase" stroke="#90a2b1" fontSize={12} />
+                <YAxis stroke="#90a2b1" fontSize={12} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Bar dataKey="cpl" fill="#0ebeb0" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="cpl" fill="#a78368" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">
             Blunder Rate by Move Number
           </h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={blunderBuckets}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="bucket" stroke="#9ca3af" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+                <XAxis dataKey="bucket" stroke="#90a2b1" fontSize={11} />
                 <YAxis
-                  stroke="#9ca3af"
+                  stroke="#90a2b1"
                   fontSize={12}
                   tickFormatter={(v) => `${v}%`}
                 />
@@ -130,7 +130,7 @@ export default function WeaknessesPage() {
 
       {/* Tactical blind spots + Time trouble */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Tactical Blind Spots</h3>
           {tacticsData.length > 0 ? (
             <div className="space-y-3">
@@ -162,7 +162,7 @@ export default function WeaknessesPage() {
           )}
         </div>
 
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Performance Breakdown</h3>
           <div className="space-y-4">
             {/* Time trouble */}
@@ -229,7 +229,7 @@ export default function WeaknessesPage() {
 
       {/* Worst blunders */}
       {patterns.example_positions.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">
             Worst Recurring Blunders
           </h3>
@@ -289,7 +289,7 @@ function WeaknessesSkeleton() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-6">
+          <div key={i} className="surface-card p-6">
             <div className="skeleton h-5 w-52 mb-4" />
             <div className="skeleton h-48 w-full" />
           </div>
@@ -297,7 +297,7 @@ function WeaknessesSkeleton() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-6">
+          <div key={i} className="surface-card p-6">
             <div className="skeleton h-5 w-40 mb-4" />
             <div className="space-y-3">
               {[...Array(3)].map((_, j) => (

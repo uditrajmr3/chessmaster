@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import AuthGuard from "@/components/AuthGuard";
@@ -18,6 +18,15 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+// Display serif — wordmark and large auth headings only. Reads warm and
+// editorial against the taupe accent; never used for UI chrome or body.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "ChessMaster - Your Personal Chess Coach",
   description: "Analyze your chess games and discover recurring patterns",
@@ -29,7 +38,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${jetbrainsMono.variable} ${fraunces.variable}`}
+    >
       <body className="flex min-h-screen">
         <AuthProvider>
           <AuthGuard>{children}</AuthGuard>

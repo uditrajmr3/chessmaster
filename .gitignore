@@ -8,10 +8,6 @@ backend/data/*.db
 !backend/data/.gitkeep
 backend/.env
 
-# Stockfish binary
-backend/stockfish/stockfish*
-!backend/stockfish/.gitkeep
-
 # Node
 node_modules/
 frontend/.next/
@@ -31,7 +27,7 @@ Thumbs.db
 .claude/
 .remember/
 .playwright-mcp/
-ui/
+/ui/
 
 # Superpowers control-plane scratch (plans/ledger/reports)
 .superpowers/

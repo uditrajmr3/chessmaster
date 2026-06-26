@@ -12,10 +12,10 @@ import type { EndgameReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
 const tooltipStyle = {
-  backgroundColor: "#1a1d27",
-  border: "1px solid #374151",
+  backgroundColor: "#101c27",
+  border: "1px solid #33495a",
   borderRadius: "8px",
-  color: "#e8eaed",
+  color: "#eaf0f3",
 };
 
 export default function EndgamePage() {
@@ -111,16 +111,16 @@ export default function EndgamePage() {
 
       {/* Conversion rate chart */}
       {conversionData.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-1">Conversion Rate by Endgame Type</h3>
           <p className="text-gray-500 text-xs mb-4">
             How often you win from a winning endgame position
           </p>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={conversionData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="name" stroke="#9ca3af" fontSize={11} angle={-20} textAnchor="end" height={60} />
-              <YAxis stroke="#9ca3af" fontSize={12} unit="%" domain={[0, 100]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+              <XAxis dataKey="name" stroke="#90a2b1" fontSize={11} angle={-20} textAnchor="end" height={60} />
+              <YAxis stroke="#90a2b1" fontSize={12} unit="%" domain={[0, 100]} />
               <Tooltip
                 contentStyle={tooltipStyle}
                 formatter={(value, name) => {
@@ -144,7 +144,7 @@ export default function EndgamePage() {
       {/* Two column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Endgame type breakdown */}
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-1">Endgame Type Breakdown</h3>
           <p className="text-gray-500 text-xs mb-4">
             Performance statistics by endgame type
@@ -153,7 +153,7 @@ export default function EndgamePage() {
             {report.by_type.map((t) => (
               <div
                 key={t.type}
-                className="bg-[#1a1d27] rounded-lg px-4 py-3 card-hover"
+                className="bg-[#101c27] rounded-lg px-4 py-3 card-hover"
               >
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm text-gray-200 font-medium">{t.type}</p>
@@ -208,7 +208,7 @@ export default function EndgamePage() {
 
         {/* Worst endgame games */}
         {report.worst_games.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Worst Conversion Failures</h3>
             <p className="text-gray-500 text-xs mb-4">
               Games where you had a winning endgame but failed to convert
@@ -217,7 +217,7 @@ export default function EndgamePage() {
               {report.worst_games.map((g) => (
                 <div
                   key={g.game_id}
-                  className="bg-[#1a1d27] rounded-lg px-4 py-3 card-hover"
+                  className="bg-[#101c27] rounded-lg px-4 py-3 card-hover"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <div>
@@ -263,16 +263,16 @@ export default function EndgamePage() {
 
       {/* Blunders by type chart */}
       {blunderData.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-1">Endgame Blunders by Type</h3>
           <p className="text-gray-500 text-xs mb-4">
             Where you make the most mistakes in the endgame
           </p>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={blunderData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="name" stroke="#9ca3af" fontSize={11} angle={-20} textAnchor="end" height={60} />
-              <YAxis stroke="#9ca3af" fontSize={12} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+              <XAxis dataKey="name" stroke="#90a2b1" fontSize={11} angle={-20} textAnchor="end" height={60} />
+              <YAxis stroke="#90a2b1" fontSize={12} />
               <Tooltip
                 contentStyle={tooltipStyle}
                 formatter={(value, name) => {
@@ -299,7 +299,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4 card-hover">
+    <div className="surface-card p-4 card-hover">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
@@ -315,13 +315,13 @@ function EndgameSkeleton() {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-4">
+          <div key={i} className="surface-card p-4">
             <div className="skeleton" style={{ height: 12, width: 100, borderRadius: 4 }} />
             <div className="skeleton mt-2" style={{ height: 32, width: 48, borderRadius: 6 }} />
           </div>
         ))}
       </div>
-      <div className="bg-[#222639] rounded-xl p-5">
+      <div className="surface-card p-5">
         <div className="skeleton" style={{ height: 20, width: 300, borderRadius: 4 }} />
         <div className="skeleton mt-4" style={{ height: 300, width: "100%", borderRadius: 8 }} />
       </div>

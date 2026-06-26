@@ -69,9 +69,4 @@ app.include_router(fastapi_users.get_users_router(UserRead, UserUpdate), prefix=
 
 @app.get("/api/health")
 def health():
-    sf = settings.resolve_stockfish()
-    return {
-        "status": "ok",
-        "stockfish_available": sf is not None,
-        "stockfish_path": sf,
-    }
+    return {"status": "ok"}

@@ -50,7 +50,7 @@ export default function ImportPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* File upload */}
         <div
-          className="bg-[#222639] rounded-xl p-8 border-2 border-dashed border-gray-700 hover:border-accent-500 transition-colors cursor-pointer text-center animate-fade-in-up"
+          className="surface-card p-8 border-2 border-dashed border-gray-700 hover:border-accent-500 transition-colors cursor-pointer text-center animate-fade-in-up"
           onClick={() => fileRef.current?.click()}
         >
           <input
@@ -66,7 +66,7 @@ export default function ImportPage() {
         </div>
 
         {/* Or paste */}
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <div className="flex items-center gap-2 mb-3">
             <FileText className="w-4 h-4 text-gray-500" />
             <label className="text-sm text-gray-400">Or paste PGN text</label>
@@ -75,7 +75,7 @@ export default function ImportPage() {
             value={pgnText}
             onChange={(e) => setPgnText(e.target.value)}
             placeholder="[Event &quot;Casual Game&quot;]&#10;[White &quot;Player1&quot;]&#10;[Black &quot;Player2&quot;]&#10;[Result &quot;1-0&quot;]&#10;&#10;1. e4 e5 2. Nf3 Nc6 1-0"
-            className="w-full h-40 bg-[#1a1d27] border border-gray-700 rounded-lg px-4 py-3 text-gray-300 text-sm font-mono resize-none focus:outline-none focus:border-accent-500"
+            className="w-full h-40 bg-[#101c27] border border-gray-700 rounded-lg px-4 py-3 text-gray-300 text-sm font-mono resize-none focus:outline-none focus:border-accent-500"
           />
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function ImportPage() {
 
       {/* Result */}
       {result && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-3">Import Result</h3>
           <div className="grid grid-cols-3 gap-4 text-center mb-4">
             <div>

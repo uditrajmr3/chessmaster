@@ -23,11 +23,11 @@ interface Props {
 }
 
 const TIME_CLASS_COLORS: Record<string, string> = {
-  rapid: "#0ebeb0",
-  classical: "#35ddcd",
-  blitz: "#59efdd",
-  bullet: "#089990",
-  daily: "#0b7a74",
+  rapid: "#a78368",
+  classical: "#b69a81",
+  blitz: "#c2ad95",
+  bullet: "#9a735c",
+  daily: "#805e4e",
 };
 
 const PLATFORM_LABELS: Record<string, string> = {
@@ -75,7 +75,7 @@ export default function RatingChart({ data }: Props) {
       }));
   }, [data, selectedPlatform, activeTimeClass]);
 
-  const color = TIME_CLASS_COLORS[activeTimeClass] || "#0ebeb0";
+  const color = TIME_CLASS_COLORS[activeTimeClass] || "#a78368";
 
   return (
     <div>
@@ -125,10 +125,10 @@ export default function RatingChart({ data }: Props) {
       <div className="h-64" style={{ minWidth: 0 }}>
         <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
             <XAxis
               dataKey="date"
-              stroke="#9ca3af"
+              stroke="#90a2b1"
               fontSize={11}
               tickLine={false}
               interval={Math.max(0, Math.floor(chartData.length / 8))}
@@ -137,17 +137,17 @@ export default function RatingChart({ data }: Props) {
               height={50}
             />
             <YAxis
-              stroke="#9ca3af"
+              stroke="#90a2b1"
               fontSize={12}
               tickLine={false}
               domain={["dataMin - 50", "dataMax + 50"]}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#1a1d27",
-                border: "1px solid #374151",
+                backgroundColor: "#101c27",
+                border: "1px solid #33495a",
                 borderRadius: "8px",
-                color: "#e8eaed",
+                color: "#eaf0f3",
               }}
               labelFormatter={(label) => label}
               formatter={(value) => [`${value ?? ""}`, "Rating"]}

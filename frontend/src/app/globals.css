@@ -1,50 +1,65 @@
 @import "tailwindcss";
 
+/* Force-scan the whole src tree for utilities. Tailwind v4 auto-detection
+ * skips gitignored paths, and src/components/ui/ was briefly caught by a
+ * `ui/` ignore rule — which silently dropped every class used only there
+ * (the login card). Explicit @source is not subject to gitignore, so the
+ * card's utilities always generate. */
+@source "../**/*.{ts,tsx}";
+
+/*
+ * ChessMaster — "Moonwalker × Rodeo Dust"
+ * ----------------------------------------
+ * Surface: a deep navy that falls to black (Moonwalker, #152331 → #000000).
+ * Accent: rodeo-dust, a warm taupe — the only saturated color on the page,
+ *         carried sparingly the way leather and brass read against slate.
+ * Theme is dark by intent: a player reviewing 500 games at night wants the
+ * board lit and the chrome to recede, not a white field glaring back.
+ */
+
 @theme {
-  --color-accent-50: #effefa;
-  --color-accent-100: #cafdf4;
-  --color-accent-200: #95fae9;
-  --color-accent-300: #59efdd;
-  --color-accent-400: #35ddcd;
-  --color-accent-500: #0ebeb0;
-  --color-accent-600: #089990;
-  --color-accent-700: #0b7a74;
-  --color-accent-800: #0e615f;
-  --color-accent-900: #11504e;
-  --color-accent-950: #023131;
+  /* Accent = rodeo-dust. Drives every Tailwind `accent-*` utility. */
+  --color-accent-50:  #f8f6f4;
+  --color-accent-100: #f0ebe4;
+  --color-accent-200: #e0d5c8;
+  --color-accent-300: #c2ad95;
+  --color-accent-400: #b69a81;
+  --color-accent-500: #a78368;
+  --color-accent-600: #9a735c;
+  --color-accent-700: #805e4e;
+  --color-accent-800: #694d43;
+  --color-accent-900: #564038;
+  --color-accent-950: #2d211d;
+
+  /* Navy neutral ramp, tinted toward the Moonwalker hue (never pure #000). */
+  --color-ink-950: #0b141d;  /* page base   */
+  --color-ink-900: #101c27;  /* sidebar / raised surface */
+  --color-ink-800: #16242f;  /* card        */
+  --color-ink-700: #1d3140;  /* card hover  */
+  --color-ink-600: #263a49;  /* border      */
+  --color-ink-500: #33495a;  /* border strong */
 }
 
 :root {
-  /* Turquoise primary palette */
-  --color-turquoise-50: #effefa;
-  --color-turquoise-100: #cafdf4;
-  --color-turquoise-200: #95fae9;
-  --color-turquoise-300: #59efdd;
-  --color-turquoise-400: #35ddcd;
-  --color-turquoise-500: #0ebeb0;
-  --color-turquoise-600: #089990;
-  --color-turquoise-700: #0b7a74;
-  --color-turquoise-800: #0e615f;
-  --color-turquoise-900: #11504e;
-  --color-turquoise-950: #023131;
+  /* Semantic roles */
+  --color-bg: #0b141d;
+  --color-surface: #101c27;
+  --color-card: #16242f;
+  --color-card-hover: #1d3140;
+  --color-border: #263a49;
+  --color-border-strong: #33495a;
+  --color-text: #eaf0f3;
+  --color-text-muted: #90a2b1;
+  --color-text-faint: #637688;
+  --color-accent: #a78368;
+  --color-accent-hover: #b69a81;
 
-  /* Rulebook 2.1 — Mandatory color roles */
-  --color-bg: #0f1117;
-  --color-surface: #1a1d27;
-  --color-card: #222639;
-  --color-card-hover: #2a2f47;
-  --color-border: #2e3348;
-  --color-text: #e8eaed;
-  --color-text-muted: #9ca3af;
-  --color-accent: var(--color-turquoise-500);
-  --color-accent-hover: var(--color-turquoise-600);
-
-  /* Semantic colors — data-driven, NOT accent alternatives */
+  /* Semantic data colors — kept distinct from accent for chess outcomes */
   --color-win: #22c55e;
   --color-loss: #ef4444;
   --color-draw: #eab308;
 
-  /* Legacy aliases */
+  /* Legacy aliases (kept so older inline refs keep resolving) */
   --bg-primary: var(--color-bg);
   --bg-secondary: var(--color-surface);
   --bg-card: var(--color-card);
@@ -52,169 +67,132 @@
   --text-primary: var(--color-text);
   --text-secondary: var(--color-text-muted);
 
-  /* Easing — EXACT values from micro-animations easing dictionary */
-  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1.0);     /* entering screen */
-  --ease-in: cubic-bezier(0.4, 0.0, 1.0, 1.0);       /* leaving screen */
-  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1.0);   /* moving within screen */
-  --spring: cubic-bezier(0.34, 1.56, 0.64, 1.0);      /* personality/satisfaction */
+  /* Easing dictionary — ease out with exponential curves, no bounce. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);          /* out-expo, entering   */
+  --ease-in: cubic-bezier(0.4, 0.0, 1.0, 1.0);        /* leaving              */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);      /* moving within screen */
+  --spring: cubic-bezier(0.34, 1.4, 0.5, 1.0);        /* restrained overshoot */
+}
 
+html {
+  /* The Moonwalker field sits behind everything and never scrolls away. */
+  background-color: #000;
+  background-image:
+    radial-gradient(120% 90% at 50% -10%, #1a2c3c 0%, #152331 32%, #0a1219 64%, #000000 100%);
+  background-attachment: fixed;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  color: var(--color-text);
   font-family: var(--font-body), system-ui, -apple-system, sans-serif;
   font-weight: 400;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Heading typography — same font, heavier weight (rulebook 1.1 dashboard rule) */
+/* UI headings — body font, heavier weight, tightened tracking. */
 h1, h2, h3, h4 {
   font-family: var(--font-body), system-ui, -apple-system, sans-serif;
   font-weight: 700;
-  letter-spacing: -0.02em; /* rulebook 1.4: -0.02em to -0.04em for headings */
-  line-height: 1.2;       /* rulebook 1.4: 1.1-1.25 for headings */
+  letter-spacing: -0.02em;
+  line-height: 1.18;
 }
 
-/* ALL CAPS labels — wider letter-spacing (rulebook 1.4: 0.08em-0.12em) */
+/* Display serif — reserved for the wordmark and large auth headings only. */
+.font-display {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.015em;
+}
+
 .tracking-wider {
   letter-spacing: 0.08em !important;
 }
 
-/* Monospace elements */
 code, .font-mono {
   font-family: var(--font-mono), ui-monospace, monospace !important;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* Selection picks up the warm accent. */
+::selection {
+  background: rgba(167, 131, 104, 0.32);
+  color: #fff;
 }
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
+
+/* Custom scrollbar — narrow, neutral, warms on hover. */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: #4b5563;
-  border-radius: 3px;
+  background: #2a3c4b;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+::-webkit-scrollbar-thumb:hover { background: #3a5060; background-clip: padding-box; }
+
+/* Reusable surface: the standard card, with a hairline top highlight. */
+.surface-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.03) inset,
+              0 12px 32px -16px rgba(0, 0, 0, 0.6);
 }
 
-/* ── Animation Keyframes (micro-animations guide) ── */
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Subtle accent halo used behind brand marks / hero icons. */
+.accent-glow {
+  box-shadow: 0 0 0 1px rgba(167, 131, 104, 0.25),
+              0 8px 40px -8px rgba(167, 131, 104, 0.35);
 }
 
-/* Cards/content revealing (ease-out, 400-600ms per duration ref) */
+/* ── Animation Keyframes ── */
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Toast entering from top (interaction 3: toastIn pattern) */
 @keyframes slideInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-16px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Toast exiting (interaction 3: toastOut — ease-in for leaving) */
 @keyframes slideOutUp {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.96);
-  }
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-8px) scale(0.97); }
 }
 
-/* Shimmer sweep for skeleton loading (interaction 5) */
 @keyframes shimmer {
   from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
+  to   { background-position: -200% 0; }
 }
 
-/* Spring scale-in for success states, badges (spring easing) */
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.7) translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: scale(0.7) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-@keyframes progress-fill {
-  from { width: 0%; }
-}
+@keyframes progress-fill { from { width: 0%; } }
 
 /* ── Utility Classes ── */
 
-/* Fade in — 200ms for content swap (interaction 5 rule) */
-.animate-fade-in {
-  animation: fadeIn 0.2s var(--ease-out) both;
-}
+.animate-fade-in       { animation: fadeIn 0.2s var(--ease-out) both; }
+.animate-fade-in-up    { animation: fadeInUp 0.5s var(--ease-out) both; }
+.animate-slide-in-right{ animation: slideInRight 0.35s var(--ease-out) both; }
+.animate-slide-in-down { animation: slideInDown 0.35s var(--ease-out) both; }
+.animate-slide-out-up  { animation: slideOutUp 0.25s var(--ease-in) both; }
+.animate-scale-in      { animation: scaleIn 0.4s var(--spring) both; }
 
-/* Cards/sections entering — 400-600ms (duration ref: long transitions) */
-.animate-fade-in-up {
-  animation: fadeInUp 0.45s var(--ease-out) both;
-}
-
-/* Side panel entering */
-.animate-slide-in-right {
-  animation: slideInRight 0.35s var(--ease-out) both;
-}
-
-/* Toast entering — 350ms (duration ref: medium transitions) */
-.animate-slide-in-down {
-  animation: slideInDown 0.35s var(--ease-out) both;
-}
-
-/* Toast exiting — 250ms with ease-in (interaction 3 rule) */
-.animate-slide-out-up {
-  animation: slideOutUp 0.25s var(--ease-in) both;
-}
-
-/* Spring scale for success states (interaction 2: 400-500ms) */
-.animate-scale-in {
-  animation: scaleIn 0.4s var(--spring) both;
-}
-
-/* Staggered children — 60ms per element (animation checklist rule) */
-.stagger-children > * {
-  animation: fadeInUp 0.45s var(--ease-out) both;
-}
+.stagger-children > * { animation: fadeInUp 0.5s var(--ease-out) both; }
 .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
 .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
 .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
@@ -224,15 +202,9 @@ code, .font-mono {
 .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
 .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
 
-/*
- * Skeleton shimmer loading (interaction 5 — dark mode variant)
- * Uses ::after pseudo-element with subtle shimmer sweep.
- * Duration: 1.5s infinite (rule: faster=frantic, slower=broken).
- * Shape must match real content (applied via inline height/width).
- */
 .skeleton {
-  background: #2a2d3e;
-  border-radius: 4px;
+  background: #182734;
+  border-radius: 6px;
   position: relative;
   overflow: hidden;
 }
@@ -240,80 +212,46 @@ code, .font-mono {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.06) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
-/*
- * Card hover (rulebook 4.2)
- * Explicit properties — NEVER transition: all (animation checklist rule)
- * Hover: translateY(-2px) + box-shadow 0 8px 32px
- * Duration: 200ms (short transition)
- */
+/* Card hover — explicit properties only, never transition: all. */
 .card-hover {
   transition:
-    transform 0.2s var(--ease-out),
-    box-shadow 0.2s var(--ease-out),
-    background-color 0.15s ease;
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  background-color: var(--bg-card-hover);
+  transform: translateY(-3px);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.7);
+  background-color: var(--color-card-hover);
 }
 
-/*
- * Button press (interaction 1)
- * Hover: background 0.15s (rule: faster than you think)
- * Active: scale(0.97) for large buttons (rule: never below 0.94)
- * Explicit properties only — no transition: all
- */
+/* Button press. */
 .btn-press {
-  transition:
-    background-color 0.15s ease,
-    transform 0.1s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.2s ease;
 }
 .btn-press:active {
   transform: scale(0.97);
-  transition-duration: 0.08s; /* faster on press than release (interaction 1) */
+  transition-duration: 0.08s;
 }
 
-/* Active nav indicator (dashboard blueprint zone 2: left border accent + bg highlight) */
-.nav-active-indicator {
-  position: relative;
-}
-.nav-active-indicator::before {
-  content: '';
-  position: absolute;
-  left: -12px;
-  top: 0;
-  width: 3px;
-  height: 100%;
-  border-radius: 0 3px 3px 0;
-  background: var(--color-accent);
-  animation: scaleIn 0.4s var(--spring) both;
-}
-
-/*
- * Progress bar (interaction 8)
- * Width transition: 0.4s ease-in-out (rule: instant changes destroy metaphor)
- */
+/* Progress bar. */
 .progress-animated {
   animation: progress-fill 0.8s var(--ease-in-out) both;
   transition: width 0.4s var(--ease-in-out);
 }
 
-/* Reduced motion (animation checklist: disable scroll reveals + entrance animations) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  html { background-attachment: scroll; }
 }

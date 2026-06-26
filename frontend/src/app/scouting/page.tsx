@@ -39,7 +39,7 @@ export default function ScoutingPage() {
       </div>
 
       {/* Search form */}
-      <div className="bg-[#222639] rounded-xl p-5">
+      <div className="surface-card p-5">
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
@@ -47,12 +47,12 @@ export default function ScoutingPage() {
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleScout()}
             placeholder="Opponent username"
-            className="flex-1 bg-[#1a1d27] text-gray-200 text-sm rounded-lg px-4 py-2.5 border border-gray-700 focus:border-blue-500 focus:outline-none placeholder-gray-500"
+            className="flex-1 bg-[#101c27] text-gray-200 text-sm rounded-lg px-4 py-2.5 border border-gray-700 focus:border-blue-500 focus:outline-none placeholder-gray-500"
           />
           <select
             value={platform}
             onChange={(e) => setPlatform(e.target.value)}
-            className="bg-[#1a1d27] text-gray-300 text-sm rounded-lg px-3 py-2.5 border border-gray-700 focus:border-blue-500 focus:outline-none"
+            className="bg-[#101c27] text-gray-300 text-sm rounded-lg px-3 py-2.5 border border-gray-700 focus:border-blue-500 focus:outline-none"
           >
             <option value="chesscom">Chess.com</option>
             <option value="lichess">Lichess</option>
@@ -155,7 +155,7 @@ function OpeningTable({
 }) {
   if (openings.length === 0) {
     return (
-      <div className="bg-[#222639] rounded-xl p-5">
+      <div className="surface-card p-5">
         <h3 className="text-xl font-semibold mb-3">{title}</h3>
         <p className="text-gray-500 text-sm">No opening data</p>
       </div>
@@ -165,7 +165,7 @@ function OpeningTable({
   const xrefMap = new Map(crossRef.map((x) => [x.eco, x]));
 
   return (
-    <div className="bg-[#222639] rounded-xl p-5">
+    <div className="surface-card p-5">
       <h3 className="text-xl font-semibold mb-3">{title}</h3>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -239,7 +239,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4">
+    <div className="surface-card p-4">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>

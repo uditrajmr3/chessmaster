@@ -12,10 +12,10 @@ import type { TiltReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
 const tooltipStyle = {
-  backgroundColor: "#1a1d27",
-  border: "1px solid #374151",
+  backgroundColor: "#101c27",
+  border: "1px solid #33495a",
   borderRadius: "8px",
-  color: "#e8eaed",
+  color: "#eaf0f3",
 };
 
 export default function TiltPage() {
@@ -105,16 +105,16 @@ export default function TiltPage() {
 
       {/* Primary viz — blunder rate by streak */}
       {streakChartData.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-1">Blunder Rate by Consecutive Losses</h3>
           <p className="text-gray-500 text-xs mb-4">
             Does your play deteriorate after consecutive losses?
           </p>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={streakChartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} />
-              <YAxis stroke="#9ca3af" fontSize={12} unit="%" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+              <XAxis dataKey="name" stroke="#90a2b1" fontSize={12} />
+              <YAxis stroke="#90a2b1" fontSize={12} unit="%" />
               <Tooltip
                 contentStyle={tooltipStyle}
                 formatter={(value, name) => {
@@ -137,7 +137,7 @@ export default function TiltPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Worst Tilt Sessions */}
         {report.rating_drops.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Worst Tilt Sessions</h3>
             <p className="text-gray-500 text-xs mb-4">
               Sessions where you lost the most rating
@@ -146,7 +146,7 @@ export default function TiltPage() {
               {report.rating_drops.map((drop, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between bg-[#1a1d27] rounded-lg px-4 py-3 card-hover"
+                  className="flex items-center justify-between bg-[#101c27] rounded-lg px-4 py-3 card-hover"
                 >
                   <div>
                     <p className="text-sm text-gray-300 font-medium">
@@ -172,7 +172,7 @@ export default function TiltPage() {
 
         {/* Session History */}
         {report.sessions.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Recent Sessions</h3>
             <p className="text-gray-500 text-xs mb-4">
               Performance within each playing session
@@ -201,7 +201,7 @@ function SessionCard({ session }: { session: TiltReport["sessions"][0] }) {
   }));
 
   return (
-    <div className="bg-[#1a1d27] rounded-lg p-4 card-hover">
+    <div className="bg-[#101c27] rounded-lg p-4 card-hover">
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-sm text-gray-300 font-medium">
@@ -242,9 +242,9 @@ function SessionCard({ session }: { session: TiltReport["sessions"][0] }) {
             <Tooltip
               contentStyle={{
                 backgroundColor: "#1f2937",
-                border: "1px solid #374151",
+                border: "1px solid #33495a",
                 borderRadius: "6px",
-                color: "#e8eaed",
+                color: "#eaf0f3",
                 fontSize: "12px",
               }}
               formatter={(value, name) => {
@@ -277,7 +277,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4 card-hover">
+    <div className="surface-card p-4 card-hover">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
@@ -293,13 +293,13 @@ function TiltSkeleton() {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-4">
+          <div key={i} className="surface-card p-4">
             <div className="skeleton" style={{ height: 12, width: 100, borderRadius: 4 }} />
             <div className="skeleton mt-2" style={{ height: 32, width: 48, borderRadius: 6 }} />
           </div>
         ))}
       </div>
-      <div className="bg-[#222639] rounded-xl p-5">
+      <div className="surface-card p-5">
         <div className="skeleton" style={{ height: 20, width: 260, borderRadius: 4 }} />
         <div className="skeleton mt-4" style={{ height: 300, width: "100%", borderRadius: 8 }} />
       </div>

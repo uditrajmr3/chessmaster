@@ -92,10 +92,10 @@ export default function ExportPage() {
 
       {/* Data preview */}
       {s && (s.total_games as number) > 0 && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Export Preview</h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-[#1a1d27] rounded-lg p-4">
+            <div className="bg-[#101c27] rounded-lg p-4">
               <p className="text-xs text-gray-500 mb-1">Record</p>
               <p className="text-sm font-mono">
                 <span className="text-green-400">{s.wins as number}W</span>
@@ -105,15 +105,15 @@ export default function ExportPage() {
                 <span className="text-gray-400">{s.draws as number}D</span>
               </p>
             </div>
-            <div className="bg-[#1a1d27] rounded-lg p-4">
+            <div className="bg-[#101c27] rounded-lg p-4">
               <p className="text-xs text-gray-500 mb-1">Peak Rating</p>
               <p className="text-sm font-mono text-yellow-400">{s.peak_rating as number}</p>
             </div>
-            <div className="bg-[#1a1d27] rounded-lg p-4">
+            <div className="bg-[#101c27] rounded-lg p-4">
               <p className="text-xs text-gray-500 mb-1">Avg CPL</p>
               <p className="text-sm font-mono text-gray-300">{s.avg_cpl as number}</p>
             </div>
-            <div className="bg-[#1a1d27] rounded-lg p-4">
+            <div className="bg-[#101c27] rounded-lg p-4">
               <p className="text-xs text-gray-500 mb-1">Total Blunders</p>
               <p className="text-sm font-mono text-red-400">{s.total_blunders as number}</p>
             </div>
@@ -149,7 +149,7 @@ function ExportCard({
   onClick: () => void;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-5 card-hover animate-fade-in-up">
+    <div className="surface-card p-5 card-hover animate-fade-in-up">
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-gray-200 font-medium">{title}</p>
@@ -180,7 +180,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4 card-hover">
+    <div className="surface-card p-4 card-hover">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>

@@ -12,10 +12,10 @@ import type { RatingPredictionReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
 const tooltipStyle = {
-  backgroundColor: "#1a1d27",
-  border: "1px solid #374151",
+  backgroundColor: "#101c27",
+  border: "1px solid #33495a",
   borderRadius: "8px",
-  color: "#e8eaed",
+  color: "#eaf0f3",
 };
 
 export default function RatingPredictorPage() {
@@ -125,7 +125,7 @@ export default function RatingPredictorPage() {
 
       {/* Milestones */}
       {report.milestones.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-1">Projected Milestones</h3>
           <p className="text-gray-500 text-xs mb-4">
             Based on your current improvement rate of {t.rate_per_month > 0 ? "+" : ""}{t.rate_per_month} points/month
@@ -134,7 +134,7 @@ export default function RatingPredictorPage() {
             {report.milestones.map((m) => (
               <div
                 key={m.target_rating}
-                className="bg-[#1a1d27] rounded-lg p-4 card-hover text-center"
+                className="bg-[#101c27] rounded-lg p-4 card-hover text-center"
               >
                 <p className="text-2xl font-bold text-accent-400 font-mono">{m.target_rating}</p>
                 <p className="text-xs text-gray-500 mt-1">
@@ -151,16 +151,16 @@ export default function RatingPredictorPage() {
 
       {/* Rating over time chart */}
       {monthlyChartData.length > 1 && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-1">Rating Over Time</h3>
           <p className="text-gray-500 text-xs mb-4">
             Monthly average and peak rating
           </p>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyChartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="month" stroke="#9ca3af" fontSize={11} />
-              <YAxis stroke="#9ca3af" fontSize={12} domain={["auto", "auto"]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+              <XAxis dataKey="month" stroke="#90a2b1" fontSize={11} />
+              <YAxis stroke="#90a2b1" fontSize={12} domain={["auto", "auto"]} />
               <Tooltip
                 contentStyle={tooltipStyle}
                 formatter={(value, name) => {
@@ -196,16 +196,16 @@ export default function RatingPredictorPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly performance */}
         {monthlyChartData.length > 1 && (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Monthly Win Rate</h3>
             <p className="text-gray-500 text-xs mb-4">
               Win percentage by month
             </p>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={monthlyChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="month" stroke="#9ca3af" fontSize={11} />
-                <YAxis stroke="#9ca3af" fontSize={12} unit="%" domain={[0, 100]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+                <XAxis dataKey="month" stroke="#90a2b1" fontSize={11} />
+                <YAxis stroke="#90a2b1" fontSize={12} unit="%" domain={[0, 100]} />
                 <Tooltip
                   contentStyle={tooltipStyle}
                   formatter={(value, name) => {
@@ -221,16 +221,16 @@ export default function RatingPredictorPage() {
 
         {/* CPL trends */}
         {cplChartData.length > 1 && (
-          <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+          <div className="surface-card p-5 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Weakness Trends</h3>
             <p className="text-gray-500 text-xs mb-4">
               Average CPL by game phase over time (lower is better)
             </p>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={cplChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="month" stroke="#9ca3af" fontSize={11} />
-                <YAxis stroke="#9ca3af" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+                <XAxis dataKey="month" stroke="#90a2b1" fontSize={11} />
+                <YAxis stroke="#90a2b1" fontSize={12} />
                 <Tooltip
                   contentStyle={tooltipStyle}
                   formatter={(value, name) => {
@@ -270,7 +270,7 @@ export default function RatingPredictorPage() {
 
       {/* Monthly breakdown table */}
       {report.monthly_performance.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-1">Monthly Breakdown</h3>
           <p className="text-gray-500 text-xs mb-4">
             Detailed stats for each month
@@ -331,7 +331,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4 card-hover">
+    <div className="surface-card p-4 card-hover">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
@@ -347,13 +347,13 @@ function PredictorSkeleton() {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-4">
+          <div key={i} className="surface-card p-4">
             <div className="skeleton" style={{ height: 12, width: 80, borderRadius: 4 }} />
             <div className="skeleton mt-2" style={{ height: 32, width: 60, borderRadius: 6 }} />
           </div>
         ))}
       </div>
-      <div className="bg-[#222639] rounded-xl p-5">
+      <div className="surface-card p-5">
         <div className="skeleton" style={{ height: 20, width: 200, borderRadius: 4 }} />
         <div className="skeleton mt-4" style={{ height: 300, width: "100%", borderRadius: 8 }} />
       </div>

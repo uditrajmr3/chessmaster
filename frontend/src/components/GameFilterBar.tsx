@@ -31,7 +31,7 @@ export default function GameFilterBar({
         onChange={(e) =>
           onChange({ ...filters, platform: e.target.value || undefined })
         }
-        className="bg-[#222639] text-gray-300 text-sm rounded-lg px-3 py-2 border border-gray-700 focus:border-accent-500 focus:outline-none"
+        className="bg-[#16242f] text-gray-300 text-sm rounded-lg px-3 py-2 border border-gray-700 focus:border-accent-500 focus:outline-none"
       >
         {PLATFORMS.map((p) => (
           <option key={p.value} value={p.value}>
@@ -44,7 +44,7 @@ export default function GameFilterBar({
         onChange={(e) =>
           onChange({ ...filters, time_class: e.target.value || undefined })
         }
-        className="bg-[#222639] text-gray-300 text-sm rounded-lg px-3 py-2 border border-gray-700 focus:border-accent-500 focus:outline-none"
+        className="bg-[#16242f] text-gray-300 text-sm rounded-lg px-3 py-2 border border-gray-700 focus:border-accent-500 focus:outline-none"
       >
         {TIME_CLASSES.map((t) => (
           <option key={t.value} value={t.value}>

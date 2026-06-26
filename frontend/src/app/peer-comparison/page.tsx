@@ -12,10 +12,10 @@ import type { PeerComparisonReport, GameFilters } from "@/lib/types";
 import GameFilterBar from "@/components/GameFilterBar";
 
 const tooltipStyle = {
-  backgroundColor: "#1a1d27",
-  border: "1px solid #374151",
+  backgroundColor: "#101c27",
+  border: "1px solid #33495a",
   borderRadius: "8px",
-  color: "#e8eaed",
+  color: "#eaf0f3",
 };
 
 export default function PeerComparisonPage() {
@@ -97,16 +97,16 @@ export default function PeerComparisonPage() {
       </div>
 
       {/* Comparison chart */}
-      <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+      <div className="surface-card p-5 animate-fade-in-up">
         <h3 className="text-xl font-semibold mb-1">You vs. Peers</h3>
         <p className="text-gray-500 text-xs mb-4">
           Your stats compared to the {report.rating_band} average
         </p>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={chartData} barGap={4}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-            <XAxis dataKey="name" stroke="#9ca3af" fontSize={11} interval={0} />
-            <YAxis stroke="#9ca3af" fontSize={12} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+            <XAxis dataKey="name" stroke="#90a2b1" fontSize={11} interval={0} />
+            <YAxis stroke="#90a2b1" fontSize={12} />
             <Tooltip
               contentStyle={tooltipStyle}
               formatter={(value, name) => {
@@ -123,7 +123,7 @@ export default function PeerComparisonPage() {
       {/* Metric cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Strengths */}
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">
             <span className="text-green-400">Strengths</span> vs. Peers
           </h3>
@@ -141,7 +141,7 @@ export default function PeerComparisonPage() {
         </div>
 
         {/* Weaknesses */}
-        <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+        <div className="surface-card p-5 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">
             <span className="text-red-400">Weaknesses</span> vs. Peers
           </h3>
@@ -160,7 +160,7 @@ export default function PeerComparisonPage() {
       </div>
 
       {/* All metrics table */}
-      <div className="bg-[#222639] rounded-xl p-5 animate-fade-in-up">
+      <div className="surface-card p-5 animate-fade-in-up">
         <h3 className="text-xl font-semibold mb-4">Full Comparison</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -213,7 +213,7 @@ function MetricCard({ metric }: { metric: PeerComparisonReport["comparisons"][0]
   const isBetter = metric.verdict === "better";
 
   return (
-    <div className="bg-[#1a1d27] rounded-lg px-4 py-3 card-hover">
+    <div className="bg-[#101c27] rounded-lg px-4 py-3 card-hover">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-200 font-medium">{metric.metric}</p>
@@ -247,7 +247,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4 card-hover">
+    <div className="surface-card p-4 card-hover">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>
@@ -263,13 +263,13 @@ function PeerSkeleton() {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-4">
+          <div key={i} className="surface-card p-4">
             <div className="skeleton" style={{ height: 12, width: 100, borderRadius: 4 }} />
             <div className="skeleton mt-2" style={{ height: 32, width: 60, borderRadius: 6 }} />
           </div>
         ))}
       </div>
-      <div className="bg-[#222639] rounded-xl p-5">
+      <div className="surface-card p-5">
         <div className="skeleton" style={{ height: 20, width: 200, borderRadius: 4 }} />
         <div className="skeleton mt-4" style={{ height: 350, width: "100%", borderRadius: 8 }} />
       </div>

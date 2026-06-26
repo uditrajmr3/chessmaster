@@ -177,7 +177,7 @@ function AccordionSection({
                 onClick={onNavigate}
                 className={`group flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
                   isActive
-                    ? "bg-accent-500/10 text-accent-400 font-medium nav-active-indicator"
+                    ? "bg-accent-500/10 text-accent-300 font-medium ring-1 ring-inset ring-accent-500/20"
                     : "text-gray-400 hover:bg-white/[0.04] hover:text-gray-200"
                 }`}
                 style={{
@@ -218,9 +218,9 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#1a1d27]/95 backdrop-blur-md border-b border-gray-800/50 flex items-center justify-between px-4 py-3">
-        <h1 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-          <Crown className="w-5 h-5 text-yellow-400" />
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-ink-900/90 backdrop-blur-md border-b border-white/6 flex items-center justify-between px-4 py-3">
+        <h1 className="font-display text-lg font-semibold text-white flex items-center gap-2">
+          <Crown className="w-5 h-5 text-accent-300" strokeWidth={1.75} />
           ChessMaster
         </h1>
         <button
@@ -246,18 +246,20 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-[#1a1d27]/95 backdrop-blur-md border-r border-gray-800/50 flex flex-col z-50 transition-transform duration-300 ${
+        className={`fixed left-0 top-0 h-screen w-64 bg-ink-900/95 backdrop-blur-md border-r border-white/6 flex flex-col z-50 transition-transform duration-300 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
         style={{ transitionTimingFunction: "var(--ease-out)" }}
       >
         {/* Brand */}
-        <div className="p-6 border-b border-gray-800/50">
-          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Crown className="w-5 h-5 text-yellow-400" />
+        <div className="px-6 pt-6 pb-5 border-b border-white/6">
+          <h1 className="font-display text-xl font-semibold text-white flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-500/12 border border-accent-500/25">
+              <Crown className="w-4 h-4 text-accent-300" strokeWidth={1.75} />
+            </span>
             ChessMaster
           </h1>
-          <p className="text-xs text-gray-500 mt-2 tracking-wider uppercase font-medium">
+          <p className="text-[0.65rem] text-gray-500 mt-2.5 ml-0.5 tracking-wider uppercase font-medium">
             Personal Chess Analyzer
           </p>
         </div>

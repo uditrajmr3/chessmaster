@@ -91,7 +91,7 @@ export default function ReportPage() {
             <span>{report.games_count} games analyzed</span>
           </div>
 
-          <div className="bg-[#222639] rounded-xl p-8 card-hover">
+          <div className="surface-card p-8 card-hover">
             <div className="max-w-none">
               <MarkdownRenderer text={report.report_text} />
             </div>
@@ -113,7 +113,7 @@ function ReportSkeleton() {
         <div className="skeleton" style={{ height: 40, width: 160, borderRadius: 8 }} />
       </div>
       <div className="skeleton" style={{ height: 16, width: 280, borderRadius: 4 }} />
-      <div className="bg-[#222639] rounded-xl p-8">
+      <div className="surface-card p-8">
         <div className="skeleton" style={{ height: 28, width: 300, borderRadius: 6 }} />
         <div className="skeleton mt-4" style={{ height: 16, width: "100%", borderRadius: 4 }} />
         <div className="skeleton mt-2" style={{ height: 16, width: "90%", borderRadius: 4 }} />

@@ -181,7 +181,7 @@ export default function PuzzlesPage() {
     loadPuzzle();
   }
 
-  const selectClass = "bg-[#222639] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30";
+  const selectClass = "bg-[#16242f] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30";
 
   return (
     <div className="space-y-6">
@@ -238,7 +238,7 @@ export default function PuzzlesPage() {
         {/* Chessboard */}
         <div className="lg:col-span-2 flex flex-col items-center gap-4">
           {state === "loading" && (
-            <div className="w-full max-w-[560px] aspect-square bg-[#222639] rounded-xl flex items-center justify-center animate-fade-in">
+            <div className="w-full max-w-[560px] aspect-square surface-card flex items-center justify-center animate-fade-in">
               <div className="flex flex-col items-center gap-3">
                 <div className="w-8 h-8 border-2 border-gray-600 border-t-accent-400 rounded-full animate-spin" />
                 <p className="text-gray-400 text-sm">Loading puzzle...</p>
@@ -247,7 +247,7 @@ export default function PuzzlesPage() {
           )}
 
           {state === "empty" && (
-            <div className="w-full max-w-[560px] aspect-square bg-[#222639] rounded-xl flex items-center justify-center flex-col gap-3 p-8 text-center animate-fade-in-up">
+            <div className="w-full max-w-[560px] aspect-square surface-card flex items-center justify-center flex-col gap-3 p-8 text-center animate-fade-in-up">
               <PuzzleIcon className="w-10 h-10 text-gray-500" />
               <p className="text-gray-400 text-lg font-medium">No puzzles available</p>
               <p className="text-gray-500 text-sm">
@@ -313,7 +313,7 @@ export default function PuzzlesPage() {
         </div>
 
         {/* Puzzle info panel */}
-        <div className="bg-[#222639] rounded-xl p-5 h-fit animate-slide-in-right">
+        <div className="surface-card p-5 h-fit animate-slide-in-right">
           <h3 className="text-xl font-semibold mb-4">Puzzle Info</h3>
 
           {puzzle && state !== "loading" ? (
@@ -458,7 +458,7 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-4 card-hover">
+    <div className="surface-card p-4 card-hover">
       <p className="text-gray-400 text-xs font-medium">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>{value}</p>
     </div>

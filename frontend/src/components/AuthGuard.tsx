@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { Mail } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import Sidebar from "@/components/Sidebar";
@@ -56,18 +57,22 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   // Authenticated but email not verified
   if (!user.is_verified) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="max-w-md rounded-lg border border-amber-200 bg-amber-50 p-8 text-center shadow-sm">
-          <h2 className="mb-2 text-xl font-semibold text-amber-800">
+      <div className="flex min-h-screen w-full items-center justify-center px-4">
+        <div className="surface-card max-w-md w-full p-8 text-center">
+          <span className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-accent-500/12 border border-accent-500/25">
+            <Mail className="h-5 w-5 text-accent-300" strokeWidth={1.75} />
+          </span>
+          <h2 className="mb-2 text-xl font-semibold text-white">
             Verify your email
           </h2>
-          <p className="mb-6 text-amber-700">
-            Please check your inbox and verify your email address to access
+          <p className="mb-6 text-sm text-white/55">
+            Check your inbox and confirm{" "}
+            <span className="text-white/80">{user.email}</span> to unlock
             ChessMaster.
           </p>
           <button
             onClick={() => api.requestVerify(user.email)}
-            className="rounded-md bg-amber-600 px-5 py-2 text-sm font-medium text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+            className="rounded-lg bg-accent-500 px-5 py-2.5 text-sm font-semibold text-[#1a120c] hover:bg-accent-400 btn-press"
           >
             Resend verification email
           </button>

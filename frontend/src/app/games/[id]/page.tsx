@@ -99,7 +99,7 @@ export default function GameDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Move list */}
-        <div className="lg:col-span-2 bg-[#222639] rounded-xl p-4 max-h-[600px] overflow-y-auto">
+        <div className="lg:col-span-2 surface-card p-4 max-h-[600px] overflow-y-auto">
           <h3 className="text-xl font-semibold mb-3">Moves</h3>
           <table className="w-full text-sm">
             <thead>
@@ -140,7 +140,7 @@ export default function GameDetailPage() {
         </div>
 
         {/* Move detail panel */}
-        <div className="bg-[#222639] rounded-xl p-5">
+        <div className="surface-card p-5">
           <h3 className="text-xl font-semibold mb-3">Move Details</h3>
           {selected ? (
             <div className="space-y-4">

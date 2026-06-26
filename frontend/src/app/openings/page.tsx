@@ -48,7 +48,7 @@ export default function OpeningsPage() {
       ) : (
         <>
           {/* Desktop table */}
-          <div className="hidden md:block bg-[#222639] rounded-xl overflow-hidden animate-fade-in-up">
+          <div className="hidden md:block surface-card overflow-hidden animate-fade-in-up">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-700/50 text-gray-400 text-xs uppercase tracking-wider">
@@ -125,7 +125,7 @@ export default function OpeningsPage() {
                   : "bg-red-500";
 
               return (
-                <div key={o.eco} className="bg-[#222639] rounded-xl p-4 card-hover">
+                <div key={o.eco} className="surface-card p-4 card-hover">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-accent-400 text-sm font-medium">{o.eco}</span>
@@ -171,7 +171,7 @@ function OpeningsSkeleton() {
         <div className="skeleton h-8 w-48 mb-2" />
         <div className="skeleton h-4 w-72" />
       </div>
-      <div className="bg-[#222639] rounded-xl overflow-hidden">
+      <div className="surface-card overflow-hidden">
         <div className="p-4 border-b border-gray-700/50">
           <div className="skeleton h-4 w-full" />
         </div>

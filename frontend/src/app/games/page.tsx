@@ -44,7 +44,7 @@ export default function GamesPage() {
         <select
           value={platform}
           onChange={(e) => setPlatform(e.target.value)}
-          className="bg-[#222639] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
+          className="bg-[#16242f] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
         >
           <option value="">All Platforms</option>
           <option value="chesscom">Chess.com</option>
@@ -53,7 +53,7 @@ export default function GamesPage() {
         <select
           value={result}
           onChange={(e) => setResult(e.target.value)}
-          className="bg-[#222639] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
+          className="bg-[#16242f] border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-600 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30"
         >
           <option value="">All Results</option>
           <option value="win">Wins</option>
@@ -72,7 +72,7 @@ export default function GamesPage() {
       ) : (
         <>
           {/* Desktop table */}
-          <div className="hidden md:block bg-[#222639] rounded-xl overflow-hidden animate-fade-in-up">
+          <div className="hidden md:block surface-card overflow-hidden animate-fade-in-up">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-700/50 text-gray-400 text-xs uppercase tracking-wider">
@@ -139,7 +139,7 @@ export default function GamesPage() {
               <Link
                 key={game.id}
                 href={`/games/${game.id}`}
-                className="block bg-[#222639] rounded-xl p-4 card-hover active:scale-[0.97]"
+                className="block surface-card p-4 card-hover active:scale-[0.97]"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-gray-200 font-medium">{game.opponent_name}</span>
@@ -164,7 +164,7 @@ export default function GamesPage() {
 
 function GamesTableSkeleton() {
   return (
-    <div className="bg-[#222639] rounded-xl overflow-hidden animate-fade-in">
+    <div className="surface-card overflow-hidden animate-fade-in">
       <div className="p-4 border-b border-gray-700/50">
         <div className="skeleton h-4 w-full" />
       </div>

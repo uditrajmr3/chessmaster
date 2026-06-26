@@ -21,10 +21,10 @@ import {
 } from "recharts";
 
 const tooltipStyle = {
-  backgroundColor: "#1a1d27",
-  border: "1px solid #374151",
+  backgroundColor: "#101c27",
+  border: "1px solid #33495a",
   borderRadius: "8px",
-  color: "#e8eaed",
+  color: "#eaf0f3",
 };
 
 export default function TimeManagementPage() {
@@ -96,7 +96,7 @@ export default function TimeManagementPage() {
       {/* KPI strip — phase timing cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger-children">
         {phaseTimeData.map((p) => (
-          <div key={p.phase} className="bg-[#222639] rounded-xl p-5 card-hover">
+          <div key={p.phase} className="surface-card p-5 card-hover">
             <p className="text-sm text-gray-400 font-medium">{p.phase} avg time/move</p>
             <p className="text-3xl font-bold mt-1">{p.time}s</p>
           </div>
@@ -105,7 +105,7 @@ export default function TimeManagementPage() {
 
       {/* Primary content — 2-column charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Time Spent vs Move Number</h3>
           <p className="text-xs text-gray-500 mb-3">
             Average seconds spent per move (with CPL overlay)
@@ -113,25 +113,25 @@ export default function TimeManagementPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data.time_vs_move_number}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
                 <XAxis
                   dataKey="move"
-                  stroke="#9ca3af"
+                  stroke="#90a2b1"
                   fontSize={11}
-                  label={{ value: "Move #", position: "insideBottom", offset: -2, style: { fill: "#6b7280", fontSize: 11 } }}
+                  label={{ value: "Move #", position: "insideBottom", offset: -2, style: { fill: "#637688", fontSize: 11 } }}
                 />
                 <YAxis
                   yAxisId="time"
-                  stroke="#9ca3af"
+                  stroke="#90a2b1"
                   fontSize={11}
-                  label={{ value: "Seconds", angle: -90, position: "insideLeft", style: { fill: "#6b7280", fontSize: 11 } }}
+                  label={{ value: "Seconds", angle: -90, position: "insideLeft", style: { fill: "#637688", fontSize: 11 } }}
                 />
                 <YAxis
                   yAxisId="cpl"
                   orientation="right"
-                  stroke="#9ca3af"
+                  stroke="#90a2b1"
                   fontSize={11}
-                  label={{ value: "CPL", angle: 90, position: "insideRight", style: { fill: "#6b7280", fontSize: 11 } }}
+                  label={{ value: "CPL", angle: 90, position: "insideRight", style: { fill: "#637688", fontSize: 11 } }}
                 />
                 <Tooltip contentStyle={tooltipStyle} />
                 <Area
@@ -147,7 +147,7 @@ export default function TimeManagementPage() {
                   yAxisId="time"
                   type="monotone"
                   dataKey="avg_time"
-                  stroke="#0ebeb0"
+                  stroke="#a78368"
                   strokeWidth={2}
                   dot={false}
                   name="Avg Time (s)"
@@ -157,7 +157,7 @@ export default function TimeManagementPage() {
           </div>
         </div>
 
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Time by Move Quality</h3>
           <p className="text-xs text-gray-500 mb-3">
             Average seconds spent on moves of each quality
@@ -165,18 +165,18 @@ export default function TimeManagementPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={classificationData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="classification" stroke="#9ca3af" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
+                <XAxis dataKey="classification" stroke="#90a2b1" fontSize={11} />
                 <YAxis
-                  stroke="#9ca3af"
+                  stroke="#90a2b1"
                   fontSize={11}
-                  label={{ value: "Seconds", angle: -90, position: "insideLeft", style: { fill: "#6b7280", fontSize: 11 } }}
+                  label={{ value: "Seconds", angle: -90, position: "insideLeft", style: { fill: "#637688", fontSize: 11 } }}
                 />
                 <Tooltip
                   contentStyle={tooltipStyle}
                   formatter={(value) => [`${value}s`, "Avg Time"]}
                 />
-                <Bar dataKey="time" radius={[4, 4, 0, 0]} fill="#0ebeb0" />
+                <Bar dataKey="time" radius={[4, 4, 0, 0]} fill="#a78368" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -184,7 +184,7 @@ export default function TimeManagementPage() {
       </div>
 
       {/* Time Pressure Zones */}
-      <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+      <div className="surface-card p-6 animate-fade-in-up">
         <h3 className="text-xl font-semibold mb-4">Time Pressure Zones</h3>
         <p className="text-xs text-gray-500 mb-4">
           How your play quality changes based on remaining clock time
@@ -251,7 +251,7 @@ export default function TimeManagementPage() {
 
       {/* Time Control Breakdown */}
       {data.time_class_breakdown.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">By Time Control</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -293,7 +293,7 @@ export default function TimeManagementPage() {
       {/* Overthinking + Rushing — 2-column */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {data.overthink_moves.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+          <div className="surface-card p-6 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Overthinking Book Moves</h3>
             <p className="text-xs text-gray-500 mb-4">
               Opening moves you played correctly but spent too long on
@@ -321,7 +321,7 @@ export default function TimeManagementPage() {
         )}
 
         {data.underthink_blunders.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+          <div className="surface-card p-6 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Rushed Blunders</h3>
             <p className="text-xs text-gray-500 mb-4">
               Mistakes made in under 5 seconds — slow down here
@@ -376,7 +376,7 @@ function TimeSkeleton() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-5">
+          <div key={i} className="surface-card p-5">
             <div className="skeleton" style={{ height: 14, width: 140, borderRadius: 4 }} />
             <div className="skeleton mt-2" style={{ height: 36, width: 60, borderRadius: 6 }} />
           </div>
@@ -384,7 +384,7 @@ function TimeSkeleton() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-6">
+          <div key={i} className="surface-card p-6">
             <div className="skeleton" style={{ height: 20, width: 200, borderRadius: 4 }} />
             <div className="skeleton mt-4" style={{ height: 256, width: "100%", borderRadius: 8 }} />
           </div>

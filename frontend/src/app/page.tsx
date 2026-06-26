@@ -60,7 +60,7 @@ export default function Dashboard() {
 
       {/* Zone 5 — Primary Content: Rating Chart (blueprint: one primary viz) */}
       {stats.rating_history.length > 0 && (
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Rating Over Time</h3>
           <RatingChart data={stats.rating_history} />
         </div>
@@ -70,14 +70,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* FIDE Rating Estimates */}
         {stats.rating_estimates.length > 0 && (
-          <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+          <div className="surface-card p-6 animate-fade-in-up">
             <h3 className="text-xl font-semibold mb-1">Estimated FIDE Rating</h3>
             <p className="text-gray-500 text-xs mb-4">Approximate conversion based on community data</p>
             <div className="grid grid-cols-2 gap-3">
               {stats.rating_estimates.map((est) => (
                 <div
                   key={`${est.platform}-${est.time_class}`}
-                  className="bg-[#1a1d27] rounded-lg p-4 card-hover"
+                  className="bg-[#101c27] rounded-lg p-4 card-hover"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-gray-400 text-xs font-medium">
@@ -94,7 +94,7 @@ export default function Dashboard() {
         )}
 
         {/* Results breakdown */}
-        <div className="bg-[#222639] rounded-xl p-6 animate-fade-in-up">
+        <div className="surface-card p-6 animate-fade-in-up">
           <h3 className="text-xl font-semibold mb-4">Results</h3>
           <div className="flex gap-4">
             <ResultBar label="Win" value={stats.wins} total={stats.total_games} color="bg-green-500" />
@@ -129,11 +129,13 @@ function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] gap-6 animate-fade-in-up">
       {/* Element 1: Illustration/Icon — contextual, warm */}
-      <Crown className="w-16 h-16 text-yellow-400" />
+      <span className="flex h-20 w-20 items-center justify-center rounded-3xl bg-accent-500/10 border border-accent-500/25 accent-glow">
+        <Crown className="w-9 h-9 text-accent-300" strokeWidth={1.5} />
+      </span>
 
       {/* Element 2: Explanation — headline + subline, helpful not apologetic */}
       <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold">Your games live here</h2>
+        <h2 className="font-display text-3xl font-semibold">Your games live here</h2>
         <p className="text-gray-400 text-center max-w-md leading-relaxed">
           Sync your Chess.com and Lichess games, then analyze them to
           discover your recurring patterns and get personalized coaching.
@@ -178,7 +180,7 @@ function DashboardSkeleton() {
       {/* KPI strip skeleton — 4 cards matching StatCard shape */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-[#222639] rounded-xl p-5">
+          <div key={i} className="surface-card p-5">
             <div className="skeleton" style={{ height: 14, width: 96, borderRadius: 4 }} />
             <div className="skeleton mt-3" style={{ height: 32, width: 80, borderRadius: 6 }} />
           </div>
@@ -186,14 +188,14 @@ function DashboardSkeleton() {
       </div>
 
       {/* Primary chart skeleton */}
-      <div className="bg-[#222639] rounded-xl p-6">
+      <div className="surface-card p-6">
         <div className="skeleton" style={{ height: 20, width: 140, borderRadius: 4 }} />
         <div className="skeleton mt-4" style={{ height: 256, width: "100%", borderRadius: 8 }} />
       </div>
 
       {/* Secondary zone skeleton — 2-column */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#222639] rounded-xl p-6">
+        <div className="surface-card p-6">
           <div className="skeleton" style={{ height: 20, width: 180, borderRadius: 4 }} />
           <div className="grid grid-cols-2 gap-3 mt-4">
             {[...Array(4)].map((_, i) => (
@@ -201,7 +203,7 @@ function DashboardSkeleton() {
             ))}
           </div>
         </div>
-        <div className="bg-[#222639] rounded-xl p-6">
+        <div className="surface-card p-6">
           <div className="skeleton" style={{ height: 20, width: 100, borderRadius: 4 }} />
           <div className="skeleton mt-4" style={{ height: 64, width: "100%", borderRadius: 8 }} />
         </div>
@@ -221,9 +223,13 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-[#222639] rounded-xl p-5 card-hover">
-      <p className="text-gray-400 text-sm font-medium">{label}</p>
-      <p className={`text-2xl font-bold mt-1.5 ${color}`}>{value}</p>
+    <div className="surface-card p-5 card-hover">
+      <p className="text-[0.7rem] uppercase tracking-wider text-gray-500 font-medium">
+        {label}
+      </p>
+      <p className={`text-[1.7rem] leading-none font-bold font-mono mt-3 ${color}`}>
+        {value}
+      </p>
     </div>
   );
 }

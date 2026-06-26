@@ -20,5 +20,7 @@ COPY alembic.ini ./
 COPY alembic ./alembic
 
 # Render injects $PORT; default to 8000 for local `docker run`.
+# Run migrations at startup (free tier doesn't allow a pre-deploy hook).
+# `alembic upgrade head` is idempotent — a no-op once the schema is current.
 EXPOSE 8000
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

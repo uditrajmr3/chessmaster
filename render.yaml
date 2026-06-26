@@ -13,7 +13,7 @@ databases:
     databaseName: chessmaster
     user: chessmaster
     plan: free
-    region: oregon
+    region: singapore
 
 services:
   # ── Backend: FastAPI on Postgres ───────────────────────────────────────────
@@ -23,10 +23,8 @@ services:
     rootDir: backend
     dockerfilePath: ./Dockerfile
     plan: free
-    region: oregon
+    region: singapore
     healthCheckPath: /api/health
-    # Build the DB schema before each deploy goes live.
-    preDeployCommand: "alembic upgrade head"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -57,7 +55,7 @@ services:
     runtime: node
     rootDir: frontend
     plan: free
-    region: oregon
+    region: singapore
     buildCommand: "npm ci && npm run fetch-stockfish && npm run build"
     startCommand: "npm start"
     envVars:

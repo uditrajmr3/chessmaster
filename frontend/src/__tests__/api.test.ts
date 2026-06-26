@@ -329,7 +329,7 @@ describe("error handling", () => {
       statusText: "Internal Server Error",
       json: async () => ({}),
     });
-    await expect(api.getOverview()).rejects.toThrow("API error: 500");
+    await expect(api.getOverview()).rejects.toThrow("Something went wrong (500)");
   });
 
   it("throws generic Error (not AuthError) on 500", async () => {

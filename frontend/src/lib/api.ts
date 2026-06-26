@@ -7,6 +7,49 @@ export class AuthError extends Error {
   }
 }
 
+// Friendly text for the structured error codes FastAPI-Users returns, so the
+// UI can show something meaningful instead of "API error: 400".
+const AUTH_ERROR_MESSAGES: Record<string, string> = {
+  REGISTER_USER_ALREADY_EXISTS: "An account with this email already exists. Try signing in instead.",
+  REGISTER_INVALID_PASSWORD: "That password isn't valid. Please choose a stronger one.",
+  LOGIN_BAD_CREDENTIALS: "Incorrect email or password.",
+  LOGIN_USER_NOT_VERIFIED: "Please verify your email before signing in.",
+  VERIFY_USER_BAD_TOKEN: "This verification link is invalid or has expired.",
+  VERIFY_USER_ALREADY_VERIFIED: "Your email is already verified — you can sign in.",
+  RESET_PASSWORD_BAD_TOKEN: "This reset link is invalid or has expired.",
+};
+
+type ErrorDetail =
+  | string
+  | { code?: string; reason?: string }
+  | Array<{ msg?: string }>
+  | undefined;
+
+// Turn a non-OK response into an Error with a human-readable message. FastAPI
+// puts the cause under `detail`: a code string, a {code, reason} object, or a
+// validation array (422). We map known codes and fall back gracefully.
+async function errorFromResponse(res: Response): Promise<Error> {
+  let detail: ErrorDetail;
+  try {
+    const body = (await res.json()) as { detail?: ErrorDetail };
+    detail = body?.detail;
+  } catch {
+    detail = undefined;
+  }
+  if (typeof detail === "string") {
+    return new Error(AUTH_ERROR_MESSAGES[detail] ?? detail);
+  }
+  if (Array.isArray(detail)) {
+    const msg = detail.map((e) => e?.msg).filter(Boolean).join(", ");
+    return new Error(msg || `Request failed (${res.status}).`);
+  }
+  if (detail && typeof detail === "object") {
+    if (detail.code) return new Error(AUTH_ERROR_MESSAGES[detail.code] ?? detail.reason ?? detail.code);
+    if (detail.reason) return new Error(detail.reason);
+  }
+  return new Error(`Something went wrong (${res.status}). Please try again.`);
+}
+
 // Parse a successful response body, tolerating empty bodies (204 No Content
 // from login/logout, 202 Accepted from forgot-password, etc.). Calling
 // res.json() on an empty body throws, which previously broke the login flow.
@@ -33,7 +76,7 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
     throw new AuthError(`API error: ${res.status} ${res.statusText}`);
   }
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    throw await errorFromResponse(res);
   }
   return parseBody<T>(res);
 }
@@ -51,7 +94,7 @@ async function fetchFormAPI<T>(path: string, body: Record<string, string>): Prom
     throw new AuthError(`API error: ${res.status} ${res.statusText}`);
   }
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    throw await errorFromResponse(res);
   }
   return parseBody<T>(res);
 }

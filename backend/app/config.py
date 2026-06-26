@@ -1,4 +1,5 @@
 from pathlib import Path
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -16,6 +17,19 @@ class Settings(BaseSettings):
     cookie_secure: bool = False
     cookie_samesite: str = "lax"
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+
+    @field_validator("database_url")
+    @classmethod
+    def _normalize_db_url(cls, v: str) -> str:
+        """Managed providers (Render, Heroku, etc.) hand out 'postgres://' or
+        'postgresql://' URLs. SQLAlchemy needs the psycopg3 driver explicitly,
+        so coerce the scheme to 'postgresql+psycopg://' for both the sync and
+        async engines."""
+        if v.startswith("postgres://"):
+            v = "postgresql://" + v[len("postgres://"):]
+        if v.startswith("postgresql://"):
+            v = "postgresql+psycopg://" + v[len("postgresql://"):]
+        return v
 
     def resolve_stockfish(self) -> str | None:
         import shutil

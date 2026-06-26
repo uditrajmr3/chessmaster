@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Stockfish WASM binaries (fetched at build via npm run fetch-stockfish)
+/public/stockfish/*
+!/public/stockfish/README.md

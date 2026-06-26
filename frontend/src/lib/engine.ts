@@ -32,12 +32,15 @@ export type WorkerFactory = () => WorkerLike;
 
 /**
  * Default factory: constructs the real Stockfish Web Worker.
- * The binary must be present at /stockfish/stockfish.js at runtime.
- * The build does NOT verify this path — drop the file in
- * frontend/public/stockfish/ as described in that directory's README.
+ * The single-threaded build must be present at
+ * /stockfish/stockfish-18-lite-single.js at runtime (it loads its sibling
+ * .wasm by name). Populate it with `npm run fetch-stockfish` — see
+ * frontend/public/stockfish/README.md.
  */
+const STOCKFISH_WORKER_URL = "/stockfish/stockfish-18-lite-single.js";
+
 function defaultWorkerFactory(): WorkerLike {
-  return new Worker("/stockfish/stockfish.js") as unknown as WorkerLike;
+  return new Worker(STOCKFISH_WORKER_URL) as unknown as WorkerLike;
 }
 
 /**

@@ -1,0 +1,71 @@
+# Render Blueprint — deploys ChessMaster as three pieces:
+#   1. chessmaster-db   : managed Postgres
+#   2. chessmaster-api  : FastAPI backend (Docker)
+#   3. chessmaster-web  : Next.js frontend (proxies /api/* to the backend)
+#
+# Apply via Render Dashboard → New → Blueprint → pick this repo.
+# After the first apply, set the secret env vars marked `sync: false`
+# (see docs/DEPLOY.md). Plans default to `free` to start cheap — see the
+# notes in docs/DEPLOY.md for the production upgrade path.
+
+databases:
+  - name: chessmaster-db
+    databaseName: chessmaster
+    user: chessmaster
+    plan: free
+    region: oregon
+
+services:
+  # ── Backend: FastAPI on Postgres ───────────────────────────────────────────
+  - type: web
+    name: chessmaster-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    # Build the DB schema before each deploy goes live.
+    preDeployCommand: "alembic upgrade head"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: chessmaster-db
+          property: connectionString
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: COOKIE_SAMESITE
+        value: "lax"
+      # Set these in the Render dashboard (Environment tab) — secrets / values
+      # that depend on your domain:
+      - key: SECRET_KEY            # python3 -c "import secrets; print(secrets.token_hex(32))"
+        sync: false
+      - key: RESEND_API_KEY        # resend.com
+        sync: false
+      - key: ANTHROPIC_API_KEY     # console.anthropic.com
+        sync: false
+      - key: EMAIL_FROM            # e.g. "ChessMaster <noreply@yourdomain.com>"
+        sync: false
+      - key: FRONTEND_URL          # public web URL, e.g. https://chessmaster.yourdomain.com
+        sync: false
+      - key: CORS_ORIGINS          # JSON list, e.g. ["https://chessmaster.yourdomain.com"]
+        sync: false
+
+  # ── Frontend: Next.js (single-origin proxy to the backend) ─────────────────
+  - type: web
+    name: chessmaster-web
+    runtime: node
+    rootDir: frontend
+    plan: free
+    region: oregon
+    buildCommand: "npm ci && npm run fetch-stockfish && npm run build"
+    startCommand: "npm start"
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: "/api"
+      # Backend host (no scheme); next.config.mjs prefixes https://.
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: chessmaster-api
+          property: host

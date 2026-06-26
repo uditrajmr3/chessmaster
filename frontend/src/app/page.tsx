@@ -3,11 +3,24 @@
 import { useEffect, useState } from "react";
 import { Crown, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { OverviewStats } from "@/lib/types";
 import RatingChart from "@/components/RatingChart";
+import Landing from "@/components/Landing";
 
-export default function Dashboard() {
+export default function Home() {
+  const { user } = useAuth();
+
+  // Signed-out visitors get the public marketing landing; signed-in users get
+  // their dashboard. AuthGuard has already resolved auth before we render.
+  if (!user) {
+    return <Landing />;
+  }
+  return <Dashboard />;
+}
+
+function Dashboard() {
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [loading, setLoading] = useState(true);
 

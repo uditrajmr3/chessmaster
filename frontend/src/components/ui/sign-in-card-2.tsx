@@ -9,7 +9,8 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
-import { Mail, Lock, Eye, EyeClosed, ArrowRight, Crown } from "lucide-react";
+import { Mail, Lock, Eye, EyeClosed, ArrowRight } from "lucide-react";
+import Logo from "@/components/Logo";
 
 import { cn } from "@/lib/utils";
 import { useAuth, AuthError } from "@/lib/auth";
@@ -175,7 +176,7 @@ export function Component() {
                   transition={{ type: "spring", duration: 0.8 }}
                   className="mx-auto w-12 h-12 rounded-2xl flex items-center justify-center bg-[#a78368]/12 border border-[#a78368]/25 accent-glow"
                 >
-                  <Crown className="w-5 h-5 text-accent-300" strokeWidth={1.75} />
+                  <Logo className="w-5 h-5 text-accent-300" />
                 </motion.div>
 
                 <motion.h1
@@ -184,7 +185,7 @@ export function Component() {
                   transition={{ delay: 0.15 }}
                   className="font-display text-[1.7rem] leading-none font-semibold text-white pt-1"
                 >
-                  ChessMaster
+                  ChessInt
                 </motion.h1>
 
                 <motion.p
@@ -325,7 +326,7 @@ export function Component() {
 
                 {/* Sign up */}
                 <p className="text-center text-xs text-white/55 pt-1">
-                  New to ChessMaster?{" "}
+                  New to ChessInt?{" "}
                   <Link href="/register" className="relative inline-block group/su font-medium text-white">
                     <span className="group-hover/su:text-accent-300 transition-colors duration-300">Create an account</span>
                     <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-accent-400 group-hover/su:w-full transition-all duration-300" />

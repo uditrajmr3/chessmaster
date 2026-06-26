@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { runAnalysis } from "@/lib/analyze";
 import { emitDataRefresh } from "@/lib/useDataRefresh";
+import Logo from "@/components/Logo";
 import {
   LayoutDashboard,
   Swords,
@@ -17,7 +18,6 @@ import {
   Flame,
   UserSearch,
   BotMessageSquare,
-  Crown,
   Trophy,
   TrendingUp,
   Mail,
@@ -220,8 +220,8 @@ export default function Sidebar() {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-ink-900/90 backdrop-blur-md border-b border-white/6 flex items-center justify-between px-4 py-3">
         <h1 className="font-display text-lg font-semibold text-white flex items-center gap-2">
-          <Crown className="w-5 h-5 text-accent-300" strokeWidth={1.75} />
-          ChessMaster
+          <Logo className="w-5 h-5 text-accent-300" />
+          ChessInt
         </h1>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -255,9 +255,9 @@ export default function Sidebar() {
         <div className="px-6 pt-6 pb-5 border-b border-white/6">
           <h1 className="font-display text-xl font-semibold text-white flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-500/12 border border-accent-500/25">
-              <Crown className="w-4 h-4 text-accent-300" strokeWidth={1.75} />
+              <Logo className="w-5 h-5 text-accent-300" />
             </span>
-            ChessMaster
+            ChessInt
           </h1>
           <p className="text-[0.65rem] text-gray-500 mt-2.5 ml-0.5 tracking-wider uppercase font-medium">
             Personal Chess Analyzer

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Crown } from "lucide-react";
+import Logo from "@/components/Logo";
 
 /* Shared field + button styles so every auth screen matches the login card. */
 export const authInputClass =
@@ -79,10 +79,10 @@ export function AuthShell({
           {/* Brand */}
           <div className="flex items-center gap-2.5 mb-7">
             <span className="w-9 h-9 rounded-xl flex items-center justify-center bg-accent-500/12 border border-accent-500/25">
-              <Crown className="w-4 h-4 text-accent-300" strokeWidth={1.75} />
+              <Logo className="w-5 h-5 text-accent-300" />
             </span>
             <span className="font-display text-lg font-semibold text-white/90">
-              ChessMaster
+              ChessInt
             </span>
           </div>
 

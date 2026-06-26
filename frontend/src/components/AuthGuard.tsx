@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar";
 import StatusBar from "@/components/StatusBar";
 
 const PUBLIC_ROUTES = [
+  "/about",
   "/login",
   "/register",
   "/verify-email",
@@ -28,14 +29,17 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const isPublic = isPublicRoute(pathname);
+  // The home route is open to everyone: a marketing landing for signed-out
+  // visitors, the dashboard (with chrome) once signed in. page.tsx picks which.
+  const isHome = pathname === "/";
 
   useEffect(() => {
-    if (!loading && !user && !isPublic) {
+    if (!loading && !user && !isPublic && !isHome) {
       router.replace("/login");
     }
-  }, [loading, user, isPublic, router]);
+  }, [loading, user, isPublic, isHome, router]);
 
-  // Always render public routes without restriction
+  // Bare public routes (auth pages, about) — no app chrome
   if (isPublic) {
     return <>{children}</>;
   }
@@ -47,6 +51,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent opacity-60" />
       </div>
     );
+  }
+
+  // Signed-out on the home route — render the public landing bare (no chrome).
+  if (isHome && !user) {
+    return <>{children}</>;
   }
 
   // Unauthenticated on a protected route — redirect happening, render nothing
@@ -68,7 +77,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
           <p className="mb-6 text-sm text-white/55">
             Check your inbox and confirm{" "}
             <span className="text-white/80">{user.email}</span> to unlock
-            ChessMaster.
+            ChessInt.
           </p>
           <button
             onClick={() => api.requestVerify(user.email)}

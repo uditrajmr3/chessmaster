@@ -5,12 +5,17 @@ import { CheckCircle, XCircle } from "lucide-react";
 import type { SyncStatus, AnalyzeStatus } from "@/lib/types";
 import { API_BASE } from "@/lib/api";
 import { emitDataRefresh } from "@/lib/useDataRefresh";
+import { useAnalysisDone } from "@/lib/notify";
 
 export default function StatusBar() {
   const [sync, setSync] = useState<SyncStatus | null>(null);
   const [analysis, setAnalysis] = useState<AnalyzeStatus | null>(null);
   const [showDone, setShowDone] = useState(true);
   const [dismissing, setDismissing] = useState(false);
+  // Browser-side analysis completion (the backend /analyze/status poll never
+  // sees the in-browser run, so the Sidebar signals us directly).
+  const [clientDone, setClientDone] = useState<number | null>(null);
+  const [clientDismissing, setClientDismissing] = useState(false);
   const prevSyncStatus = useRef<string | undefined>(undefined);
   const prevAnalysisStatus = useRef<string | undefined>(undefined);
   const lastProgressEmit = useRef<number>(0);
@@ -45,6 +50,22 @@ export default function StatusBar() {
   const syncDone = sync?.status === "done";
   const analysisDone = analysis?.status === "done";
 
+  // Show + auto-dismiss the in-browser analysis-complete banner.
+  useAnalysisDone((analyzed) => {
+    setClientDismissing(false);
+    setClientDone(analyzed);
+    emitDataRefresh();
+  });
+  useEffect(() => {
+    if (clientDone === null) return;
+    const hide = setTimeout(() => setClientDismissing(true), 7000);
+    const clear = setTimeout(() => setClientDone(null), 7300);
+    return () => {
+      clearTimeout(hide);
+      clearTimeout(clear);
+    };
+  }, [clientDone]);
+
   useEffect(() => {
     if (syncDone || analysisDone) {
       setShowDone(true);
@@ -77,7 +98,7 @@ export default function StatusBar() {
   const showSyncDone = syncDone && showDone;
   const showAnalysisDone = analysisDone && showDone;
 
-  if (!isSyncing && !isAnalyzing && !showSyncDone && !showAnalysisDone && !syncError && !analysisError) {
+  if (!isSyncing && !isAnalyzing && !showSyncDone && !showAnalysisDone && !syncError && !analysisError && clientDone === null) {
     return null;
   }
 
@@ -137,6 +158,17 @@ export default function StatusBar() {
           <CheckCircle className="w-4.5 h-4.5 text-green-400" />
           <span className="text-green-200 text-sm font-medium">
             Analysis complete — {analysis?.completed} games analyzed. Refresh the page to see results.
+          </span>
+        </div>
+      )}
+
+      {clientDone !== null && (
+        <div className={`${clientDismissing ? "animate-slide-out-up" : "animate-slide-in-down"} bg-green-900/90 backdrop-blur-sm border-b border-green-700/50 px-6 py-2.5 flex items-center gap-3`}>
+          <CheckCircle className="w-4.5 h-4.5 text-green-400" />
+          <span className="text-green-200 text-sm font-medium">
+            {clientDone > 0
+              ? `Analysis complete — ${clientDone} games analyzed.`
+              : "You're all caught up — no new games to analyze."}
           </span>
         </div>
       )}

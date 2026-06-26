@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { runAnalysis } from "@/lib/analyze";
 import { emitDataRefresh } from "@/lib/useDataRefresh";
+import { emitAnalysisDone, requestNotifyPermission, systemNotify } from "@/lib/notify";
 import Logo from "@/components/Logo";
 import {
   LayoutDashboard,
@@ -350,14 +351,32 @@ function SyncButton() {
           setAnalyzing(true);
           setAnalysisDone(0);
           setAnalysisTotal(0);
+          // Ask up front (needs the click gesture) so we can notify on finish.
+          requestNotifyPermission();
+          let finalDone = 0;
+          let finalTotal = 0;
           try {
             await runAnalysis((done, total) => {
               setAnalysisDone(done);
               setAnalysisTotal(total);
+              finalDone = done;
+              finalTotal = total;
               if (done === total && total > 0) {
                 emitDataRefresh();
               }
             });
+            emitDataRefresh();
+            // Notify on completion — system notification (reaches you on another
+            // tab) + an in-app banner via the StatusBar.
+            if (finalTotal === 0) {
+              systemNotify("ChessInt", "You're all caught up — no new games to analyze.");
+            } else {
+              systemNotify(
+                "ChessInt — Analysis complete",
+                `${finalDone} games analyzed. Open ChessInt to see your results.`
+              );
+            }
+            emitAnalysisDone(finalTotal === 0 ? 0 : finalDone);
           } catch (err) {
             console.error("Analysis error:", err);
             // Refresh even on error so partially-analyzed games become visible

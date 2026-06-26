@@ -14,7 +14,7 @@
  */
 
 import { Chess } from "chess.js";
-import { api } from "./api";
+import { api, AuthError } from "./api";
 import { Engine } from "./engine";
 import type { MoveEval } from "./types";
 
@@ -129,7 +129,18 @@ export async function runAnalysis(
         carryBestMove = nextBestMove;
       }
 
-      await api.postAnalysisResults({ game_id, depth, moves });
+      try {
+        await api.postAnalysisResults({ game_id, depth, moves });
+      } catch (err) {
+        if (err instanceof AuthError) {
+          // Session ended mid-run (e.g. the user logged out or the cookie
+          // expired). Stop quietly — games analysed so far are already saved
+          // server-side, so this is not a failure worth alarming the user.
+          console.info("Analysis stopped: session ended.");
+          return;
+        }
+        throw err;
+      }
       onProgress(gameIdx + 1, total);
     }
   } finally {

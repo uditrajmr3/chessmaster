@@ -7,6 +7,19 @@ export class AuthError extends Error {
   }
 }
 
+// Parse a successful response body, tolerating empty bodies (204 No Content
+// from login/logout, 202 Accepted from forgot-password, etc.). Calling
+// res.json() on an empty body throws, which previously broke the login flow.
+async function parseBody<T>(res: Response): Promise<T> {
+  if (res.status === 204) return undefined as T;
+  try {
+    return (await res.json()) as T;
+  } catch {
+    // Empty body (e.g. 202 Accepted) — nothing to parse.
+    return undefined as T;
+  }
+}
+
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
@@ -22,7 +35,7 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
   }
-  return res.json();
+  return parseBody<T>(res);
 }
 
 async function fetchFormAPI<T>(path: string, body: Record<string, string>): Promise<T> {
@@ -40,7 +53,7 @@ async function fetchFormAPI<T>(path: string, body: Record<string, string>): Prom
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
   }
-  return res.json();
+  return parseBody<T>(res);
 }
 
 export const api = {

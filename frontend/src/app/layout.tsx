@@ -34,6 +34,13 @@ export default function RootLayout({
         <AuthProvider>
           <AuthGuard>{children}</AuthGuard>
         </AuthProvider>
+        <footer className="fixed bottom-0 right-0 z-10 px-3 py-1">
+          <p className="text-[9px] font-mono opacity-25 text-foreground">
+            <a href="https://uditraj.site" rel="author noopener">Udit Raj</a>
+            {' '}·{' '}
+            <a href="https://evileye.uditraj.site" rel="noopener">Evil Eye</a>
+          </p>
+        </footer>
       </body>
     </html>
   );

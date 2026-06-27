@@ -1,38 +1,118 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Chess } from "chess.js";
+import { Chessboard } from "react-chessboard";
 import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
 import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
-import { ArrowLeft, Swords } from "lucide-react";
+import {
+  ArrowLeft,
+  Swords,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
-const CLASSIFICATION_COLORS: Record<string, string> = {
-  brilliant: "text-cyan-400",
-  great: "text-blue-400",
-  good: "text-green-400",
-  book: "text-gray-400",
-  inaccuracy: "text-yellow-400",
-  mistake: "text-orange-400",
-  blunder: "text-red-400",
+// chess.com-style move classifications. "best" is derived (move == engine best).
+const CLASS_META: Record<
+  string,
+  { label: string; symbol: string; color: string; chip: string }
+> = {
+  brilliant: { label: "Brilliant", symbol: "!!", color: "text-cyan-300", chip: "bg-cyan-400/15 text-cyan-300" },
+  great: { label: "Great", symbol: "!", color: "text-blue-300", chip: "bg-blue-400/15 text-blue-300" },
+  best: { label: "Best", symbol: "★", color: "text-green-300", chip: "bg-green-400/15 text-green-300" },
+  good: { label: "Good", symbol: "", color: "text-gray-300", chip: "bg-white/10 text-gray-300" },
+  book: { label: "Book", symbol: "", color: "text-amber-300/80", chip: "bg-amber-400/10 text-amber-300/80" },
+  inaccuracy: { label: "Inaccuracy", symbol: "?!", color: "text-yellow-400", chip: "bg-yellow-400/15 text-yellow-400" },
+  mistake: { label: "Mistake", symbol: "?", color: "text-orange-400", chip: "bg-orange-400/15 text-orange-400" },
+  blunder: { label: "Blunder", symbol: "??", color: "text-red-400", chip: "bg-red-400/15 text-red-400" },
 };
+const CLASS_ORDER = ["brilliant", "great", "best", "good", "book", "inaccuracy", "mistake", "blunder"];
 
-const CLASSIFICATION_SYMBOLS: Record<string, string> = {
-  brilliant: "!!",
-  great: "!",
-  good: "",
-  book: "",
-  inaccuracy: "?!",
-  mistake: "?",
-  blunder: "??",
-};
+const CPL_CAP = 1000; // mate-score swings (±10000) are clamped so they don't skew metrics
 
-export default function GameDetailPage() {
+function effectiveClass(m: MoveAnalysis): string {
+  if (m.classification === "brilliant") return "brilliant";
+  if (m.classification === "great") return "great";
+  if (m.best_move_san && m.move_san === m.best_move_san) return "best";
+  if (CLASS_META[m.classification]) return m.classification;
+  return "good";
+}
+
+function involvesMate(m: MoveAnalysis): boolean {
+  return (
+    (m.eval_before !== null && Math.abs(m.eval_before) >= 9000) ||
+    (m.eval_after !== null && Math.abs(m.eval_after) >= 9000)
+  );
+}
+
+function evalToStr(cp: number | null): string {
+  if (cp === null) return "?";
+  if (cp >= 9000) return "+M";
+  if (cp <= -9000) return "−M";
+  const v = cp / 100;
+  return (v > 0 ? "+" : "") + v.toFixed(2);
+}
+
+function accuracyFromAcpl(acpl: number): number {
+  const a = 103.1668 * Math.exp(-0.04354 * acpl) - 3.1669;
+  return Math.max(0, Math.min(100, a));
+}
+
+function estRating(accuracy: number): number {
+  return Math.round(Math.max(100, Math.min(2800, ((accuracy - 20) / 75) * 1800 + 500)));
+}
+
+function phaseGrade(cpl: number | null): { label: string; color: string } {
+  if (cpl === null) return { label: "—", color: "text-white/40" };
+  if (cpl <= 30) return { label: "Excellent", color: "text-green-400" };
+  if (cpl <= 70) return { label: "Good", color: "text-green-300" };
+  if (cpl <= 130) return { label: "OK", color: "text-yellow-400" };
+  return { label: "Shaky", color: "text-red-400" };
+}
+
+interface SideSummary {
+  n: number;
+  accuracy: number;
+  counts: Record<string, number>;
+  phaseCpl: Record<string, number | null>;
+}
+
+function summarize(moves: MoveAnalysis[]): SideSummary {
+  const counts: Record<string, number> = {};
+  const phases: Record<string, { sum: number; n: number }> = {};
+  let cplSum = 0;
+  for (const m of moves) {
+    const c = effectiveClass(m);
+    counts[c] = (counts[c] || 0) + 1;
+    const cpl = Math.min(Math.max(m.centipawn_loss, 0), CPL_CAP);
+    cplSum += cpl;
+    const p = m.game_phase || "middlegame";
+    phases[p] = phases[p] || { sum: 0, n: 0 };
+    phases[p].sum += cpl;
+    phases[p].n += 1;
+  }
+  const acpl = moves.length ? cplSum / moves.length : 0;
+  const phaseCpl: Record<string, number | null> = {};
+  for (const p of ["opening", "middlegame", "endgame"]) {
+    phaseCpl[p] = phases[p]?.n ? phases[p].sum / phases[p].n : null;
+  }
+  return {
+    n: moves.length,
+    accuracy: moves.length ? accuracyFromAcpl(acpl) : 0,
+    counts,
+    phaseCpl,
+  };
+}
+
+export default function GameReviewPage() {
   const params = useParams();
   const [game, setGame] = useState<GameDetail | null>(null);
-  const [selectedMove, setSelectedMove] = useState<number | null>(null);
+  const [ply, setPly] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,44 +124,70 @@ export default function GameDetailPage() {
       const data = await api.getGame(params.id as string);
       setGame(data);
     } catch {
-      // error
+      // handled by !game state
     }
     setLoading(false);
   }
 
-  // For unanalyzed games (no MoveAnalysis rows), parse the PGN so the move list
-  // still renders instead of showing an empty "0 ply" panel.
-  const pgnSan = useMemo(() => {
-    if (!game || game.moves.length > 0 || !game.pgn) return [];
+  // Replay the PGN into a per-ply list of positions (works for analyzed AND
+  // unanalyzed games), so the board can step through the whole game.
+  const plies = useMemo(() => {
+    const out: { fen: string; uci: string; san: string }[] = [];
     try {
-      const c = new Chess();
-      c.loadPgn(game.pgn);
-      return c.history();
+      const loaded = new Chess();
+      loaded.loadPgn(game!.pgn);
+      const startFen = (loaded.header() as Record<string, string>)["FEN"];
+      const replay = startFen ? new Chess(startFen) : new Chess();
+      out.push({ fen: replay.fen(), uci: "", san: "" });
+      for (const mv of loaded.history({ verbose: true })) {
+        replay.move(mv.san);
+        out.push({ fen: replay.fen(), uci: mv.lan, san: mv.san });
+      }
     } catch {
-      return [];
+      out.push({ fen: new Chess().fen(), uci: "", san: "" });
     }
+    return out;
   }, [game]);
 
-  if (loading) return <GameDetailSkeleton />;
+  const totalPlies = plies.length - 1;
+  const isAnalyzed = !!game && game.moves.length > 0;
+
+  const summary = useMemo(() => {
+    if (!game || !isAnalyzed) return null;
+    const you: MoveAnalysis[] = [];
+    const opp: MoveAnalysis[] = [];
+    for (const m of game.moves) (m.is_player_move ? you : opp).push(m);
+    return { you: summarize(you), opp: summarize(opp) };
+  }, [game, isAnalyzed]);
+
+  const go = useCallback(
+    (p: number) => setPly(Math.max(0, Math.min(totalPlies, p))),
+    [totalPlies]
+  );
+
+  // Keyboard navigation through the game.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); setPly((p) => Math.max(0, p - 1)); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); setPly((p) => Math.min(totalPlies, p + 1)); }
+      else if (e.key === "Home") setPly(0);
+      else if (e.key === "End") setPly(totalPlies);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [totalPlies]);
+
+  if (loading) return <GameReviewSkeleton />;
   if (!game)
     return (
       <div className="space-y-6">
-        <Link
-          href="/games"
-          className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
-          Back to games
-        </Link>
+        <BackLink />
         <EmptyState
           icon={Swords}
           title="Game not found"
-          description="This game may have been removed, or the link is incorrect. Head back to your games list to pick another."
+          description="This game may have been removed, or the link is incorrect."
           action={
-            <Link
-              href="/games"
-              className="inline-flex items-center gap-2 bg-accent-600 hover:bg-accent-500 text-white font-medium rounded-lg btn-press px-4 py-2 text-sm"
-            >
+            <Link href="/games" className="inline-flex items-center gap-2 bg-accent-600 hover:bg-accent-500 text-white font-medium rounded-lg btn-press px-4 py-2 text-sm">
               View all games
             </Link>
           }
@@ -89,271 +195,277 @@ export default function GameDetailPage() {
       </div>
     );
 
-  const selected = selectedMove !== null ? game.moves[selectedMove] : null;
+  const current = plies[ply];
+  const currentMove: MoveAnalysis | null = isAnalyzed && ply > 0 ? game.moves[ply - 1] ?? null : null;
+  const orientation = game.player_color === "black" ? "black" : "white";
 
-  // Group moves into pairs (white/black)
-  const movePairs: Array<{
-    number: number;
-    white: MoveAnalysis | null;
-    black: MoveAnalysis | null;
-  }> = [];
-  for (let i = 0; i < game.moves.length; i += 2) {
-    movePairs.push({
-      number: Math.floor(i / 2) + 1,
-      white: game.moves[i] || null,
-      black: game.moves[i + 1] || null,
-    });
+  const lastMoveStyles: Record<string, React.CSSProperties> = {};
+  if (current.uci && current.uci.length >= 4) {
+    lastMoveStyles[current.uci.slice(0, 2)] = { background: "rgba(167,131,104,0.32)" };
+    lastMoveStyles[current.uci.slice(2, 4)] = { background: "rgba(167,131,104,0.42)" };
   }
 
-  const isAnalyzed = game.moves.length > 0;
-  const plainPairs: Array<{ number: number; white: string | null; black: string | null }> = [];
-  for (let i = 0; i < pgnSan.length; i += 2) {
-    plainPairs.push({
-      number: Math.floor(i / 2) + 1,
-      white: pgnSan[i] || null,
-      black: pgnSan[i + 1] || null,
-    });
+  // Build the move-pair rows (analyzed → with classification; else plain SAN).
+  const rows: Array<{ n: number; white: number | null; black: number | null }> = [];
+  for (let i = 1; i <= totalPlies; i += 2) {
+    rows.push({ n: Math.floor((i - 1) / 2) + 1, white: i, black: i + 1 <= totalPlies ? i + 1 : null });
   }
 
   return (
     <div className="space-y-6">
-      <Link
-        href="/games"
-        className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white transition-colors"
-      >
-        <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
-        Back to games
-      </Link>
+      <BackLink />
 
-      {/* Game header */}
       <header className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-2xl sm:text-[1.75rem] font-bold tracking-tight text-white">
-            vs {game.opponent_name}
-          </h1>
+          <h1 className="text-2xl sm:text-[1.75rem] font-bold tracking-tight text-white">vs {game.opponent_name}</h1>
           <p className="mt-1 text-sm text-white/55">
             {new Date(game.played_at).toLocaleDateString()} · {game.opening_name || game.opening_eco || "Unknown opening"} · {game.time_class}
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap shrink-0">
-          <span className="text-xs uppercase tracking-wider text-white/45 font-medium">
-            {game.player_color}
-          </span>
+          <span className="text-xs uppercase tracking-wider text-white/45 font-medium">{game.player_color}</span>
           <ResultBadge result={game.result} />
-          <span className="text-white/55 font-mono text-sm">
-            {game.player_rating} vs {game.opponent_rating}
-          </span>
+          <span className="text-white/55 font-mono text-sm">{game.player_rating} vs {game.opponent_rating}</span>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Move list */}
-        <div className="lg:col-span-2 surface-card overflow-hidden animate-fade-in-up">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-            <h2 className="text-base font-semibold text-white">Moves</h2>
-            <span className="text-xs text-white/45 font-mono">
-              {isAnalyzed ? game.moves.length : pgnSan.length} ply
-            </span>
-          </div>
-          {!isAnalyzed && pgnSan.length > 0 && (
-            <div className="px-4 py-2.5 border-b border-white/5 bg-accent-500/5 text-xs text-white/55">
-              This game isn&apos;t analyzed yet. Run{" "}
-              <span className="text-accent-300">Analyze Games</span> for
-              evaluations, best moves, and tactics.
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Board + controls */}
+        <div className="lg:col-span-3 space-y-3">
+          <div className="surface-card p-3 sm:p-4">
+            <div className="mx-auto w-full max-w-[560px]">
+              <Chessboard
+                options={{
+                  position: current.fen,
+                  allowDragging: false,
+                  boardOrientation: orientation,
+                  squareStyles: lastMoveStyles,
+                  showAnimations: true,
+                  animationDurationInMs: 150,
+                  boardStyle: { borderRadius: "12px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" },
+                  darkSquareStyle: { backgroundColor: "#6f8a6b" },
+                  lightSquareStyle: { backgroundColor: "#e9ecd6" },
+                }}
+              />
             </div>
-          )}
-          <div className="max-h-[600px] overflow-y-auto divide-y divide-white/5">
-            {isAnalyzed
-              ? movePairs.map((pair) => (
-                  <div
-                    key={pair.number}
-                    className="grid grid-cols-[2.5rem_1fr_1fr] items-stretch hover:bg-white/[0.02] transition-colors"
-                  >
-                    <div className="flex items-center justify-center text-xs text-white/40 font-mono">
-                      {pair.number}.
-                    </div>
-                    <div className="py-0.5 pr-1">
-                      {pair.white && (
-                        <MoveCell
-                          move={pair.white}
-                          index={pair.white.move_number}
-                          isSelected={selectedMove === pair.white.move_number}
-                          onClick={() => setSelectedMove(pair.white!.move_number)}
-                        />
-                      )}
-                    </div>
-                    <div className="py-0.5 pr-1">
-                      {pair.black && (
-                        <MoveCell
-                          move={pair.black}
-                          index={pair.black.move_number}
-                          isSelected={selectedMove === pair.black.move_number}
-                          onClick={() => setSelectedMove(pair.black!.move_number)}
-                        />
-                      )}
-                    </div>
-                  </div>
-                ))
-              : plainPairs.map((pair) => (
-                  <div
-                    key={pair.number}
-                    className="grid grid-cols-[2.5rem_1fr_1fr] items-stretch"
-                  >
-                    <div className="flex items-center justify-center text-xs text-white/40 font-mono">
-                      {pair.number}.
-                    </div>
-                    <div className="px-2 py-1 font-mono text-sm text-white/80">{pair.white}</div>
-                    <div className="px-2 py-1 font-mono text-sm text-white/80">{pair.black}</div>
-                  </div>
-                ))}
-            {!isAnalyzed && pgnSan.length === 0 && (
-              <div className="px-4 py-8 text-center text-sm text-white/45">
-                No moves available for this game.
-              </div>
-            )}
+            {/* Nav controls */}
+            <div className="mt-3 flex items-center justify-center gap-2">
+              <NavBtn onClick={() => go(0)} disabled={ply === 0} label="Start"><ChevronsLeft className="h-4 w-4" /></NavBtn>
+              <NavBtn onClick={() => go(ply - 1)} disabled={ply === 0} label="Previous"><ChevronLeft className="h-4 w-4" /></NavBtn>
+              <span className="px-3 text-sm font-mono text-white/60 tabular-nums">{ply} / {totalPlies}</span>
+              <NavBtn onClick={() => go(ply + 1)} disabled={ply === totalPlies} label="Next"><ChevronRight className="h-4 w-4" /></NavBtn>
+              <NavBtn onClick={() => go(totalPlies)} disabled={ply === totalPlies} label="End"><ChevronsRight className="h-4 w-4" /></NavBtn>
+            </div>
+            <p className="mt-2 text-center text-[0.7rem] text-white/35">Use ← → arrow keys to step through the game</p>
           </div>
+
+          {/* Current move detail */}
+          {currentMove && <MoveDetail move={currentMove} />}
         </div>
 
-        {/* Move detail panel */}
-        <div className="surface-card p-5 h-fit animate-slide-in-right">
-          <h2 className="text-base font-semibold text-white mb-4">Move Details</h2>
-          {selected ? (
-            <div className="space-y-4">
-              <div>
-                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Move</span>
-                <p className={`text-xl font-bold font-mono mt-0.5 ${CLASSIFICATION_COLORS[selected.classification]}`}>
-                  {selected.move_san}
-                  {CLASSIFICATION_SYMBOLS[selected.classification]}
-                </p>
-              </div>
-              <div>
-                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Classification</span>
-                <p className={`font-medium capitalize mt-0.5 ${CLASSIFICATION_COLORS[selected.classification]}`}>
-                  {selected.classification}
-                </p>
-              </div>
-              <div>
-                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Centipawn Loss</span>
-                <p className="font-mono mt-0.5">{selected.centipawn_loss.toFixed(0)}</p>
-              </div>
-              {selected.best_move_san && selected.best_move_san !== selected.move_san && (
-                <div>
-                  <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Best Move</span>
-                  <p className="text-green-400 font-bold font-mono mt-0.5">{selected.best_move_san}</p>
-                </div>
-              )}
-              <div>
-                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Evaluation</span>
-                <p className="font-mono mt-0.5">
-                  {selected.eval_before !== null ? (selected.eval_before / 100).toFixed(2) : "?"} →{" "}
-                  {selected.eval_after !== null ? (selected.eval_after / 100).toFixed(2) : "?"}
-                </p>
-              </div>
-              <div>
-                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Phase</span>
-                <p className="capitalize mt-0.5">{selected.game_phase}</p>
-              </div>
-              {selected.tactical_motifs && selected.tactical_motifs.length > 0 && (
-                <div>
-                  <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Missed Tactics</span>
-                  <div className="flex gap-2 mt-1.5 flex-wrap">
-                    {selected.tactical_motifs.map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-1 bg-red-500/15 text-red-400 rounded-md text-xs capitalize font-medium"
-                      >
-                        {t.replace("_", " ")}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {selected.time_remaining !== null && (
-                <div>
-                  <span className="text-white/45 text-xs uppercase tracking-wider font-medium">Time Remaining</span>
-                  <p className="font-mono mt-0.5">
-                    {Math.floor(selected.time_remaining / 60)}:{String(Math.floor(selected.time_remaining % 60)).padStart(2, "0")}
-                  </p>
-                </div>
-              )}
-              <div className="pt-3 border-t border-white/5">
-                <span className="text-white/45 text-xs uppercase tracking-wider font-medium">FEN</span>
-                <p className="text-xs font-mono text-white/45 break-all mt-1">
-                  {selected.fen_before}
-                </p>
-              </div>
-            </div>
+        {/* Right column: review summary + move list */}
+        <div className="lg:col-span-2 space-y-6">
+          {isAnalyzed && summary ? (
+            <ReviewSummary you={summary.you} opp={summary.opp} opponent={game.opponent_name} />
           ) : (
-            <p className="text-white/45 text-sm">Select a move from the list to see its evaluation, best move, and missed tactics.</p>
+            <div className="surface-card p-5">
+              <h2 className="text-base font-semibold text-white mb-1">Game Review</h2>
+              <p className="text-sm text-white/55">
+                This game isn&apos;t analyzed yet. Run <span className="text-accent-300">Analyze Games</span> to get
+                accuracy, move classifications, and phase grades. You can still replay the moves on the board.
+              </p>
+            </div>
           )}
+
+          {/* Move list */}
+          <div className="surface-card overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
+              <h2 className="text-base font-semibold text-white">Moves</h2>
+              <span className="text-xs text-white/45 font-mono">{totalPlies} ply</span>
+            </div>
+            <div className="max-h-[460px] overflow-y-auto divide-y divide-white/5">
+              {rows.map((row) => (
+                <div key={row.n} className="grid grid-cols-[2.5rem_1fr_1fr] items-stretch">
+                  <div className="flex items-center justify-center text-xs text-white/40 font-mono">{row.n}.</div>
+                  <PlyCell plyIdx={row.white} plies={plies} game={game} isAnalyzed={isAnalyzed} selected={ply} onSelect={go} />
+                  <PlyCell plyIdx={row.black} plies={plies} game={game} isAnalyzed={isAnalyzed} selected={ply} onSelect={go} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function MoveCell({
-  move,
-  index,
-  isSelected,
-  onClick,
+function PlyCell({
+  plyIdx, plies, game, isAnalyzed, selected, onSelect,
 }: {
-  move: MoveAnalysis;
-  index: number;
-  isSelected: boolean;
-  onClick: () => void;
+  plyIdx: number | null;
+  plies: { san: string }[];
+  game: GameDetail;
+  isAnalyzed: boolean;
+  selected: number;
+  onSelect: (p: number) => void;
 }) {
-  const color = CLASSIFICATION_COLORS[move.classification] || "text-gray-300";
-  const symbol = CLASSIFICATION_SYMBOLS[move.classification] || "";
+  if (plyIdx === null) return <div className="py-0.5 pr-1" />;
+  const san = plies[plyIdx]?.san ?? "";
+  const move = isAnalyzed ? game.moves[plyIdx - 1] : null;
+  const cls = move ? effectiveClass(move) : null;
+  const meta = cls ? CLASS_META[cls] : null;
+  const isSel = selected === plyIdx;
+  return (
+    <div className="py-0.5 pr-1">
+      <button
+        onClick={() => onSelect(plyIdx)}
+        className={`px-2 py-1 rounded-md text-left w-full font-mono text-sm transition-colors btn-press flex items-center gap-1 ${
+          isSel ? "bg-accent-500/15 ring-1 ring-accent-500/30" : "hover:bg-white/5"
+        } ${meta && move?.is_player_move ? meta.color : "text-white/70"}`}
+      >
+        <span>{san}</span>
+        {meta?.symbol && <span className="text-xs">{meta.symbol}</span>}
+      </button>
+    </div>
+  );
+}
 
+function ReviewSummary({ you, opp, opponent }: { you: SideSummary; opp: SideSummary; opponent: string }) {
+  return (
+    <div className="surface-card p-5 animate-fade-in-up">
+      <h2 className="text-base font-semibold text-white mb-4">Game Review</h2>
+
+      {/* Accuracy */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <AccuracyCard label="You" accuracy={you.accuracy} rating={estRating(you.accuracy)} highlight />
+        <AccuracyCard label={opponent || "Opponent"} accuracy={opp.accuracy} rating={estRating(opp.accuracy)} />
+      </div>
+
+      {/* Classification counts */}
+      <div className="space-y-1.5 mb-5">
+        {CLASS_ORDER.filter((c) => (you.counts[c] || 0) + (opp.counts[c] || 0) > 0).map((c) => {
+          const meta = CLASS_META[c];
+          return (
+            <div key={c} className="grid grid-cols-[1.5rem_1fr_1.5rem] items-center text-sm">
+              <span className={`text-right font-mono ${meta.color}`}>{you.counts[c] || 0}</span>
+              <span className={`text-center text-xs uppercase tracking-wide ${meta.color}`}>{meta.label}</span>
+              <span className="text-left font-mono text-white/60">{opp.counts[c] || 0}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Phase grades */}
+      <div className="border-t border-white/5 pt-4">
+        <h3 className="text-xs uppercase tracking-wider text-white/45 font-medium mb-2">Your phase grades</h3>
+        <div className="grid grid-cols-3 gap-2">
+          {["opening", "middlegame", "endgame"].map((p) => {
+            const g = phaseGrade(you.phaseCpl[p]);
+            return (
+              <div key={p} className="rounded-lg bg-white/[0.03] px-3 py-2.5 text-center">
+                <p className="text-[0.65rem] uppercase tracking-wider text-white/40 capitalize">{p}</p>
+                <p className={`text-sm font-semibold mt-0.5 ${g.color}`}>{g.label}</p>
+                <p className="text-[0.65rem] text-white/35 font-mono mt-0.5">
+                  {you.phaseCpl[p] !== null ? `${you.phaseCpl[p]!.toFixed(0)} cpl` : "—"}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AccuracyCard({ label, accuracy, rating, highlight }: { label: string; accuracy: number; rating: number; highlight?: boolean }) {
+  return (
+    <div className={`rounded-xl px-4 py-3 ${highlight ? "bg-accent-500/12 border border-accent-500/25" : "bg-white/[0.03] border border-white/5"}`}>
+      <p className="text-xs text-white/50 truncate">{label}</p>
+      <p className="text-2xl font-bold font-mono mt-1 text-white">{accuracy.toFixed(1)}<span className="text-sm text-white/50">%</span></p>
+      <p className="text-[0.7rem] text-white/40 mt-0.5">Est. rating ~{rating}</p>
+    </div>
+  );
+}
+
+function MoveDetail({ move }: { move: MoveAnalysis }) {
+  const cls = effectiveClass(move);
+  const meta = CLASS_META[cls];
+  const mate = involvesMate(move);
+  return (
+    <div className="surface-card p-5 animate-fade-in">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className={`text-xl font-bold font-mono ${meta.color}`}>{move.move_san}{meta.symbol}</span>
+          <span className={`text-xs px-2 py-0.5 rounded-md ${meta.chip}`}>{meta.label}</span>
+        </div>
+        <span className="text-sm font-mono text-white/55">
+          {evalToStr(move.eval_before)} → {evalToStr(move.eval_after)}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        {move.best_move_san && move.best_move_san !== move.move_san && (
+          <Field label="Best move"><span className="text-green-400 font-mono font-semibold">{move.best_move_san}</span></Field>
+        )}
+        <Field label="Centipawn loss">
+          <span className="font-mono">{mate ? "mate swing" : move.centipawn_loss.toFixed(0)}</span>
+        </Field>
+        <Field label="Phase"><span className="capitalize">{move.game_phase}</span></Field>
+        {move.tactical_motifs && move.tactical_motifs.length > 0 && (
+          <Field label="Missed tactics">
+            <div className="flex gap-1.5 flex-wrap">
+              {move.tactical_motifs.map((t) => (
+                <span key={t} className="px-2 py-0.5 bg-red-500/15 text-red-400 rounded-md text-xs capitalize">{t.replace("_", " ")}</span>
+              ))}
+            </div>
+          </Field>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <span className="text-white/45 text-xs uppercase tracking-wider font-medium">{label}</span>
+      <div className="mt-0.5">{children}</div>
+    </div>
+  );
+}
+
+function NavBtn({ onClick, disabled, label, children }: { onClick: () => void; disabled: boolean; label: string; children: React.ReactNode }) {
   return (
     <button
       onClick={onClick}
-      className={`px-2 py-1 rounded-md text-left w-full font-mono text-sm transition-colors btn-press ${
-        isSelected
-          ? "bg-accent-500/15 ring-1 ring-accent-500/30"
-          : "hover:bg-white/5"
-      } ${move.is_player_move ? color : "text-white/45"}`}
+      disabled={disabled}
+      aria-label={label}
+      className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/70 hover:bg-white/5 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed btn-press"
     >
-      {move.move_san}
-      <span className="text-xs">{symbol}</span>
-      {move.centipawn_loss > 50 && move.is_player_move && (
-        <span className="ml-1 text-xs opacity-60">
-          ({move.centipawn_loss.toFixed(0)})
-        </span>
-      )}
+      {children}
     </button>
   );
 }
 
-function GameDetailSkeleton() {
+function BackLink() {
+  return (
+    <Link href="/games" className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white transition-colors">
+      <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
+      Back to games
+    </Link>
+  );
+}
+
+function GameReviewSkeleton() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="skeleton h-4 w-28" />
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-        <div className="space-y-2">
-          <div className="skeleton h-7 w-48" />
-          <div className="skeleton h-4 w-64" />
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="skeleton h-6 w-16" />
-          <div className="skeleton h-6 w-24" />
-        </div>
+      <div className="flex justify-between gap-3">
+        <div className="space-y-2"><div className="skeleton h-7 w-48" /><div className="skeleton h-4 w-64" /></div>
+        <div className="skeleton h-6 w-24" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 surface-card p-4 space-y-2">
-          {[...Array(12)].map((_, i) => (
-            <div key={i} className="skeleton h-7 w-full" />
-          ))}
-        </div>
-        <div className="surface-card p-5 space-y-4">
-          {[...Array(6)].map((_, i) => (
-            <div key={i}>
-              <div className="skeleton h-3 w-20 mb-1.5" />
-              <div className="skeleton h-5 w-32" />
-            </div>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="lg:col-span-3 surface-card p-4"><div className="skeleton aspect-square w-full max-w-[560px] mx-auto rounded-xl" /></div>
+        <div className="lg:col-span-2 surface-card p-5 space-y-3">{[...Array(6)].map((_, i) => <div key={i} className="skeleton h-8 w-full" />)}</div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Swords, Check, Minus } from "lucide-react";
 import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
@@ -12,6 +13,7 @@ const selectClass =
   "bg-ink-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300 transition-colors hover:border-white/20 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500/30";
 
 export default function GamesPage() {
+  const router = useRouter();
   const [games, setGames] = useState<GameSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [platform, setPlatform] = useState<string>("");
@@ -101,17 +103,21 @@ export default function GamesPage() {
                 {games.map((game) => (
                   <tr
                     key={game.id}
-                    className="border-b border-gray-800/50 hover:bg-white/[0.02] transition-colors group"
+                    onClick={() => router.push(`/games/${game.id}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") router.push(`/games/${game.id}`);
+                    }}
+                    tabIndex={0}
+                    role="link"
+                    aria-label={`Open review of game vs ${game.opponent_name}`}
+                    className="border-b border-gray-800/50 hover:bg-white/[0.05] focus:bg-white/[0.05] focus:outline-none transition-colors cursor-pointer group"
                   >
-                    <td className="p-4">
-                      <Link
-                        href={`/games/${game.id}`}
-                        className="text-accent-400 hover:text-accent-300 transition-colors"
-                      >
-                        {new Date(game.played_at).toLocaleDateString()}
-                      </Link>
+                    <td className="p-4 text-gray-300">
+                      {new Date(game.played_at).toLocaleDateString()}
                     </td>
-                    <td className="p-4 text-gray-300 font-medium">{game.opponent_name}</td>
+                    <td className="p-4 text-gray-200 font-medium group-hover:text-white transition-colors">
+                      {game.opponent_name}
+                    </td>
                     <td className="p-4 text-gray-400 text-xs max-w-[200px] truncate">
                       {game.opening_name || game.opening_eco || "—"}
                     </td>

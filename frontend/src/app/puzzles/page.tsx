@@ -21,12 +21,15 @@ export default function PuzzlesPage() {
   const [motifFilter, setMotifFilter] = useState<string>("");
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [legalMoves, setLegalMoves] = useState<string[]>([]);
+  // The board shows the user's move once made (the puzzle FEN is the start).
+  const [displayFen, setDisplayFen] = useState<string | null>(null);
 
   const loadPuzzle = useCallback(async () => {
     setState("loading");
     setResult(null);
     setSelectedSquare(null);
     setLegalMoves([]);
+    setDisplayFen(null);
     try {
       const params: { phase?: string; motif?: string } = {};
       if (phaseFilter) params.phase = phaseFilter;
@@ -69,26 +72,42 @@ export default function PuzzlesPage() {
     return moves.map((m) => m.to);
   }
 
-  function submitMove(from: string, to: string, piece: string) {
-    if (state !== "solving" || !puzzle) return;
+  function submitMove(from: string, to: string, piece: string): boolean {
+    if (state !== "solving" || !puzzle) return false;
 
+    // Validate the move against the actual position before accepting it, so
+    // illegal drops snap back cleanly instead of being submitted as "wrong".
+    const game = new Chess(puzzle.fen);
     const isPromotion = piece.toLowerCase().includes("p") && (to[1] === "8" || to[1] === "1");
-    const moveUci = from + to + (isPromotion ? "q" : "");
+    let moveObj;
+    try {
+      moveObj = game.move({ from, to, promotion: isPromotion ? "q" : undefined });
+    } catch {
+      return false;
+    }
+    if (!moveObj) return false;
 
+    const moveUci = from + to + (isPromotion ? "q" : "");
     setSelectedSquare(null);
     setLegalMoves([]);
+    setDisplayFen(game.fen()); // reflect the move on the board immediately
 
     api.submitPuzzle(puzzle.id, moveUci).then((res) => {
       setResult(res);
       setState(res.correct ? "correct" : "wrong");
       loadStats();
-    }).catch(() => {});
+    }).catch((err) => {
+      // Don't leave the user stuck on a silent failure — roll back and log.
+      console.error("Puzzle submit failed:", err);
+      setDisplayFen(null);
+      setState("solving");
+    });
+    return true;
   }
 
   function handleMove({ piece, sourceSquare, targetSquare }: { piece: { pieceType: string }; sourceSquare: string; targetSquare: string | null }) {
     if (state !== "solving" || !puzzle || !targetSquare) return false;
-    submitMove(sourceSquare, targetSquare, piece.pieceType);
-    return true;
+    return submitMove(sourceSquare, targetSquare, piece.pieceType);
   }
 
   function handlePieceClick({ square, piece }: { square: string | null; piece: { pieceType: string }; isSparePiece: boolean }) {
@@ -281,7 +300,7 @@ export default function PuzzlesPage() {
               <div className="w-full max-w-[560px] animate-scale-in">
                 <Chessboard
                   options={{
-                    position: puzzle.fen,
+                    position: displayFen ?? puzzle.fen,
                     onPieceDrop: handleMove,
                     onPieceClick: handlePieceClick,
                     onSquareClick: handleSquareClick,

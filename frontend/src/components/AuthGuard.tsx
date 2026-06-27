@@ -44,18 +44,21 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  // Show loading state while auth is resolving
+  // Home renders for everyone. While auth resolves — including SSR, where
+  // `loading` is true — render the public landing (page.tsx shows <Landing/>
+  // when there's no user) instead of a spinner, so the marketing homepage is
+  // server-rendered and indexable.
+  if (isHome && (loading || !user)) {
+    return <>{children}</>;
+  }
+
+  // Show loading state while auth is resolving (protected routes).
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent opacity-60" />
       </div>
     );
-  }
-
-  // Signed-out on the home route — render the public landing bare (no chrome).
-  if (isHome && !user) {
-    return <>{children}</>;
   }
 
   // Unauthenticated on a protected route — redirect happening, render nothing

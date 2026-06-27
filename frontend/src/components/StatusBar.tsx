@@ -81,8 +81,8 @@ export default function StatusBar() {
   async function poll() {
     try {
       const [syncRes, analysisRes] = await Promise.all([
-        fetch(`${API_BASE}/sync/status`).then((r) => r.json()),
-        fetch(`${API_BASE}/analyze/status`).then((r) => r.json()),
+        fetch(`${API_BASE}/sync/status`, { credentials: "include" }).then((r) => r.json()),
+        fetch(`${API_BASE}/analyze/status`, { credentials: "include" }).then((r) => r.json()),
       ]);
       setSync(syncRes);
       setAnalysis(analysisRes);

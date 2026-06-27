@@ -6,6 +6,12 @@ from sqlalchemy.orm import Session
 
 from ..models import Game, MoveAnalysis, PuzzleProgress
 
+# A real puzzle is a recoverable tactical blunder, not a mate-score swing. The
+# analysis encodes checkmate as ±10000 cp, so any move into/out of a mate line
+# produces a centipawn_loss in the thousands. Those aren't learnable one-move
+# tactics (and flood the pool), so exclude anything above this ceiling.
+MAX_PUZZLE_CPL = 2000
+
 
 class PuzzleService:
     def __init__(self, db: Session, user_id: str | None = None):
@@ -38,6 +44,8 @@ class PuzzleService:
                 MoveAnalysis.best_move_uci.isnot(None),
                 # Exclude moves that are checkmate (false positives from eval sign flip)
                 ~MoveAnalysis.move_san.like("%#"),
+                # Exclude mate-score swings — not real one-move tactics
+                MoveAnalysis.centipawn_loss <= MAX_PUZZLE_CPL,
                 ~MoveAnalysis.id.in_(existing_ids),
             )
             .all()
@@ -78,7 +86,10 @@ class PuzzleService:
             self.db.query(PuzzleProgress, MoveAnalysis, Game)
             .join(MoveAnalysis, PuzzleProgress.move_analysis_id == MoveAnalysis.id)
             .join(Game, MoveAnalysis.game_id == Game.id)
-            .filter(PuzzleProgress.user_id == self._user_id)
+            .filter(
+                PuzzleProgress.user_id == self._user_id,
+                MoveAnalysis.centipawn_loss <= MAX_PUZZLE_CPL,
+            )
         )
 
         if phase:
@@ -158,53 +169,50 @@ class PuzzleService:
             "tactical_motifs": motifs,
         }
 
+    def _puzzle_pool(self):
+        """PuzzleProgress rows that are real, solvable puzzles for this user —
+        mate-score artifacts excluded. Joined to MoveAnalysis so callers can
+        filter/aggregate on either table."""
+        return (
+            self.db.query(PuzzleProgress)
+            .join(MoveAnalysis, PuzzleProgress.move_analysis_id == MoveAnalysis.id)
+            .filter(
+                PuzzleProgress.user_id == self._user_id,
+                MoveAnalysis.centipawn_loss <= MAX_PUZZLE_CPL,
+            )
+        )
+
     def get_stats(self) -> dict:
         """Get overall puzzle training statistics."""
         self.ensure_puzzles_exist()
         now = datetime.utcnow()
 
-        total = (
-            self.db.query(func.count(PuzzleProgress.id))
-            .filter(PuzzleProgress.user_id == self._user_id)
-            .scalar() or 0
-        )
-        attempted = (
-            self.db.query(func.count(PuzzleProgress.id))
-            .filter(PuzzleProgress.user_id == self._user_id, PuzzleProgress.attempts > 0)
-            .scalar() or 0
-        )
+        total = self._puzzle_pool().count()
+        attempted = self._puzzle_pool().filter(PuzzleProgress.attempts > 0).count()
 
         # Mastered: >= 3 attempts with >= 80% success
         mastered = 0
         if attempted > 0:
-            all_attempted = (
-                self.db.query(PuzzleProgress)
-                .filter(PuzzleProgress.user_id == self._user_id, PuzzleProgress.attempts >= 3)
-                .all()
-            )
+            all_attempted = self._puzzle_pool().filter(PuzzleProgress.attempts >= 3).all()
             mastered = sum(
                 1 for p in all_attempted
                 if p.successes / p.attempts >= 0.8
             )
 
         due_for_review = (
-            self.db.query(func.count(PuzzleProgress.id))
-            .filter(
-                PuzzleProgress.user_id == self._user_id,
-                PuzzleProgress.next_review <= now,
-                PuzzleProgress.attempts > 0,
-            )
-            .scalar() or 0
+            self._puzzle_pool()
+            .filter(PuzzleProgress.next_review <= now, PuzzleProgress.attempts > 0)
+            .count()
         )
 
         total_attempts = (
-            self.db.query(func.sum(PuzzleProgress.attempts))
-            .filter(PuzzleProgress.user_id == self._user_id)
+            self._puzzle_pool()
+            .with_entities(func.coalesce(func.sum(PuzzleProgress.attempts), 0))
             .scalar() or 0
         )
         total_successes = (
-            self.db.query(func.sum(PuzzleProgress.successes))
-            .filter(PuzzleProgress.user_id == self._user_id)
+            self._puzzle_pool()
+            .with_entities(func.coalesce(func.sum(PuzzleProgress.successes), 0))
             .scalar() or 0
         )
         accuracy = (
@@ -215,19 +223,15 @@ class PuzzleService:
         # Breakdown by phase
         phase_counts: dict[str, int] = {}
         for phase in ("opening", "middlegame", "endgame"):
-            count = (
-                self.db.query(func.count(PuzzleProgress.id))
-                .join(MoveAnalysis, PuzzleProgress.move_analysis_id == MoveAnalysis.id)
-                .filter(PuzzleProgress.user_id == self._user_id, MoveAnalysis.game_phase == phase)
-                .scalar() or 0
+            phase_counts[phase] = (
+                self._puzzle_pool().filter(MoveAnalysis.game_phase == phase).count()
             )
-            phase_counts[phase] = count
 
         # Breakdown by motif
         motif_rows = (
-            self.db.query(MoveAnalysis.tactical_motifs)
-            .join(PuzzleProgress, PuzzleProgress.move_analysis_id == MoveAnalysis.id)
-            .filter(PuzzleProgress.user_id == self._user_id, MoveAnalysis.tactical_motifs.isnot(None))
+            self._puzzle_pool()
+            .with_entities(MoveAnalysis.tactical_motifs)
+            .filter(MoveAnalysis.tactical_motifs.isnot(None))
             .all()
         )
         motif_counts: dict[str, int] = {}

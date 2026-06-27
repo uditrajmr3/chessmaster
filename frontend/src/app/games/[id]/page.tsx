@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { Chess } from "chess.js";
 import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
 import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
@@ -48,6 +49,19 @@ export default function GameDetailPage() {
     setLoading(false);
   }
 
+  // For unanalyzed games (no MoveAnalysis rows), parse the PGN so the move list
+  // still renders instead of showing an empty "0 ply" panel.
+  const pgnSan = useMemo(() => {
+    if (!game || game.moves.length > 0 || !game.pgn) return [];
+    try {
+      const c = new Chess();
+      c.loadPgn(game.pgn);
+      return c.history();
+    } catch {
+      return [];
+    }
+  }, [game]);
+
   if (loading) return <GameDetailSkeleton />;
   if (!game)
     return (
@@ -91,6 +105,16 @@ export default function GameDetailPage() {
     });
   }
 
+  const isAnalyzed = game.moves.length > 0;
+  const plainPairs: Array<{ number: number; white: string | null; black: string | null }> = [];
+  for (let i = 0; i < pgnSan.length; i += 2) {
+    plainPairs.push({
+      number: Math.floor(i / 2) + 1,
+      white: pgnSan[i] || null,
+      black: pgnSan[i + 1] || null,
+    });
+  }
+
   return (
     <div className="space-y-6">
       <Link
@@ -128,40 +152,65 @@ export default function GameDetailPage() {
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
             <h2 className="text-base font-semibold text-white">Moves</h2>
             <span className="text-xs text-white/45 font-mono">
-              {game.moves.length} ply
+              {isAnalyzed ? game.moves.length : pgnSan.length} ply
             </span>
           </div>
+          {!isAnalyzed && pgnSan.length > 0 && (
+            <div className="px-4 py-2.5 border-b border-white/5 bg-accent-500/5 text-xs text-white/55">
+              This game isn&apos;t analyzed yet. Run{" "}
+              <span className="text-accent-300">Analyze Games</span> for
+              evaluations, best moves, and tactics.
+            </div>
+          )}
           <div className="max-h-[600px] overflow-y-auto divide-y divide-white/5">
-            {movePairs.map((pair) => (
-              <div
-                key={pair.number}
-                className="grid grid-cols-[2.5rem_1fr_1fr] items-stretch hover:bg-white/[0.02] transition-colors"
-              >
-                <div className="flex items-center justify-center text-xs text-white/40 font-mono">
-                  {pair.number}.
-                </div>
-                <div className="py-0.5 pr-1">
-                  {pair.white && (
-                    <MoveCell
-                      move={pair.white}
-                      index={pair.white.move_number}
-                      isSelected={selectedMove === pair.white.move_number}
-                      onClick={() => setSelectedMove(pair.white!.move_number)}
-                    />
-                  )}
-                </div>
-                <div className="py-0.5 pr-1">
-                  {pair.black && (
-                    <MoveCell
-                      move={pair.black}
-                      index={pair.black.move_number}
-                      isSelected={selectedMove === pair.black.move_number}
-                      onClick={() => setSelectedMove(pair.black!.move_number)}
-                    />
-                  )}
-                </div>
+            {isAnalyzed
+              ? movePairs.map((pair) => (
+                  <div
+                    key={pair.number}
+                    className="grid grid-cols-[2.5rem_1fr_1fr] items-stretch hover:bg-white/[0.02] transition-colors"
+                  >
+                    <div className="flex items-center justify-center text-xs text-white/40 font-mono">
+                      {pair.number}.
+                    </div>
+                    <div className="py-0.5 pr-1">
+                      {pair.white && (
+                        <MoveCell
+                          move={pair.white}
+                          index={pair.white.move_number}
+                          isSelected={selectedMove === pair.white.move_number}
+                          onClick={() => setSelectedMove(pair.white!.move_number)}
+                        />
+                      )}
+                    </div>
+                    <div className="py-0.5 pr-1">
+                      {pair.black && (
+                        <MoveCell
+                          move={pair.black}
+                          index={pair.black.move_number}
+                          isSelected={selectedMove === pair.black.move_number}
+                          onClick={() => setSelectedMove(pair.black!.move_number)}
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))
+              : plainPairs.map((pair) => (
+                  <div
+                    key={pair.number}
+                    className="grid grid-cols-[2.5rem_1fr_1fr] items-stretch"
+                  >
+                    <div className="flex items-center justify-center text-xs text-white/40 font-mono">
+                      {pair.number}.
+                    </div>
+                    <div className="px-2 py-1 font-mono text-sm text-white/80">{pair.white}</div>
+                    <div className="px-2 py-1 font-mono text-sm text-white/80">{pair.black}</div>
+                  </div>
+                ))}
+            {!isAnalyzed && pgnSan.length === 0 && (
+              <div className="px-4 py-8 text-center text-sm text-white/45">
+                No moves available for this game.
               </div>
-            ))}
+            )}
           </div>
         </div>
 

@@ -41,7 +41,7 @@ export default function ReportPage() {
       }
     } catch {
       alert(
-        `Failed to generate report. Make sure ANTHROPIC_API_KEY is set in backend/.env and games have been analyzed.`
+        `Failed to generate report. Make sure your games have been analyzed, then try again.`
       );
     }
     setGenerating(false);
@@ -71,7 +71,7 @@ export default function ReportPage() {
         <EmptyState
           icon={FileText}
           title="Your coaching report starts here"
-          description="Sync and analyze your games, then generate a report to get personalized coaching insights powered by AI. Requires ANTHROPIC_API_KEY in backend/.env."
+          description="Sync and analyze your games, then generate a report to get personalized coaching insights powered by AI."
           action={
             <button
               onClick={handleGenerate}

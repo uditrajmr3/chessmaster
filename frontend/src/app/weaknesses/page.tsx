@@ -87,7 +87,7 @@ export default function WeaknessesPage() {
             Accuracy by Game Phase (Avg CPL)
           </h2>
           <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={192}>
               <BarChart data={phaseData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
                 <XAxis dataKey="phase" stroke="#90a2b1" fontSize={12} />
@@ -104,7 +104,7 @@ export default function WeaknessesPage() {
             Blunder Rate by Move Number
           </h2>
           <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={192}>
               <BarChart data={blunderBuckets}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
                 <XAxis dataKey="bucket" stroke="#90a2b1" fontSize={11} />

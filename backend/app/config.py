@@ -13,7 +13,9 @@ class Settings(BaseSettings):
     report_monthly_quota: int = 5
     cors_origins: list[str] = ["http://localhost:3000"]
     secret_key: str = "CHANGE_ME_DEV_ONLY"
-    access_token_lifetime: int = 3600
+    # 7 days. A short (1h) session logged users out mid-analysis — browser-side
+    # analysis of a large history can run well over an hour.
+    access_token_lifetime: int = 604800
     resend_api_key: str = ""
     email_from: str = "ChessInt <noreply@example.com>"
     # Resend published-template id. When set, transactional emails render via the

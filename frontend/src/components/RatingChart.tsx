@@ -122,8 +122,8 @@ export default function RatingChart({ data }: Props) {
         ))}
       </div>
 
-      <div className="h-64" style={{ minWidth: 0 }}>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+      <div className="w-full" style={{ minWidth: 0 }}>
+        <ResponsiveContainer width="100%" height={256} minWidth={0}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#33495a" />
             <XAxis

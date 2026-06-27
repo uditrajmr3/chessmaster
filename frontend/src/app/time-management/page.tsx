@@ -113,7 +113,7 @@ export default function TimeManagementPage() {
             Average seconds spent per move, with centipawn loss overlay.
           </p>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={256}>
               <ComposedChart data={data.time_vs_move_number}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#263a49" />
                 <XAxis
@@ -165,7 +165,7 @@ export default function TimeManagementPage() {
             Average seconds spent on moves of each quality.
           </p>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={256}>
               <BarChart data={classificationData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#263a49" />
                 <XAxis dataKey="classification" stroke="#90a2b1" fontSize={11} />

@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timedelta
 
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ..models import Game, MoveAnalysis, PuzzleProgress
@@ -61,7 +62,17 @@ class PuzzleService:
             self.db.add(PuzzleProgress(move_analysis_id=ma.id, user_id=game.user_id))
 
         if new_blunders:
-            self.db.commit()
+            try:
+                self.db.commit()
+            except IntegrityError:
+                # The puzzles page loads the next puzzle and the stats in
+                # parallel, and both lazily create puzzle rows here. If a
+                # concurrent request inserted the same blunders first, the
+                # unique move_analysis_id constraint trips — roll back; the rows
+                # already exist from the other transaction. Any still-missing
+                # ones get created on the next call (idempotent).
+                self.db.rollback()
+                return 0
 
         return len(new_blunders)
 

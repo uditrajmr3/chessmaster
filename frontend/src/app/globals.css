@@ -207,6 +207,18 @@ code, .font-mono {
 .animate-slide-in-right{ animation: slideInRight 0.35s var(--ease-out) both; }
 .animate-slide-in-down { animation: slideInDown 0.35s var(--ease-out) both; }
 .animate-slide-out-up  { animation: slideOutUp 0.25s var(--ease-in) both; }
+
+/* ── Branded loader ── */
+@keyframes loaderSpin    { to { transform: rotate(360deg); } }
+@keyframes loaderBreathe { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+.loader-ring  { animation: loaderSpin 0.7s linear infinite; }
+.loader-glyph { animation: loaderBreathe 1.4s var(--ease-in-out) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* No rotation; keep a calm opacity pulse, which doesn't induce motion sickness. */
+  .loader-ring  { animation: none; }
+  .loader-glyph { animation: loaderBreathe 2s ease-in-out infinite; }
+}
 .animate-scale-in      { animation: scaleIn 0.4s var(--spring) both; }
 
 .stagger-children > * { animation: fadeInUp 0.5s var(--ease-out) both; }

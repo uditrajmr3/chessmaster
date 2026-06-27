@@ -161,12 +161,18 @@ export default function PuzzlesPage() {
     if (state === "solving") {
       for (const sq of legalMoves) {
         const hasPiece = chess?.get(sq as Square);
+        // Use backgroundImage (not the `background` shorthand) so the marker
+        // overlays the square's base color instead of being overridden by it.
         styles[sq] = hasPiece
           ? {
-              background: "radial-gradient(transparent 51%, rgba(0,0,0,0.3) 51%)",
+              // capture target — ring around the piece
+              backgroundImage:
+                "radial-gradient(circle, transparent 62%, rgba(20,30,40,0.45) 63%, rgba(20,30,40,0.45) 80%, transparent 81%)",
             }
           : {
-              background: "radial-gradient(circle, rgba(0,0,0,0.25) 25%, transparent 25%)",
+              // quiet move — center dot
+              backgroundImage:
+                "radial-gradient(circle, rgba(20,30,40,0.45) 24%, transparent 26%)",
             };
       }
     }

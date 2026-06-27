@@ -58,9 +58,20 @@ function evalToStr(cp: number | null): string {
   return (v > 0 ? "+" : "") + v.toFixed(2);
 }
 
-function accuracyFromAcpl(acpl: number): number {
-  const a = 103.1668 * Math.exp(-0.04354 * acpl) - 3.1669;
-  return Math.max(0, Math.min(100, a));
+// Win% for White from a white-POV centipawn eval (Lichess model). Saturates
+// near 0/100 for large or mate evals, so no extra clamping is needed.
+function winPctWhite(cp: number): number {
+  return 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
+}
+
+// Per-move accuracy from the drop in the mover's winning chances (Lichess).
+function moveAccuracy(evalBefore: number, evalAfter: number, moverIsWhite: boolean): number {
+  const wpBefore = winPctWhite(evalBefore);
+  const wpAfter = winPctWhite(evalAfter);
+  const before = moverIsWhite ? wpBefore : 100 - wpBefore;
+  const after = moverIsWhite ? wpAfter : 100 - wpAfter;
+  const drop = Math.max(0, before - after);
+  return Math.max(0, Math.min(100, 103.1668 * Math.exp(-0.04354 * drop) - 3.1669));
 }
 
 function estRating(accuracy: number): number {
@@ -82,28 +93,30 @@ interface SideSummary {
   phaseCpl: Record<string, number | null>;
 }
 
-function summarize(moves: MoveAnalysis[]): SideSummary {
+function summarize(moves: MoveAnalysis[], sideIsWhite: boolean): SideSummary {
   const counts: Record<string, number> = {};
   const phases: Record<string, { sum: number; n: number }> = {};
-  let cplSum = 0;
+  let accSum = 0;
+  let accN = 0;
   for (const m of moves) {
-    const c = effectiveClass(m);
-    counts[c] = (counts[c] || 0) + 1;
+    counts[effectiveClass(m)] = (counts[effectiveClass(m)] || 0) + 1;
     const cpl = Math.min(Math.max(m.centipawn_loss, 0), CPL_CAP);
-    cplSum += cpl;
     const p = m.game_phase || "middlegame";
     phases[p] = phases[p] || { sum: 0, n: 0 };
     phases[p].sum += cpl;
     phases[p].n += 1;
+    if (m.eval_before !== null && m.eval_after !== null) {
+      accSum += moveAccuracy(m.eval_before, m.eval_after, sideIsWhite);
+      accN += 1;
+    }
   }
-  const acpl = moves.length ? cplSum / moves.length : 0;
   const phaseCpl: Record<string, number | null> = {};
   for (const p of ["opening", "middlegame", "endgame"]) {
     phaseCpl[p] = phases[p]?.n ? phases[p].sum / phases[p].n : null;
   }
   return {
     n: moves.length,
-    accuracy: moves.length ? accuracyFromAcpl(acpl) : 0,
+    accuracy: accN ? accSum / accN : 0,
     counts,
     phaseCpl,
   };
@@ -157,7 +170,8 @@ export default function GameReviewPage() {
     const you: MoveAnalysis[] = [];
     const opp: MoveAnalysis[] = [];
     for (const m of game.moves) (m.is_player_move ? you : opp).push(m);
-    return { you: summarize(you), opp: summarize(opp) };
+    const playerIsWhite = game.player_color !== "black";
+    return { you: summarize(you, playerIsWhite), opp: summarize(opp, !playerIsWhite) };
   }, [game, isAnalyzed]);
 
   const go = useCallback(
@@ -363,7 +377,7 @@ function ReviewSummary({ you, opp, opponent }: { you: SideSummary; opp: SideSumm
             const g = phaseGrade(you.phaseCpl[p]);
             return (
               <div key={p} className="rounded-lg bg-white/[0.03] px-3 py-2.5 text-center">
-                <p className="text-[0.65rem] uppercase tracking-wider text-white/40 capitalize">{p}</p>
+                <p className="text-[0.65rem] uppercase tracking-wider text-white/40">{p}</p>
                 <p className={`text-sm font-semibold mt-0.5 ${g.color}`}>{g.label}</p>
                 <p className="text-[0.65rem] text-white/35 font-mono mt-0.5">
                   {you.phaseCpl[p] !== null ? `${you.phaseCpl[p]!.toFixed(0)} cpl` : "—"}

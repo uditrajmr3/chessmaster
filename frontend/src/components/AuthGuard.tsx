@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import Sidebar from "@/components/Sidebar";
 import StatusBar from "@/components/StatusBar";
+import Loader from "@/components/Loader";
 
 const PUBLIC_ROUTES = [
   "/about",
@@ -54,11 +55,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   // Show loading state while auth is resolving (protected routes).
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent opacity-60" />
-      </div>
-    );
+    return <Loader fullscreen />;
   }
 
   // Unauthenticated on a protected route — redirect happening, render nothing

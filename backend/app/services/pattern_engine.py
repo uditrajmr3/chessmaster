@@ -1,10 +1,25 @@
 import json
 from collections import defaultdict
 
-from sqlalchemy import func
+from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
 from ..models import Game, MoveAnalysis
+
+# Checkmate is encoded as ±10000, so a move into/out of mate yields a
+# centipawn_loss in the thousands. Cap it for averages so a handful of mate
+# swings don't make phase/opening CPL meaningless (e.g. "endgame 420 CPL").
+CPL_CAP = 1000
+# Worst-blunder examples exclude mate-score swings entirely so the AI report
+# shows real, learnable tactics rather than "CPL: 20000".
+MAX_EXAMPLE_CPL = 2000
+
+# Row-wise clamp of centipawn_loss, portable across Postgres and the SQLite
+# test DB (func.least is Postgres-only).
+_CAPPED_CPL = case(
+    (MoveAnalysis.centipawn_loss > CPL_CAP, CPL_CAP),
+    else_=MoveAnalysis.centipawn_loss,
+)
 
 
 class PatternEngine:
@@ -87,7 +102,7 @@ class PatternEngine:
             game_ids = [g.id for g in games if g.opening_eco == eco]
             if game_ids:
                 avg_cpl = (
-                    self.db.query(func.avg(MoveAnalysis.centipawn_loss))
+                    self.db.query(func.avg(_CAPPED_CPL))
                     .filter(
                         MoveAnalysis.game_id.in_(game_ids),
                         MoveAnalysis.is_player_move == 1,
@@ -112,7 +127,7 @@ class PatternEngine:
         """Average centipawn loss per game phase."""
         result = {}
         for phase in ("opening", "middlegame", "endgame"):
-            q = self.db.query(func.avg(MoveAnalysis.centipawn_loss)).filter(
+            q = self.db.query(func.avg(_CAPPED_CPL)).filter(
                 MoveAnalysis.is_player_move == 1,
                 MoveAnalysis.game_phase == phase,
             )
@@ -190,7 +205,7 @@ class PatternEngine:
         game_ids = [g.id for g in games]
 
         avg_cpl = (
-            self.db.query(func.avg(MoveAnalysis.centipawn_loss))
+            self.db.query(func.avg(_CAPPED_CPL))
             .filter(
                 MoveAnalysis.game_id.in_(game_ids),
                 MoveAnalysis.is_player_move == 1,
@@ -271,6 +286,8 @@ class PatternEngine:
             MoveAnalysis.classification == "blunder",
             MoveAnalysis.best_move_san.isnot(None),
             MoveAnalysis.move_san != MoveAnalysis.best_move_san,
+            # Exclude mate-score swings — real tactics, not "CPL 20000" examples
+            MoveAnalysis.centipawn_loss <= MAX_EXAMPLE_CPL,
         )
         blunders = (
             self._apply_move_filter(q)

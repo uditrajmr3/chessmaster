@@ -10,7 +10,9 @@ export default function Loader({ fullscreen = false }: { fullscreen?: boolean })
     <div
       className={
         fullscreen
-          ? "flex min-h-screen items-center justify-center"
+          ? // fixed inset-0 so it centers in the viewport regardless of the
+            // flex-row <body> layout (min-h-screen alone left it stuck at the edge)
+            "fixed inset-0 z-50 flex items-center justify-center"
           : "flex items-center justify-center py-16"
       }
       role="status"

@@ -74,10 +74,6 @@ function moveAccuracy(evalBefore: number, evalAfter: number, isPlayerMove: boole
   return Math.max(0, Math.min(100, 103.1668 * Math.exp(-0.04354 * drop) - 3.1669));
 }
 
-function estRating(accuracy: number): number {
-  return Math.round(Math.max(100, Math.min(2800, ((accuracy - 20) / 75) * 1800 + 500)));
-}
-
 function phaseGrade(cpl: number | null): { label: string; color: string } {
   if (cpl === null) return { label: "—", color: "text-white/40" };
   if (cpl <= 30) return { label: "Excellent", color: "text-green-400" };
@@ -350,8 +346,8 @@ function ReviewSummary({ you, opp, opponent }: { you: SideSummary; opp: SideSumm
 
       {/* Accuracy */}
       <div className="grid grid-cols-2 gap-3 mb-5">
-        <AccuracyCard label="You" accuracy={you.accuracy} rating={estRating(you.accuracy)} highlight />
-        <AccuracyCard label={opponent || "Opponent"} accuracy={opp.accuracy} rating={estRating(opp.accuracy)} />
+        <AccuracyCard label="You" accuracy={you.accuracy} highlight />
+        <AccuracyCard label={opponent || "Opponent"} accuracy={opp.accuracy} />
       </div>
 
       {/* Classification counts */}
@@ -390,12 +386,12 @@ function ReviewSummary({ you, opp, opponent }: { you: SideSummary; opp: SideSumm
   );
 }
 
-function AccuracyCard({ label, accuracy, rating, highlight }: { label: string; accuracy: number; rating: number; highlight?: boolean }) {
+function AccuracyCard({ label, accuracy, highlight }: { label: string; accuracy: number; highlight?: boolean }) {
   return (
     <div className={`rounded-xl px-4 py-3 ${highlight ? "bg-accent-500/12 border border-accent-500/25" : "bg-white/[0.03] border border-white/5"}`}>
       <p className="text-xs text-white/50 truncate">{label}</p>
       <p className="text-2xl font-bold font-mono mt-1 text-white">{accuracy.toFixed(1)}<span className="text-sm text-white/50">%</span></p>
-      <p className="text-[0.7rem] text-white/40 mt-0.5">Est. rating ~{rating}</p>
+      <p className="text-[0.7rem] text-white/40 mt-0.5">accuracy</p>
     </div>
   );
 }

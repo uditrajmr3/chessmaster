@@ -58,19 +58,19 @@ function evalToStr(cp: number | null): string {
   return (v > 0 ? "+" : "") + v.toFixed(2);
 }
 
-// Win% for White from a white-POV centipawn eval (Lichess model). Saturates
-// near 0/100 for large or mate evals, so no extra clamping is needed.
-function winPctWhite(cp: number): number {
+// Evals are stored player-POV (positive = good for the logged-in player; the
+// ingest negates white-POV evals for black players), so win% uses them directly.
+function winPct(cp: number): number {
   return 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
 }
 
-// Per-move accuracy from the drop in the mover's winning chances (Lichess).
-function moveAccuracy(evalBefore: number, evalAfter: number, moverIsWhite: boolean): number {
-  const wpBefore = winPctWhite(evalBefore);
-  const wpAfter = winPctWhite(evalAfter);
-  const before = moverIsWhite ? wpBefore : 100 - wpBefore;
-  const after = moverIsWhite ? wpAfter : 100 - wpAfter;
-  const drop = Math.max(0, before - after);
+// Per-move accuracy from the drop in the MOVER's winning chances (Lichess model).
+function moveAccuracy(evalBefore: number, evalAfter: number, isPlayerMove: boolean): number {
+  const before = winPct(evalBefore); // player win% before the move
+  const after = winPct(evalAfter);
+  // Player's own move: penalize a drop in the player's win%. Opponent's move:
+  // penalize a rise in the player's win% (the opponent worsened their position).
+  const drop = isPlayerMove ? Math.max(0, before - after) : Math.max(0, after - before);
   return Math.max(0, Math.min(100, 103.1668 * Math.exp(-0.04354 * drop) - 3.1669));
 }
 
@@ -93,7 +93,7 @@ interface SideSummary {
   phaseCpl: Record<string, number | null>;
 }
 
-function summarize(moves: MoveAnalysis[], sideIsWhite: boolean): SideSummary {
+function summarize(moves: MoveAnalysis[]): SideSummary {
   const counts: Record<string, number> = {};
   const phases: Record<string, { sum: number; n: number }> = {};
   let accSum = 0;
@@ -106,7 +106,7 @@ function summarize(moves: MoveAnalysis[], sideIsWhite: boolean): SideSummary {
     phases[p].sum += cpl;
     phases[p].n += 1;
     if (m.eval_before !== null && m.eval_after !== null) {
-      accSum += moveAccuracy(m.eval_before, m.eval_after, sideIsWhite);
+      accSum += moveAccuracy(m.eval_before, m.eval_after, m.is_player_move);
       accN += 1;
     }
   }
@@ -170,8 +170,7 @@ export default function GameReviewPage() {
     const you: MoveAnalysis[] = [];
     const opp: MoveAnalysis[] = [];
     for (const m of game.moves) (m.is_player_move ? you : opp).push(m);
-    const playerIsWhite = game.player_color !== "black";
-    return { you: summarize(you, playerIsWhite), opp: summarize(opp, !playerIsWhite) };
+    return { you: summarize(you), opp: summarize(opp) };
   }, [game, isAnalyzed]);
 
   const go = useCallback(

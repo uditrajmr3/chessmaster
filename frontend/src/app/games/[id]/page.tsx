@@ -35,10 +35,36 @@ const CLASS_ORDER = ["brilliant", "great", "best", "good", "book", "inaccuracy",
 
 const CPL_CAP = 1000; // mate-score swings (±10000) are clamped so they don't skew metrics
 
+const PIECE_VALUE: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+
+// A "brilliant" is a sound sacrifice: the best move that leaves the mover still
+// winning even though it lets the opponent win material (a piece >= a minor
+// captured by a strictly cheaper piece). Evals are player-POV, so "winning for
+// the mover" flips on the opponent's moves.
+function isBrilliantSac(m: MoveAnalysis): boolean {
+  const winningForMover =
+    m.eval_after !== null && (m.is_player_move ? m.eval_after >= 100 : m.eval_after <= -100);
+  if (!winningForMover) return false;
+  try {
+    const c = new Chess(m.fen_before);
+    if (!c.move(m.move_san)) return false;
+    for (const om of c.moves({ verbose: true })) {
+      if (om.captured && PIECE_VALUE[om.captured] >= 3 && PIECE_VALUE[om.piece] < PIECE_VALUE[om.captured]) {
+        return true;
+      }
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 function effectiveClass(m: MoveAnalysis): string {
   if (m.classification === "brilliant") return "brilliant";
+  const isBest = !!(m.best_move_san && m.move_san === m.best_move_san);
+  if (isBest && isBrilliantSac(m)) return "brilliant";
   if (m.classification === "great") return "great";
-  if (m.best_move_san && m.move_san === m.best_move_san) return "best";
+  if (isBest) return "best";
   if (CLASS_META[m.classification]) return m.classification;
   return "good";
 }
@@ -352,7 +378,7 @@ function ReviewSummary({ you, opp, opponent }: { you: SideSummary; opp: SideSumm
 
       {/* Classification counts */}
       <div className="space-y-1.5 mb-5">
-        {CLASS_ORDER.filter((c) => (you.counts[c] || 0) + (opp.counts[c] || 0) > 0).map((c) => {
+        {CLASS_ORDER.map((c) => {
           const meta = CLASS_META[c];
           return (
             <div key={c} className="grid grid-cols-[1.5rem_1fr_1.5rem] items-center text-sm">

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
+import { Area, AreaChart, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
 import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
@@ -24,14 +25,16 @@ const CLASS_META: Record<
 > = {
   brilliant: { label: "Brilliant", symbol: "!!", color: "text-cyan-300", chip: "bg-cyan-400/15 text-cyan-300" },
   great: { label: "Great", symbol: "!", color: "text-blue-300", chip: "bg-blue-400/15 text-blue-300" },
-  best: { label: "Best", symbol: "★", color: "text-green-300", chip: "bg-green-400/15 text-green-300" },
+  best: { label: "Best", symbol: "★", color: "text-green-400", chip: "bg-green-400/15 text-green-400" },
+  excellent: { label: "Excellent", symbol: "", color: "text-emerald-300", chip: "bg-emerald-400/12 text-emerald-300" },
   good: { label: "Good", symbol: "", color: "text-gray-300", chip: "bg-white/10 text-gray-300" },
   book: { label: "Book", symbol: "", color: "text-amber-300/80", chip: "bg-amber-400/10 text-amber-300/80" },
   inaccuracy: { label: "Inaccuracy", symbol: "?!", color: "text-yellow-400", chip: "bg-yellow-400/15 text-yellow-400" },
+  miss: { label: "Miss", symbol: "✗", color: "text-rose-400", chip: "bg-rose-400/15 text-rose-400" },
   mistake: { label: "Mistake", symbol: "?", color: "text-orange-400", chip: "bg-orange-400/15 text-orange-400" },
   blunder: { label: "Blunder", symbol: "??", color: "text-red-400", chip: "bg-red-400/15 text-red-400" },
 };
-const CLASS_ORDER = ["brilliant", "great", "best", "good", "book", "inaccuracy", "mistake", "blunder"];
+const CLASS_ORDER = ["brilliant", "great", "best", "excellent", "good", "book", "inaccuracy", "miss", "mistake", "blunder"];
 
 const CPL_CAP = 1000; // mate-score swings (±10000) are clamped so they don't skew metrics
 
@@ -60,13 +63,20 @@ function isBrilliantSac(m: MoveAnalysis): boolean {
 }
 
 function effectiveClass(m: MoveAnalysis): string {
-  if (m.classification === "brilliant") return "brilliant";
   const isBest = !!(m.best_move_san && m.move_san === m.best_move_san);
   if (isBest && isBrilliantSac(m)) return "brilliant";
-  if (m.classification === "great") return "great";
+  if (m.classification === "brilliant") return "brilliant";
+  if (m.classification === "book") return "book";
   if (isBest) return "best";
-  if (CLASS_META[m.classification]) return m.classification;
-  return "good";
+  const cpl = Math.max(0, m.centipawn_loss);
+  const missedTactic = !!(m.tactical_motifs && m.tactical_motifs.length > 0);
+  if (cpl <= 25) return "excellent";
+  if (cpl <= 50) return "good";
+  // A "miss" is a significant error that let a tactic / winning chance slip.
+  if (missedTactic && cpl >= 100) return "miss";
+  if (cpl <= 100) return "inaccuracy";
+  if (cpl <= 300) return "mistake";
+  return "blunder";
 }
 
 function involvesMate(m: MoveAnalysis): boolean {
@@ -240,6 +250,24 @@ export default function GameReviewPage() {
     lastMoveStyles[current.uci.slice(2, 4)] = { background: "rgba(167,131,104,0.42)" };
   }
 
+  // Best move FROM the current position (the move analyzed at this ply). Shown
+  // as a green arrow when the move actually played here wasn't the best.
+  const nextMove: MoveAnalysis | null =
+    isAnalyzed && ply < game.moves.length ? game.moves[ply] ?? null : null;
+  const bestArrows =
+    nextMove &&
+    nextMove.best_move_uci &&
+    nextMove.best_move_uci.length >= 4 &&
+    nextMove.move_uci !== nextMove.best_move_uci
+      ? [
+          {
+            startSquare: nextMove.best_move_uci.slice(0, 2),
+            endSquare: nextMove.best_move_uci.slice(2, 4),
+            color: "rgba(34,197,94,0.55)",
+          },
+        ]
+      : [];
+
   // Build the move-pair rows (analyzed → with classification; else plain SAN).
   const rows: Array<{ n: number; white: number | null; black: number | null }> = [];
   for (let i = 1; i <= totalPlies; i += 2) {
@@ -275,6 +303,7 @@ export default function GameReviewPage() {
                   allowDragging: false,
                   boardOrientation: orientation,
                   squareStyles: lastMoveStyles,
+                  arrows: bestArrows,
                   showAnimations: true,
                   animationDurationInMs: 150,
                   boardStyle: { borderRadius: "12px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" },
@@ -293,6 +322,9 @@ export default function GameReviewPage() {
             </div>
             <p className="mt-2 text-center text-[0.7rem] text-white/35">Use ← → arrow keys to step through the game</p>
           </div>
+
+          {/* Evaluation graph — scrub the game, click to jump */}
+          {isAnalyzed && <EvalGraph moves={game.moves} ply={ply} onSeek={go} />}
 
           {/* Current move detail */}
           {currentMove && <MoveDetail move={currentMove} />}
@@ -418,6 +450,61 @@ function AccuracyCard({ label, accuracy, highlight }: { label: string; accuracy:
       <p className="text-xs text-white/50 truncate">{label}</p>
       <p className="text-2xl font-bold font-mono mt-1 text-white">{accuracy.toFixed(1)}<span className="text-sm text-white/50">%</span></p>
       <p className="text-[0.7rem] text-white/40 mt-0.5">accuracy</p>
+    </div>
+  );
+}
+
+function EvalGraph({
+  moves,
+  ply,
+  onSeek,
+}: {
+  moves: MoveAnalysis[];
+  ply: number;
+  onSeek: (p: number) => void;
+}) {
+  const data = moves.map((m, i) => ({
+    ply: i + 1,
+    advantage: Math.max(-1000, Math.min(1000, m.eval_after ?? 0)) / 100,
+  }));
+  if (data.length === 0) return null;
+  return (
+    <div className="surface-card p-3">
+      <div className="flex items-center justify-between px-1 pb-1.5">
+        <span className="text-xs font-semibold text-white/70">Your advantage</span>
+        <span className="text-[0.65rem] text-white/35">click to jump</span>
+      </div>
+      <ResponsiveContainer width="100%" height={110}>
+        <AreaChart
+          data={data}
+          margin={{ top: 4, right: 6, bottom: 0, left: 6 }}
+          onClick={(state) => {
+            if (state && typeof state.activeTooltipIndex === "number") {
+              onSeek(state.activeTooltipIndex + 1);
+            }
+          }}
+        >
+          <defs>
+            <linearGradient id="evalFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#c2ad95" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="#c2ad95" stopOpacity={0.04} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="ply" type="number" domain={[1, data.length]} hide />
+          <YAxis domain={[-8, 8]} hide />
+          <ReferenceLine y={0} stroke="#33495a" strokeWidth={1} />
+          {ply > 0 && <ReferenceLine x={ply} stroke="#a78368" strokeWidth={1.5} />}
+          <Area
+            type="monotone"
+            dataKey="advantage"
+            stroke="#c2ad95"
+            strokeWidth={1.5}
+            fill="url(#evalFill)"
+            isAnimationActive={false}
+            dot={false}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 }

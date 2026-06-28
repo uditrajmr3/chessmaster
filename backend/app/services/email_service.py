@@ -4,7 +4,13 @@ from ..config import settings
 logger = logging.getLogger(__name__)
 
 
-def _send(to: str, subject: str, html: str | None = None, variables: dict | None = None) -> bool:
+def _send(
+    to: str,
+    subject: str,
+    html: str | None = None,
+    variables: dict | None = None,
+    use_template: bool = True,
+) -> bool:
     """Send an email via Resend. Returns True on success. Never raises — a mail
     provider problem (missing key, unverified domain, outage) must not break the
     signup/reset flow that triggered it.
@@ -20,7 +26,7 @@ def _send(to: str, subject: str, html: str | None = None, variables: dict | None
         import resend
         resend.api_key = settings.resend_api_key
         params = {"from": settings.email_from, "to": [to], "subject": subject}
-        if settings.email_template_id:
+        if use_template and settings.email_template_id:
             params["template"] = {"id": settings.email_template_id, "variables": variables or {}}
         else:
             params["html"] = html or ""
@@ -31,16 +37,30 @@ def _send(to: str, subject: str, html: str | None = None, variables: dict | None
         return False
 
 
-def _template_vars(link: str, heading: str, cta: str) -> dict:
+def _template_vars(link: str, heading: str, cta: str, name: str = "") -> dict:
     """Hedge the CTA link (and heading/button label) across the variable names a
     Resend template is likely to use, so the template renders correctly without
-    us having to hard-code its exact placeholder names. Unused keys are ignored."""
+    us having to hard-code its exact placeholder names. Unused keys are ignored.
+
+    The published "Verify Email" template greets `{{first_name}}` and references
+    `{{company_name}}`, so we always supply those too (blank first_name -> a
+    neutral greeting rather than "Hi ,")."""
+    greeting = name or "there"
     return {
         "link": link, "url": link, "action_url": link, "button_url": link,
         "cta_url": link, "verification_url": link, "reset_url": link,
         "heading": heading, "title": heading, "preheader": heading,
         "cta": cta, "button_text": cta, "action": cta,
+        "first_name": greeting, "name": greeting,
+        "company_name": "ChessInt", "company": "ChessInt", "product_name": "ChessInt",
     }
+
+
+def _name_from_email(email: str) -> str:
+    """Best-effort first name from the local part (no PII source available here)."""
+    local = email.split("@", 1)[0]
+    parts = local.replace(".", " ").replace("_", " ").split()
+    return parts[0].title() if parts else ""
 
 
 def send_verification_email(email: str, token: str) -> None:
@@ -49,7 +69,7 @@ def send_verification_email(email: str, token: str) -> None:
         email,
         "Verify your ChessInt email",
         html=f'<p>Confirm your email:</p><p><a href="{link}">{link}</a></p>',
-        variables=_template_vars(link, "Verify your email", "Verify email"),
+        variables=_template_vars(link, "Verify your email", "Verify email", _name_from_email(email)),
     )
     if not sent:
         # Fallback so the flow still works before a mail domain is verified.
@@ -62,7 +82,10 @@ def send_reset_email(email: str, token: str) -> None:
         email,
         "Reset your ChessInt password",
         html=f'<p>Reset your password:</p><p><a href="{link}">{link}</a></p>',
-        variables=_template_vars(link, "Reset your password", "Reset password"),
+        variables=_template_vars(link, "Reset your password", "Reset password", _name_from_email(email)),
+        # The published template is the verify-email design; don't reuse its
+        # "Confirm your email address" copy for a password reset.
+        use_template=False,
     )
     if not sent:
         logger.warning("Reset link for %s: %s", email, link)

@@ -1,10 +1,14 @@
-# ChessMaster
+# ChessInt — Chess Intelligence for Lichess & Chess.com
 
-**Your Personal Chess Coach** — Fetches all your Chess.com and Lichess games, runs client-side Stockfish analysis, detects recurring weakness patterns across hundreds of games, and generates a personalized AI coaching report.
+> **Live app: [ChessInt → chessmaster.cyou](https://chessmaster.cyou)**
 
-Chess.com premium tells you what blunder you made in a single game. ChessMaster tells you what patterns keep repeating across ALL your games and gives you a personalized fix.
+**ChessInt** is chess intelligence for your own games. It fetches all your Chess.com and Lichess games, runs client-side Stockfish analysis, detects recurring weakness patterns across hundreds of games, and generates a personalized AI coaching report — all in the browser.
+
+Chess.com premium tells you what blunder you made in a single game. **ChessInt** tells you what patterns keep repeating across ALL your games and gives you a personalized fix. Try it at **[chessmaster.cyou](https://chessmaster.cyou)**.
 
 ![Stack](https://img.shields.io/badge/Next.js-black?logo=next.js) ![Stack](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white) ![Stack](https://img.shields.io/badge/Stockfish_WASM-yellow) ![Stack](https://img.shields.io/badge/Claude_API-orange)
+
+> _Formerly “ChessMaster.” The repo folder and local service names are still `chessmaster`; the product is **ChessInt**._
 
 ## Features
 
@@ -164,7 +168,7 @@ chessmaster/
 │           ├── report_generator.py
 │           ├── email_service.py     # Resend / stdout fallback
 │           └── ...
-├── frontend/                   # Next.js 14 + TypeScript + Tailwind
+├── frontend/                   # Next.js 16 + TypeScript + Tailwind
 │   ├── public/stockfish/       # Drop stockfish.js + stockfish.wasm here
 │   └── src/
 │       ├── app/                # Pages: /, /login, /register, /verify-email,
@@ -201,7 +205,7 @@ npm run build                   # production build check
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, Recharts
+- **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS, Recharts
 - **Backend**: FastAPI, FastAPI-Users, SQLAlchemy (sync + async), Postgres, Alembic, python-chess
 - **Auth**: FastAPI-Users — httpOnly cookie JWT, email verification, password reset via Resend
 - **Analysis**: Stockfish WASM in the browser (depth configurable); server classifies CPL + tactical motifs

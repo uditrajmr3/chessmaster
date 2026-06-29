@@ -75,21 +75,52 @@ export const metadata: Metadata = {
   },
 };
 
-// Structured data: the app itself + Udit Raj as creator (sameAs links the
-// entity to uditraj.site so the two rank as one identity).
+// Structured data: the app, the publishing org, and Udit Raj as creator.
+// `alternateName`/`disambiguatingDescription` exist to teach search + AI that
+// "ChessInt" means this Chess-Intelligence web app (not the unrelated
+// "Chessnut" electronic-chessboard brand it currently gets confused with).
+// sameAs ties the entity to uditraj.site and the open-source repo.
+const ORG_ID = `${SITE_URL}/#org`;
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: "ChessInt",
+      alternateName: "Chess Intelligence",
+      url: SITE_URL,
+      logo: `${SITE_URL}/logo.svg`,
+      description:
+        "ChessInt (Chess Intelligence) is a free web app that analyzes your own Chess.com and Lichess games — engine analysis, a move-by-move game review, recurring weaknesses, and an AI coach.",
+      sameAs: [
+        "https://uditraj.site",
+        "https://github.com/uditrajmr3/chessmaster",
+      ],
+      founder: { "@type": "Person", name: "Udit Raj", url: "https://uditraj.site" },
+    },
     {
       "@type": "WebApplication",
       name: "ChessInt",
       alternateName: "ChessInt — Chess Intelligence",
       url: SITE_URL,
       applicationCategory: "GameApplication",
-      operatingSystem: "Web",
+      operatingSystem: "Web browser",
+      browserRequirements: "Requires a modern web browser. No install.",
+      disambiguatingDescription:
+        "ChessInt is a software web app for analyzing your own chess games on Chess.com and Lichess. It is not related to electronic chessboard hardware.",
       description:
-        "Chess intelligence for your own games: engine analysis, recurring weaknesses, opening insights, and a personal AI coach for Lichess and Chess.com players.",
+        "Chess intelligence for your own games: engine analysis, a free game review, recurring weaknesses, opening insights, and a personal AI coach for Lichess and Chess.com players.",
+      featureList: [
+        "Free move-by-move game review (Brilliant to Blunder)",
+        "Full-history Stockfish analysis in the browser",
+        "Recurring weakness detection by phase and motif",
+        "Opening win-rates from your own games",
+        "Personal AI coaching report",
+        "Tactics puzzles from your own mistakes",
+      ],
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      publisher: { "@id": ORG_ID },
       author: {
         "@type": "Person",
         name: "Udit Raj",

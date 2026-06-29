@@ -11,6 +11,8 @@ import Loader from "@/components/Loader";
 
 const PUBLIC_ROUTES = [
   "/about",
+  "/game-review",
+  "/chess-analysis",
   "/login",
   "/register",
   "/verify-email",

@@ -31,9 +31,10 @@ export default function BoardSetupPage() {
         Set up the board
       </h1>
       <p className="mt-6 text-lg leading-relaxed text-gray-400">
-        Before the first move, the board has to be set up correctly. Use the
-        board below — flip it to either side, and turn the a–h / 1–8 labels on or
-        off — while you follow along.
+        Before the first move, the board has to be set up correctly. Play with
+        the board below — turn it a quarter at a time, flip to the other side,
+        hide the pieces to study the bare squares, or reveal the a–h / 1–8
+        labels — while you follow along.
       </p>
 
       <div className="mt-8 surface-card p-4 sm:p-6">
@@ -91,9 +92,11 @@ export default function BoardSetupPage() {
         </li>
         <li>
           <strong className="text-white">Light &amp; dark squares</strong> —
-          every square is one or the other, and that colour is exactly what tells
-          you the board is turned the right way. Spin or flip the board above: the
-          light square stays in your bottom-right corner every time.
+          every square is one or the other, and that colour is how you check the
+          board is turned the right way: a <em>light</em> square belongs in your
+          bottom-right. Press <strong className="text-white">Turn 90°</strong>{" "}
+          above and watch — when a dark square lands in that corner, the board is
+          set up the wrong way round.
         </li>
       </ul>
 

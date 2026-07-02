@@ -6,18 +6,22 @@ import { FlipHorizontal2, RotateCw, Hash, RefreshCw } from "lucide-react";
 
 export type TBArrow = { startSquare: string; endSquare: string; color?: string };
 
-const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const DOT =
-  "radial-gradient(circle, rgba(20,30,40,0.5) 22%, transparent 24%)";
+const DOT = "radial-gradient(circle, rgba(20,30,40,0.5) 22%, transparent 24%)";
 const RING =
   "radial-gradient(circle, transparent 60%, rgba(20,30,40,0.5) 62%, rgba(20,30,40,0.5) 80%, transparent 82%)";
 
 type Orientation = "white" | "black";
 
 /**
- * Interactive teaching board used across the /learn interactive lessons.
- * Presentational + owns flip and coordinate-label toggles; each lesson drives
- * the position, highlighted squares, arrows, and drag/click behaviour.
+ * Interactive teaching board for the /learn lessons. Presentational + owns the
+ * "view" controls (flip perspective, physical 90° turn, coordinate labels).
+ * Each lesson drives the position, highlighted squares, arrows, and drag/click.
+ *
+ * Notes:
+ * - Coordinate labels use the board's own `showNotation` (default OFF here) so a
+ *   real, label-less board is the default — no separate overlay.
+ * - "Turn 90°" is a genuine physical quarter-turn: a CSS rotation of the whole
+ *   board (pieces included), stepping 90° each press and cycling home at 360°.
  */
 export default function TeachingBoard({
   position,
@@ -47,85 +51,64 @@ export default function TeachingBoard({
   onPieceDrop?: (from: string, to: string, pieceType: string) => boolean;
   onSquareClick?: (square: string) => void;
   onReset?: () => void;
-  controls?: ("flip" | "spin" | "coords" | "reset")[];
+  controls?: ("flip" | "turn" | "coords" | "reset")[];
   caption?: React.ReactNode;
   footer?: React.ReactNode;
   maxWidth?: number;
 }) {
   const [orientation, setOrientation] = useState<Orientation>(initialOrientation);
   const [coords, setCoords] = useState(initialCoords);
-  const [spinning, setSpinning] = useState(false);
+  const [rotation, setRotation] = useState(0); // degrees, in 90° steps
 
   const styles: Record<string, React.CSSProperties> = { ...squareStyles };
   for (const sq of dots) styles[sq] = { ...styles[sq], backgroundImage: DOT };
   for (const sq of rings) styles[sq] = { ...styles[sq], backgroundImage: RING };
 
-  const fileLabels = orientation === "white" ? FILES : [...FILES].reverse();
-  const rankLabels =
-    orientation === "white"
-      ? [8, 7, 6, 5, 4, 3, 2, 1]
-      : [1, 2, 3, 4, 5, 6, 7, 8];
+  function reset() {
+    setOrientation(initialOrientation);
+    setCoords(initialCoords);
+    setRotation(0);
+    onReset?.();
+  }
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
       <div className="w-full" style={{ maxWidth }}>
-        <div className="flex">
-          {coords && (
-            <div className="mr-1 flex w-4 flex-col py-[2px] text-[0.7rem] font-semibold text-gray-500">
-              {rankLabels.map((r) => (
-                <span key={r} className="flex flex-1 items-center justify-center">
-                  {r}
-                </span>
-              ))}
-            </div>
-          )}
-          <div
-            className={`relative flex-1${spinning ? " board-spin" : ""}`}
-            onAnimationEnd={(e) => {
-              // Ignore piece-move animations bubbling up from the board.
-              if (e.animationName === "boardSpin") setSpinning(false);
+        <div
+          className="board-rotate"
+          style={{ transform: `rotate(${rotation}deg)` }}
+        >
+          <Chessboard
+            options={{
+              position,
+              boardOrientation: orientation,
+              showNotation: coords,
+              allowDragging,
+              onPieceDrop: onPieceDrop
+                ? ({ sourceSquare, targetSquare, piece }) =>
+                    targetSquare
+                      ? onPieceDrop(sourceSquare, targetSquare, piece.pieceType)
+                      : false
+                : undefined,
+              onSquareClick: onSquareClick
+                ? ({ square }) => square && onSquareClick(square)
+                : undefined,
+              squareStyles: styles,
+              arrows: arrows.map((a) => ({
+                ...a,
+                color: a.color ?? "rgba(167,131,104,0.8)",
+              })),
+              showAnimations: true,
+              animationDurationInMs: 250,
+              boardStyle: {
+                borderRadius: "10px",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+              },
+              darkSquareStyle: { backgroundColor: "#779952" },
+              lightSquareStyle: { backgroundColor: "#edeed1" },
             }}
-          >
-            <Chessboard
-              options={{
-                position,
-                boardOrientation: orientation,
-                allowDragging,
-                onPieceDrop: onPieceDrop
-                  ? ({ sourceSquare, targetSquare, piece }) =>
-                      targetSquare
-                        ? onPieceDrop(sourceSquare, targetSquare, piece.pieceType)
-                        : false
-                  : undefined,
-                onSquareClick: onSquareClick
-                  ? ({ square }) => square && onSquareClick(square)
-                  : undefined,
-                squareStyles: styles,
-                arrows: arrows.map((a) => ({
-                  ...a,
-                  color: a.color ?? "rgba(167,131,104,0.8)",
-                })),
-                showAnimations: true,
-                animationDurationInMs: 250,
-                boardStyle: {
-                  borderRadius: "10px",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-                },
-                darkSquareStyle: { backgroundColor: "#779952" },
-                lightSquareStyle: { backgroundColor: "#edeed1" },
-              }}
-            />
-          </div>
+          />
         </div>
-        {coords && (
-          <div className="mt-1 flex text-[0.7rem] font-semibold text-gray-500" style={{ paddingLeft: "1.25rem" }}>
-            {fileLabels.map((f) => (
-              <span key={f} className="flex-1 text-center">
-                {f}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
 
       {caption && (
@@ -144,11 +127,11 @@ export default function TeachingBoard({
             }
           />
         )}
-        {controls.includes("spin") && (
+        {controls.includes("turn") && (
           <ControlBtn
             icon={RotateCw}
-            label="Spin 360°"
-            onClick={() => setSpinning(true)}
+            label="Turn 90°"
+            onClick={() => setRotation((r) => r + 90)}
           />
         )}
         {controls.includes("coords") && (
@@ -159,16 +142,16 @@ export default function TeachingBoard({
             onClick={() => setCoords((c) => !c)}
           />
         )}
-        {controls.includes("reset") && onReset && (
-          <ControlBtn icon={RefreshCw} label="Reset" onClick={onReset} />
-        )}
         {footer}
+        {controls.includes("reset") && (
+          <ControlBtn icon={RefreshCw} label="Reset" onClick={reset} />
+        )}
       </div>
     </div>
   );
 }
 
-function ControlBtn({
+export function ControlBtn({
   icon: Icon,
   label,
   onClick,

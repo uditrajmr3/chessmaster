@@ -16,8 +16,8 @@ export default function BoardSetupLesson() {
         return true;
       }}
       onReset={() => setFen(START_FEN)}
-      controls={["flip", "coords", "reset"]}
-      caption="Drag any piece to try it yourself. Tap “Flip board” to see the setup from Black’s side, and “Show labels” to reveal the a–h files and 1–8 ranks. “Reset” puts every piece back."
+      controls={["flip", "spin", "coords", "reset"]}
+      caption="Real chess boards have no letters or numbers — so “Show labels” is off by default, just like the board in front of you. Hit “Spin 360°” to turn the board like you would on a table, “Flip board” to see it from Black’s side, and drag any piece to try it. However it’s turned, the rule holds: a light square sits in your bottom-right."
     />
   );
 }

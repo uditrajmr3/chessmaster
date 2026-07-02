@@ -63,6 +63,40 @@ export default function BoardSetupPage() {
         each other across the board.
       </p>
 
+      <h2 className={H2}>Files, ranks, and squares</h2>
+      <p className={P}>
+        You don’t need any letters or numbers to play — most real boards have
+        none. But they’re how moves get written down, and they make lessons
+        easier to follow. Turn them on with the{" "}
+        <strong className="text-white">Show labels</strong> button above.
+      </p>
+      <ul className="mt-4 space-y-3 leading-relaxed text-gray-400">
+        <li>
+          <strong className="text-white">Files</strong> — the eight columns
+          running away from you. Written down, they’re lettered{" "}
+          <strong className="text-white">a</strong> to{" "}
+          <strong className="text-white">h</strong>, left to right from White’s
+          side.
+        </li>
+        <li>
+          <strong className="text-white">Ranks</strong> — the eight rows going
+          across. They’re numbered <strong className="text-white">1</strong> to{" "}
+          <strong className="text-white">8</strong>, starting from White’s side.
+          Put a file and a rank together and you’ve named a square — like{" "}
+          <strong className="text-white">e4</strong>, the famous centre square.
+        </li>
+        <li>
+          <strong className="text-white">Diagonals</strong> — lines of one colour
+          running corner to corner. These are the bishops’ highways.
+        </li>
+        <li>
+          <strong className="text-white">Light &amp; dark squares</strong> —
+          every square is one or the other, and that colour is exactly what tells
+          you the board is turned the right way. Spin or flip the board above: the
+          light square stays in your bottom-right corner every time.
+        </li>
+      </ul>
+
       <div className="mt-14 border-t border-ink-600 pt-10">
         <p className="text-gray-400">
           Next:{" "}

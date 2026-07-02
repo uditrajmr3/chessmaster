@@ -2,7 +2,7 @@
 
 import { useState, type ElementType } from "react";
 import { Chessboard } from "react-chessboard";
-import { RotateCw, Hash, RefreshCw } from "lucide-react";
+import { FlipHorizontal2, RotateCw, Hash, RefreshCw } from "lucide-react";
 
 export type TBArrow = { startSquare: string; endSquare: string; color?: string };
 
@@ -47,13 +47,14 @@ export default function TeachingBoard({
   onPieceDrop?: (from: string, to: string, pieceType: string) => boolean;
   onSquareClick?: (square: string) => void;
   onReset?: () => void;
-  controls?: ("flip" | "coords" | "reset")[];
+  controls?: ("flip" | "spin" | "coords" | "reset")[];
   caption?: React.ReactNode;
   footer?: React.ReactNode;
   maxWidth?: number;
 }) {
   const [orientation, setOrientation] = useState<Orientation>(initialOrientation);
   const [coords, setCoords] = useState(initialCoords);
+  const [spinning, setSpinning] = useState(false);
 
   const styles: Record<string, React.CSSProperties> = { ...squareStyles };
   for (const sq of dots) styles[sq] = { ...styles[sq], backgroundImage: DOT };
@@ -78,7 +79,13 @@ export default function TeachingBoard({
               ))}
             </div>
           )}
-          <div className="relative flex-1">
+          <div
+            className={`relative flex-1${spinning ? " board-spin" : ""}`}
+            onAnimationEnd={(e) => {
+              // Ignore piece-move animations bubbling up from the board.
+              if (e.animationName === "boardSpin") setSpinning(false);
+            }}
+          >
             <Chessboard
               options={{
                 position,
@@ -130,11 +137,18 @@ export default function TeachingBoard({
       <div className="flex flex-wrap items-center justify-center gap-2">
         {controls.includes("flip") && (
           <ControlBtn
-            icon={RotateCw}
+            icon={FlipHorizontal2}
             label="Flip board"
             onClick={() =>
               setOrientation((o) => (o === "white" ? "black" : "white"))
             }
+          />
+        )}
+        {controls.includes("spin") && (
+          <ControlBtn
+            icon={RotateCw}
+            label="Spin 360°"
+            onClick={() => setSpinning(true)}
           />
         )}
         {controls.includes("coords") && (

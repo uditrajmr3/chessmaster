@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/learn/improve-middlegame`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/learn/improve-endgame`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/learn/capablanca`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/learn/coach`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/register`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/login`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },

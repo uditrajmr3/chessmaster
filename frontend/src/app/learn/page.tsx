@@ -42,6 +42,7 @@ export default async function LearnPage() {
   const readLabel = t("readGuide");
 
   const interactive = [
+    { href: "/learn/coach", title: t("coachTitle"), body: t("coachBody") },
     { href: "/learn/board-setup", title: t("boardSetupTitle"), body: t("boardSetupBody") },
     { href: "/learn/piece-moves", title: t("pieceMovesTitle"), body: t("pieceMovesBody") },
     { href: "/learn/special-moves", title: t("specialMovesTitle"), body: t("specialMovesBody") },

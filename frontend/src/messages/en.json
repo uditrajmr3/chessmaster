@@ -265,6 +265,8 @@
     "hubCtaTitle": "Ready to see your own games analysed?",
     "interactiveLessons": "Interactive lessons",
     "interactiveIntro": "Learn on a board you can actually touch — flip it, turn the labels on, drag the pieces, and step through the tricky moves.",
+    "coachTitle": "Play with a coach",
+    "coachBody": "Pick a side, an opening, and a rating, then play a bot while your coach runs Capablanca's three questions every move and suggests sound moves.",
     "boardSetupTitle": "Set up the board",
     "boardSetupBody": "The correct starting position, on a board you can flip and label. “White on the right”, “queen on her colour”, and where every piece goes.",
     "pieceMovesTitle": "How the pieces move",

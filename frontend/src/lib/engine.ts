@@ -120,16 +120,10 @@ export class Engine {
   }
 
   /**
-   * Evaluate a position.
-   *
-   * Sends:
-   *   position fen <fen>
-   *   go depth <depth>
-   *
-   * Collects `info ... score ...` lines and the final `bestmove` line,
-   * then resolves with the LAST score seen (white-POV cp) + the best move.
+   * Core search: send a position + a `go ...` command, collect the last score
+   * (white-POV cp) and the final bestmove.
    */
-  analyse(fen: string, depth: number): Promise<EvalResult> {
+  private search(fen: string, goCmd: string): Promise<EvalResult> {
     if (!this.worker) {
       return Promise.reject(new Error("Engine not initialised — call init() first"));
     }
@@ -140,19 +134,17 @@ export class Engine {
       let lastScore: number | null = null;
       let settled = false;
 
-      // Safety timeout per analysis (30 s at high depth).
       const timeout = setTimeout(() => {
         if (!settled) {
           settled = true;
           worker.onmessage = null;
-          reject(new Error(`analyse() timed out for fen=${fen} depth=${depth}`));
+          reject(new Error(`search() timed out for fen=${fen} (${goCmd})`));
         }
       }, 30_000);
 
       worker.onmessage = (ev: { data: string }) => {
         const line = ev.data.trim();
 
-        // Parse info lines for score.
         if (line.startsWith("info ")) {
           const cpMatch = line.match(/\bscore cp (-?\d+)/);
           const mateMatch = line.match(/\bscore mate (-?\d+)/);
@@ -163,7 +155,6 @@ export class Engine {
           }
         }
 
-        // bestmove signals end of search.
         if (line.startsWith("bestmove ") && !settled) {
           settled = true;
           clearTimeout(timeout);
@@ -175,7 +166,71 @@ export class Engine {
       };
 
       worker.postMessage(`position fen ${fen}`);
-      worker.postMessage(`go depth ${depth}`);
+      worker.postMessage(goCmd);
+    });
+  }
+
+  /**
+   * Evaluate a position to a fixed depth. Resolves with the last white-POV
+   * score seen and the best move. (Used by full-game analysis.)
+   */
+  analyse(fen: string, depth: number): Promise<EvalResult> {
+    return this.search(fen, `go depth ${depth}`);
+  }
+
+  /**
+   * Pick a move for interactive play. Prefer a time budget (`movetime`, ms) so
+   * weakened bots feel responsive; falls back to a depth.
+   */
+  bestMove(fen: string, opts: { depth?: number; movetime?: number } = {}): Promise<EvalResult> {
+    const goCmd = opts.movetime ? `go movetime ${opts.movetime}` : `go depth ${opts.depth ?? 12}`;
+    return this.search(fen, goCmd);
+  }
+
+  /**
+   * Set engine strength for beginner-appropriate bots. `elo` uses Stockfish's
+   * built-in UCI_LimitStrength (valid roughly ≥1320); for weaker play pass a
+   * low `skill` (0–20) with limitStrength false. Resolves once applied
+   * (waits for readyok) so the next search uses the new settings.
+   */
+  configure(options: {
+    limitStrength?: boolean;
+    elo?: number;
+    skill?: number;
+  }): Promise<void> {
+    if (!this.worker) {
+      return Promise.reject(new Error("Engine not initialised — call init() first"));
+    }
+    return new Promise<void>((resolve, reject) => {
+      const worker = this.worker!;
+      let settled = false;
+      const timeout = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          worker.onmessage = null;
+          reject(new Error("configure() timed out"));
+        }
+      }, 10_000);
+
+      worker.onmessage = (ev: { data: string }) => {
+        if (ev.data.trim() === "readyok" && !settled) {
+          settled = true;
+          clearTimeout(timeout);
+          worker.onmessage = null;
+          resolve();
+        }
+      };
+
+      if (options.limitStrength !== undefined) {
+        worker.postMessage(`setoption name UCI_LimitStrength value ${options.limitStrength}`);
+      }
+      if (options.elo !== undefined) {
+        worker.postMessage(`setoption name UCI_Elo value ${options.elo}`);
+      }
+      if (options.skill !== undefined) {
+        worker.postMessage(`setoption name Skill Level value ${options.skill}`);
+      }
+      worker.postMessage("isready");
     });
   }
 

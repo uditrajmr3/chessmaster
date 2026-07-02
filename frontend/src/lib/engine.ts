@@ -188,6 +188,64 @@ export class Engine {
   }
 
   /**
+   * Return the top-N candidate moves (MultiPV), best first, each with its
+   * side-to-move-relative score. Used to weaken bots humanly: pick a slightly
+   * worse — but still engine-vetted — move rather than a random blunder.
+   * Scores here are RAW UCI (relative to the side to move; higher = better for
+   * the mover), which is what we want for ranking.
+   */
+  topMoves(
+    fen: string,
+    opts: { depth?: number; movetime?: number; multipv?: number } = {}
+  ): Promise<{ uci: string; score: number }[]> {
+    if (!this.worker) {
+      return Promise.reject(new Error("Engine not initialised — call init() first"));
+    }
+    const multipv = opts.multipv ?? 3;
+    return new Promise((resolve, reject) => {
+      const worker = this.worker!;
+      const best: Record<number, { uci: string; score: number }> = {};
+      let settled = false;
+      const timeout = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          worker.onmessage = null;
+          reject(new Error(`topMoves() timed out for fen=${fen}`));
+        }
+      }, 30_000);
+
+      worker.onmessage = (ev: { data: string }) => {
+        const line = ev.data.trim();
+        if (line.startsWith("info ") && line.includes(" multipv ")) {
+          const mpv = line.match(/\bmultipv (\d+)/);
+          const cp = line.match(/\bscore cp (-?\d+)/);
+          const mate = line.match(/\bscore mate (-?\d+)/);
+          const pv = line.match(/\bpv (\S+)/);
+          if (mpv && pv) {
+            const k = parseInt(mpv[1], 10);
+            let score: number;
+            if (cp) score = parseInt(cp[1], 10);
+            else if (mate) score = parseInt(mate[1], 10) > 0 ? 100000 : -100000;
+            else score = 0;
+            best[k] = { uci: pv[1], score };
+          }
+        }
+        if (line.startsWith("bestmove ") && !settled) {
+          settled = true;
+          clearTimeout(timeout);
+          worker.onmessage = null;
+          const arr = Object.values(best).sort((a, b) => b.score - a.score);
+          resolve(arr);
+        }
+      };
+
+      worker.postMessage(`setoption name MultiPV value ${multipv}`);
+      worker.postMessage(`position fen ${fen}`);
+      worker.postMessage(opts.movetime ? `go movetime ${opts.movetime}` : `go depth ${opts.depth ?? 10}`);
+    });
+  }
+
+  /**
    * Set engine strength for beginner-appropriate bots. `elo` uses Stockfish's
    * built-in UCI_LimitStrength (valid roughly ≥1320); for weaker play pass a
    * low `skill` (0–20) with limitStrength false. Resolves once applied

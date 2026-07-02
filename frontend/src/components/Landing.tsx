@@ -106,6 +106,10 @@ export default function Landing() {
             ·{" "}
             <Link href="/chess-analysis" className="text-accent-300 underline-offset-4 hover:underline">
               free chess analysis
+            </Link>{" "}
+            ·{" "}
+            <Link href="/learn" className="text-accent-300 underline-offset-4 hover:underline">
+              learn chess
             </Link>
           </p>
         </header>

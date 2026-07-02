@@ -34,6 +34,7 @@ import {
   Wrench,
   Settings,
   LogOut,
+  Lightbulb,
 } from "lucide-react";
 
 type NavItem = { href: string; label: string; icon: ElementType };
@@ -60,6 +61,7 @@ const navSections: NavSection[] = [
     label: "Training",
     icon: GraduationCap,
     items: [
+      { href: "/learn", label: "Learn Chess", icon: Lightbulb },
       { href: "/puzzles", label: "Puzzles", icon: Puzzle },
       { href: "/openings", label: "Openings", icon: BookOpen },
       { href: "/weaknesses", label: "Weaknesses", icon: Target },

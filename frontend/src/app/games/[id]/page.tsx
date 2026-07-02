@@ -9,6 +9,7 @@ import { Area, AreaChart, ReferenceLine, ResponsiveContainer, XAxis, YAxis } fro
 import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
 import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
+import Term from "@/components/Term";
 import {
   ArrowLeft,
   Swords,
@@ -449,7 +450,7 @@ function AccuracyCard({ label, accuracy, highlight }: { label: string; accuracy:
     <div className={`rounded-xl px-4 py-3 ${highlight ? "bg-accent-500/12 border border-accent-500/25" : "bg-white/[0.03] border border-white/5"}`}>
       <p className="text-xs text-white/50 truncate">{label}</p>
       <p className="text-2xl font-bold font-mono mt-1 text-white">{accuracy.toFixed(1)}<span className="text-sm text-white/50">%</span></p>
-      <p className="text-[0.7rem] text-white/40 mt-0.5">accuracy</p>
+      <p className="text-[0.7rem] text-white/40 mt-0.5"><Term id="accuracy">accuracy</Term></p>
     </div>
   );
 }
@@ -528,7 +529,7 @@ function MoveDetail({ move }: { move: MoveAnalysis }) {
         {move.best_move_san && move.best_move_san !== move.move_san && (
           <Field label="Best move"><span className="text-green-400 font-mono font-semibold">{move.best_move_san}</span></Field>
         )}
-        <Field label="Centipawn loss">
+        <Field label={<Term id="cpl">Centipawn loss</Term>}>
           <span className="font-mono">{mate ? "mate swing" : move.centipawn_loss.toFixed(0)}</span>
         </Field>
         <Field label="Phase"><span className="capitalize">{move.game_phase}</span></Field>
@@ -546,7 +547,7 @@ function MoveDetail({ move }: { move: MoveAnalysis }) {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
   return (
     <div>
       <span className="text-white/45 text-xs uppercase tracking-wider font-medium">{label}</span>

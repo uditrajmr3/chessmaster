@@ -9,10 +9,9 @@ import Sidebar from "@/components/Sidebar";
 import StatusBar from "@/components/StatusBar";
 import Loader from "@/components/Loader";
 
-const PUBLIC_ROUTES = [
-  "/about",
-  "/game-review",
-  "/chess-analysis",
+// Auth/transactional pages — always rendered bare (no app chrome), regardless
+// of sign-in state.
+const AUTH_ROUTES = [
   "/login",
   "/register",
   "/verify-email",
@@ -20,8 +19,14 @@ const PUBLIC_ROUTES = [
   "/reset-password",
 ];
 
-function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_ROUTES.some(
+// Public content/marketing pages — indexable and visible to signed-out visitors
+// (rendered bare so they're crawlable), but shown *inside* the app chrome when a
+// signed-in user navigates to them (e.g. the Learn guides linked from the
+// sidebar), so they don't feel like they left the app.
+const CONTENT_ROUTES = ["/about", "/game-review", "/chess-analysis", "/learn"];
+
+function matches(routes: string[], pathname: string): boolean {
+  return routes.some(
     (route) => pathname === route || pathname.startsWith(route + "/")
   );
 }
@@ -31,7 +36,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isPublic = isPublicRoute(pathname);
+  const isAuthRoute = matches(AUTH_ROUTES, pathname);
+  const isContentRoute = matches(CONTENT_ROUTES, pathname);
+  const isPublic = isAuthRoute || isContentRoute;
   // The home route is open to everyone: a marketing landing for signed-out
   // visitors, the dashboard (with chrome) once signed in. page.tsx picks which.
   const isHome = pathname === "/";
@@ -42,9 +49,26 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [loading, user, isPublic, isHome, router]);
 
-  // Bare public routes (auth pages, about) — no app chrome
-  if (isPublic) {
+  const chrome = (
+    <>
+      <Sidebar />
+      <StatusBar />
+      <main className="flex-1 lg:ml-64 pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8 pb-8">{children}</main>
+    </>
+  );
+
+  // Auth/transactional pages — never any chrome.
+  if (isAuthRoute) {
     return <>{children}</>;
+  }
+
+  // Public content pages — bare for signed-out visitors (and during SSR/auth
+  // resolution, so the page is server-rendered and indexable); inside the app
+  // chrome once a user is signed in. Guides are public, so we don't gate them
+  // behind email verification.
+  if (isContentRoute) {
+    if (loading || !user) return <>{children}</>;
+    return chrome;
   }
 
   // Home renders for everyone. While auth resolves — including SSR, where
@@ -93,11 +117,5 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   // Authenticated + verified — render full app chrome
-  return (
-    <>
-      <Sidebar />
-      <StatusBar />
-      <main className="flex-1 lg:ml-64 pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8 pb-8">{children}</main>
-    </>
-  );
+  return chrome;
 }

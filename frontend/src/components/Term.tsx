@@ -1,30 +1,35 @@
 "use client";
 
 import { useId, useState } from "react";
-import { GLOSSARY } from "@/lib/glossary";
+import { useTranslations } from "next-intl";
 
 /**
  * Inline jargon explainer. Wrap any chess/analysis term so a beginner can get a
- * plain-English definition without leaving the page:
+ * plain-English (or localized) definition without leaving the page:
  *
- *   <Term id="cpl" /> renders "CPL (Centipawn Loss)"
+ *   <Term id="cpl" /> renders the term, e.g. "CPL (Centipawn Loss)"
  *   <Term id="cpl">CPL</Term> renders just "CPL"
  *
- * Definition shows on hover, keyboard focus, and tap (mobile). Accessible via
- * aria-describedby; the trigger is a real button so it's keyboard-reachable.
+ * Text comes from the `glossary` message namespace, so tooltips follow the
+ * chosen language. Definition shows on hover, keyboard focus, and tap (mobile);
+ * accessible via aria-describedby, with a real button as the trigger.
  */
 export default function Term({
   id,
   children,
 }: {
-  id: keyof typeof GLOSSARY | string;
+  id: string;
   children?: React.ReactNode;
 }) {
-  const entry = GLOSSARY[id];
+  const t = useTranslations("glossary");
   const [open, setOpen] = useState(false);
   const tipId = useId();
 
-  if (!entry) return <>{children}</>;
+  // Unknown id → render the children (or nothing) without a tooltip.
+  if (!t.has(`${id}.term`)) return <>{children}</>;
+
+  const term = t(`${id}.term`);
+  const short = t(`${id}.short`);
 
   return (
     <span className="relative inline-block">
@@ -38,7 +43,7 @@ export default function Term({
         onClick={() => setOpen((v) => !v)}
         className="cursor-help border-b border-dotted border-accent-400/60 text-inherit underline-offset-2 hover:border-accent-300 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-400/50 rounded-[2px]"
       >
-        {children ?? entry.term}
+        {children ?? term}
       </button>
       <span
         id={tipId}
@@ -48,8 +53,8 @@ export default function Term({
         }`}
         style={{ visibility: open ? "visible" : "hidden" }}
       >
-        <span className="mb-1 block font-semibold text-white">{entry.term}</span>
-        {entry.short}
+        <span className="mb-1 block font-semibold text-white">{term}</span>
+        {short}
       </span>
     </span>
   );

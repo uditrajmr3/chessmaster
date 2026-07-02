@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Mail } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
@@ -33,6 +34,7 @@ function matches(routes: string[], pathname: string): boolean {
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const t = useTranslations("auth");
   const router = useRouter();
   const pathname = usePathname();
 
@@ -98,18 +100,19 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             <Mail className="h-5 w-5 text-accent-300" strokeWidth={1.75} />
           </span>
           <h2 className="mb-2 text-xl font-semibold text-white">
-            Verify your email
+            {t("verifyEmailTitle")}
           </h2>
           <p className="mb-6 text-sm text-white/55">
-            Check your inbox and confirm{" "}
-            <span className="text-white/80">{user.email}</span> to unlock
-            ChessInt.
+            {t.rich("verifyGateBody", {
+              email: user.email,
+              em: (chunks) => <span className="text-white/80">{chunks}</span>,
+            })}
           </p>
           <button
             onClick={() => api.requestVerify(user.email)}
             className="rounded-lg bg-accent-500 px-5 py-2.5 text-sm font-semibold text-[#1a120c] hover:bg-accent-400 btn-press"
           >
-            Resend verification email
+            {t("resendVerification")}
           </button>
         </div>
       </div>

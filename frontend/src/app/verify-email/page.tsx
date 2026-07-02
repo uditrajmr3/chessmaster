@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import {
   AuthShell,
@@ -16,6 +17,7 @@ import {
 type State = "idle" | "loading" | "success" | "error" | "no-token" | "resent";
 
 function VerifyEmailContent() {
+  const t = useTranslations("auth");
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -45,7 +47,7 @@ function VerifyEmailContent() {
       setState("resent");
     } catch (err) {
       setResendError(
-        err instanceof Error ? err.message : "Failed to send. Please try again."
+        err instanceof Error ? err.message : t("resendFailed")
       );
     } finally {
       setResending(false);
@@ -53,14 +55,18 @@ function VerifyEmailContent() {
   }
 
   if (state === "loading") {
-    return <p className="text-white/50 text-sm text-center py-2">Verifying your email…</p>;
+    return <p className="text-white/50 text-sm text-center py-2">{t("verifying")}</p>;
   }
 
   if (state === "success") {
     return (
       <AuthNotice>
-        <p className="font-semibold mb-1 text-accent-100">Email verified</p>
-        <p>You can now <AuthLink href="/login">sign in</AuthLink>.</p>
+        <p className="font-semibold mb-1 text-accent-100">{t("emailVerifiedTitle")}</p>
+        <p>
+          {t.rich("emailVerifiedBody", {
+            link: (chunks) => <AuthLink href="/login">{chunks}</AuthLink>,
+          })}
+        </p>
       </AuthNotice>
     );
   }
@@ -68,23 +74,23 @@ function VerifyEmailContent() {
   if (state === "no-token") {
     return (
       <p className="text-white/55 text-sm text-center py-2">
-        Check your inbox for a verification link.
+        {t("checkInbox")}
       </p>
     );
   }
 
   if (state === "resent") {
-    return <AuthNotice>Verification email sent. Check your inbox.</AuthNotice>;
+    return <AuthNotice>{t("verifyResent")}</AuthNotice>;
   }
 
   // state === "error"
   return (
     <div className="space-y-5">
-      <AuthError>The verification link is invalid or has expired.</AuthError>
+      <AuthError>{t("linkInvalidExpired")}</AuthError>
       <form onSubmit={handleResend} noValidate className="space-y-4">
         <div>
           <label htmlFor="resend-email" className={authLabelClass}>
-            Resend to email address
+            {t("resendToEmail")}
           </label>
           <input
             id="resend-email"
@@ -93,13 +99,13 @@ function VerifyEmailContent() {
             required
             value={resendEmail}
             onChange={(e) => setResendEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholderRegister")}
             className={authInputClass}
           />
         </div>
         {resendError && <AuthError>{resendError}</AuthError>}
         <AuthButton type="submit" disabled={resending}>
-          {resending ? "Sending…" : "Resend verification email"}
+          {resending ? t("sending") : t("resendVerification")}
         </AuthButton>
       </form>
     </div>
@@ -107,12 +113,13 @@ function VerifyEmailContent() {
 }
 
 export default function VerifyEmailPage() {
+  const t = useTranslations("auth");
   return (
     <AuthShell
-      title="Verify your email"
-      footer={<AuthLink href="/login">Back to sign in</AuthLink>}
+      title={t("verifyEmailTitle")}
+      footer={<AuthLink href="/login">{t("backToSignIn")}</AuthLink>}
     >
-      <Suspense fallback={<p className="text-white/50 text-sm text-center">Loading…</p>}>
+      <Suspense fallback={<p className="text-white/50 text-sm text-center">{t("loading")}</p>}>
         <VerifyEmailContent />
       </Suspense>
     </AuthShell>

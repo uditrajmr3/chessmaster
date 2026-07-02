@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import {
   AuthShell,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/auth-shell";
 
 function ResetPasswordContent() {
+  const t = useTranslations("auth");
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -26,8 +28,9 @@ function ResetPasswordContent() {
   if (!token) {
     return (
       <AuthError>
-        Invalid or missing reset link. Request a new one from the{" "}
-        <AuthLink href="/forgot-password">forgot password</AuthLink> page.
+        {t.rich("resetInvalidLink", {
+          link: (chunks) => <AuthLink href="/forgot-password">{chunks}</AuthLink>,
+        })}
       </AuthError>
     );
   }
@@ -35,10 +38,11 @@ function ResetPasswordContent() {
   if (success) {
     return (
       <AuthNotice>
-        <p className="font-semibold mb-1 text-accent-100">Password reset</p>
+        <p className="font-semibold mb-1 text-accent-100">{t("passwordResetTitle")}</p>
         <p>
-          You can now <AuthLink href="/login">sign in</AuthLink> with your new
-          password.
+          {t.rich("passwordResetBody", {
+            link: (chunks) => <AuthLink href="/login">{chunks}</AuthLink>,
+          })}
         </p>
       </AuthNotice>
     );
@@ -49,11 +53,11 @@ function ResetPasswordContent() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("passwordsNoMatch"));
       return;
     }
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      setError(t("passwordTooShort"));
       return;
     }
 
@@ -63,9 +67,7 @@ function ResetPasswordContent() {
       setSuccess(true);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "The reset link is expired or invalid. Please request a new one."
+        err instanceof Error ? err.message : t("resetLinkExpired")
       );
     } finally {
       setSubmitting(false);
@@ -75,7 +77,7 @@ function ResetPasswordContent() {
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       <div>
-        <label htmlFor="password" className={authLabelClass}>New password</label>
+        <label htmlFor="password" className={authLabelClass}>{t("newPassword")}</label>
         <input
           id="password"
           type="password"
@@ -83,12 +85,12 @@ function ResetPasswordContent() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="At least 8 characters"
+          placeholder={t("passwordPlaceholderRegister")}
           className={authInputClass}
         />
       </div>
       <div>
-        <label htmlFor="confirm-password" className={authLabelClass}>Confirm new password</label>
+        <label htmlFor="confirm-password" className={authLabelClass}>{t("confirmNewPassword")}</label>
         <input
           id="confirm-password"
           type="password"
@@ -96,7 +98,7 @@ function ResetPasswordContent() {
           required
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Re-enter your password"
+          placeholder={t("confirmPasswordPlaceholder")}
           className={authInputClass}
         />
       </div>
@@ -104,19 +106,20 @@ function ResetPasswordContent() {
       {error && <AuthError>{error}</AuthError>}
 
       <AuthButton type="submit" disabled={submitting}>
-        {submitting ? "Resetting…" : "Reset password"}
+        {submitting ? t("resetting") : t("resetPassword")}
       </AuthButton>
     </form>
   );
 }
 
 export default function ResetPasswordPage() {
+  const t = useTranslations("auth");
   return (
     <AuthShell
-      title="Reset your password"
-      footer={<AuthLink href="/login">Back to sign in</AuthLink>}
+      title={t("resetTitle")}
+      footer={<AuthLink href="/login">{t("backToSignIn")}</AuthLink>}
     >
-      <Suspense fallback={<p className="text-white/50 text-sm text-center">Loading…</p>}>
+      <Suspense fallback={<p className="text-white/50 text-sm text-center">{t("loading")}</p>}>
         <ResetPasswordContent />
       </Suspense>
     </AuthShell>

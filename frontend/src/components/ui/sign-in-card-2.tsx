@@ -10,6 +10,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { Mail, Lock, Eye, EyeClosed, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 
 import { cn } from "@/lib/utils";
@@ -32,6 +33,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
 export function Component() {
   const router = useRouter();
   const { login } = useAuth();
+  const t = useTranslations("auth");
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -70,9 +72,7 @@ export function Component() {
       router.push("/");
     } catch (err) {
       setError(
-        err instanceof AuthError
-          ? "Invalid email or password"
-          : "Something went wrong. Please try again."
+        err instanceof AuthError ? t("invalidCredentials") : t("genericError")
       );
       setIsLoading(false);
     }
@@ -194,7 +194,7 @@ export function Component() {
                   transition={{ delay: 0.25 }}
                   className="text-white/55 text-[0.8rem]"
                 >
-                  Sign in to study your game
+                  {t("signInSubtitle")}
                 </motion.p>
               </div>
 
@@ -211,8 +211,8 @@ export function Component() {
                       type="email"
                       autoComplete="email"
                       required
-                      aria-label="Email address"
-                      placeholder="Email address"
+                      aria-label={t("email")}
+                      placeholder={t("email")}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       onFocus={() => setFocusedInput("email")}
@@ -234,8 +234,8 @@ export function Component() {
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       required
-                      aria-label="Password"
-                      placeholder="Password"
+                      aria-label={t("password")}
+                      placeholder={t("password")}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       onFocus={() => setFocusedInput("password")}
@@ -245,7 +245,7 @@ export function Component() {
                     <button
                       type="button"
                       onClick={() => setShowPassword((s) => !s)}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={showPassword ? t("hidePassword") : t("showPassword")}
                       className="absolute right-3 text-white/40 hover:text-white transition-colors duration-300"
                     >
                       {showPassword ? <Eye className="w-4 h-4" /> : <EyeClosed className="w-4 h-4" />}
@@ -288,14 +288,14 @@ export function Component() {
                         </svg>
                       )}
                     </span>
-                    <span className="text-xs text-white/55">Remember me</span>
+                    <span className="text-xs text-white/55">{t("rememberMe")}</span>
                   </label>
 
                   <Link
                     href="/forgot-password"
                     className="text-xs text-white/55 hover:text-accent-300 transition-colors duration-200"
                   >
-                    Forgot password?
+                    {t("forgotPassword")}
                   </Link>
                 </div>
 
@@ -316,7 +316,7 @@ export function Component() {
                         </motion.span>
                       ) : (
                         <motion.span key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5 text-sm">
-                          Sign in
+                          {t("signIn")}
                           <ArrowRight className="w-4 h-4 group-hover/button:translate-x-0.5 transition-transform duration-300" />
                         </motion.span>
                       )}
@@ -326,9 +326,9 @@ export function Component() {
 
                 {/* Sign up */}
                 <p className="text-center text-xs text-white/55 pt-1">
-                  New to ChessInt?{" "}
+                  {t("newToChessInt")}{" "}
                   <Link href="/register" className="relative inline-block group/su font-medium text-white">
-                    <span className="group-hover/su:text-accent-300 transition-colors duration-300">Create an account</span>
+                    <span className="group-hover/su:text-accent-300 transition-colors duration-300">{t("createAnAccount")}</span>
                     <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-accent-400 group-hover/su:w-full transition-all duration-300" />
                   </Link>
                 </p>

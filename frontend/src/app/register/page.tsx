@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import {
   AuthShell,
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/auth-shell";
 
 export default function RegisterPage() {
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,11 +27,11 @@ export default function RegisterPage() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("passwordsNoMatch"));
       return;
     }
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      setError(t("passwordTooShort"));
       return;
     }
 
@@ -43,9 +45,9 @@ export default function RegisterPage() {
         message.toLowerCase().includes("already exists") ||
         message.toUpperCase().includes("UNIQUE")
       ) {
-        setError("An account with that email already exists.");
+        setError(t("emailExists"));
       } else {
-        setError(message || "Registration failed. Please try again.");
+        setError(message || t("registrationFailed"));
       }
     } finally {
       setSubmitting(false);
@@ -55,13 +57,13 @@ export default function RegisterPage() {
   if (success) {
     return (
       <AuthShell
-        title="Account created"
-        subtitle="One more step before you can start."
-        footer={<>Already verified? <AuthLink href="/login">Sign in</AuthLink></>}
+        title={t("accountCreatedTitle")}
+        subtitle={t("accountCreatedSubtitle")}
+        footer={<>{t("alreadyVerified")} <AuthLink href="/login">{t("signIn")}</AuthLink></>}
       >
         <AuthNotice>
-          <p className="font-semibold mb-1 text-accent-100">Check your email</p>
-          <p>We sent a verification link to confirm your email address.</p>
+          <p className="font-semibold mb-1 text-accent-100">{t("checkEmailTitle")}</p>
+          <p>{t("checkEmailBody")}</p>
         </AuthNotice>
       </AuthShell>
     );
@@ -69,13 +71,13 @@ export default function RegisterPage() {
 
   return (
     <AuthShell
-      title="Create your account"
-      subtitle="Sync your games and start finding your patterns."
-      footer={<>Already have an account? <AuthLink href="/login">Sign in</AuthLink></>}
+      title={t("createAccountTitle")}
+      subtitle={t("createAccountSubtitle")}
+      footer={<>{t("alreadyHaveAccount")} <AuthLink href="/login">{t("signIn")}</AuthLink></>}
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <div>
-          <label htmlFor="email" className={authLabelClass}>Email address</label>
+          <label htmlFor="email" className={authLabelClass}>{t("email")}</label>
           <input
             id="email"
             type="email"
@@ -83,13 +85,13 @@ export default function RegisterPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholderRegister")}
             className={authInputClass}
           />
         </div>
 
         <div>
-          <label htmlFor="password" className={authLabelClass}>Password</label>
+          <label htmlFor="password" className={authLabelClass}>{t("password")}</label>
           <input
             id="password"
             type="password"
@@ -97,13 +99,13 @@ export default function RegisterPage() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="At least 8 characters"
+            placeholder={t("passwordPlaceholderRegister")}
             className={authInputClass}
           />
         </div>
 
         <div>
-          <label htmlFor="confirm-password" className={authLabelClass}>Confirm password</label>
+          <label htmlFor="confirm-password" className={authLabelClass}>{t("confirmPassword")}</label>
           <input
             id="confirm-password"
             type="password"
@@ -111,7 +113,7 @@ export default function RegisterPage() {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Re-enter your password"
+            placeholder={t("confirmPasswordPlaceholder")}
             className={authInputClass}
           />
         </div>
@@ -119,7 +121,7 @@ export default function RegisterPage() {
         {error && <AuthError>{error}</AuthError>}
 
         <AuthButton type="submit" disabled={submitting}>
-          {submitting ? "Creating account…" : "Create account"}
+          {submitting ? t("creatingAccount") : t("createAccount")}
         </AuthButton>
       </form>
     </AuthShell>

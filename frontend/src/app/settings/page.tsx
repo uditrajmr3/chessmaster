@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import { Settings } from "lucide-react";
 
 export default function SettingsPage() {
   const { user, refresh } = useAuth();
+  const t = useTranslations("settings");
 
   const [lichessUsername, setLichessUsername] = useState("");
   const [chesscomUsername, setChesscomUsername] = useState("");
@@ -34,7 +36,7 @@ export default function SettingsPage() {
       await refresh();
       setSaved(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save settings");
+      setError(err instanceof Error ? err.message : t("saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -44,24 +46,24 @@ export default function SettingsPage() {
     <div className="max-w-xl mx-auto py-8">
       <div className="flex items-center gap-3 mb-8">
         <Settings className="w-6 h-6 text-accent-400" />
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
+        <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
       </div>
 
       <div className="surface-card p-6 space-y-6">
         {/* Email (read-only) */}
         <div>
           <label className="block text-sm font-medium text-gray-400 mb-1.5">
-            Email address
+            {t("emailLabel")}
           </label>
           <input
             type="email"
             value={user?.email ?? ""}
             readOnly
             className="w-full px-3 py-2 bg-white/[0.04] border border-gray-700/60 rounded-lg text-gray-300 text-sm cursor-not-allowed focus:outline-none"
-            aria-label="Email address"
+            aria-label={t("emailLabel")}
           />
           <p className="text-xs text-gray-500 mt-1">
-            Your account email cannot be changed.
+            {t("emailHint")}
           </p>
         </div>
 
@@ -71,14 +73,14 @@ export default function SettingsPage() {
             htmlFor="lichess-username"
             className="block text-sm font-medium text-gray-300 mb-1.5"
           >
-            Lichess username
+            {t("lichessLabel")}
           </label>
           <input
             id="lichess-username"
             type="text"
             value={lichessUsername}
             onChange={(e) => setLichessUsername(e.target.value)}
-            placeholder="e.g. DrNykterstein"
+            placeholder={t("lichessPlaceholder")}
             className="w-full px-3 py-2 bg-white/[0.04] border border-gray-700/60 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-accent-500 transition-colors"
           />
         </div>
@@ -89,14 +91,14 @@ export default function SettingsPage() {
             htmlFor="chesscom-username"
             className="block text-sm font-medium text-gray-300 mb-1.5"
           >
-            Chess.com username
+            {t("chesscomLabel")}
           </label>
           <input
             id="chesscom-username"
             type="text"
             value={chesscomUsername}
             onChange={(e) => setChesscomUsername(e.target.value)}
-            placeholder="e.g. Hikaru"
+            placeholder={t("chesscomPlaceholder")}
             className="w-full px-3 py-2 bg-white/[0.04] border border-gray-700/60 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-accent-500 transition-colors"
           />
         </div>
@@ -109,7 +111,7 @@ export default function SettingsPage() {
         )}
         {saved && (
           <p role="status" className="text-sm text-green-400">
-            Settings saved successfully.
+            {t("saved")}
           </p>
         )}
 
@@ -119,7 +121,7 @@ export default function SettingsPage() {
           disabled={saving}
           className="w-full px-4 py-2.5 bg-accent-600 hover:bg-accent-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors btn-press"
         >
-          {saving ? "Saving…" : "Save settings"}
+          {saving ? t("saving") : t("save")}
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Crown, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -21,6 +22,7 @@ export default function Home() {
 }
 
 function Dashboard() {
+  const t = useTranslations("dashboard");
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,28 +55,28 @@ function Dashboard() {
     <div className="space-y-8">
       {/* Zone 3 — Page Header (blueprint: title left-aligned, no animation on titles) */}
       <div>
-        <h2 className="text-3xl font-bold mb-1">Dashboard</h2>
-        <p className="text-gray-400 text-sm">Your chess performance overview</p>
+        <h2 className="text-3xl font-bold mb-1">{t("title")}</h2>
+        <p className="text-gray-400 text-sm">{t("subtitle")}</p>
       </div>
 
       {/* Zone 4 — Metric Strip (blueprint: 3-4 KPI cards max, leftmost = most important) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
-        <StatCard label="Total Games" value={stats.total_games} />
-        <StatCard label="Win Rate" value={`${winRate}%`} color="text-green-400" />
+        <StatCard label={t("totalGames")} value={stats.total_games} />
+        <StatCard label={t("winRate")} value={`${winRate}%`} color="text-green-400" />
         <StatCard
-          label="W / L / D"
+          label={t("wld")}
           value={`${stats.wins} / ${stats.losses} / ${stats.draws}`}
         />
         <StatCard
-          label="Avg Accuracy"
-          value={stats.avg_accuracy ? `${stats.avg_accuracy.toFixed(1)}%` : "N/A"}
+          label={t("avgAccuracy")}
+          value={stats.avg_accuracy ? `${stats.avg_accuracy.toFixed(1)}%` : t("na")}
         />
       </div>
 
       {/* Zone 5 — Primary Content: Rating Chart (blueprint: one primary viz) */}
       {stats.rating_history.length > 0 && (
         <div className="surface-card p-6 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">Rating Over Time</h3>
+          <h3 className="text-xl font-semibold mb-4">{t("ratingOverTime")}</h3>
           <RatingChart data={stats.rating_history} />
         </div>
       )}
@@ -84,8 +86,8 @@ function Dashboard() {
         {/* FIDE Rating Estimates */}
         {stats.rating_estimates.length > 0 && (
           <div className="surface-card p-6 animate-fade-in-up">
-            <h3 className="text-xl font-semibold mb-1">Estimated FIDE Rating</h3>
-            <p className="text-gray-500 text-xs mb-4">Approximate conversion based on community data</p>
+            <h3 className="text-xl font-semibold mb-1">{t("estFideTitle")}</h3>
+            <p className="text-gray-500 text-xs mb-4">{t("estFideSubtitle")}</p>
             <div className="grid grid-cols-2 gap-3">
               {stats.rating_estimates.map((est) => (
                 <div
@@ -108,21 +110,21 @@ function Dashboard() {
 
         {/* Results breakdown */}
         <div className="surface-card p-6 animate-fade-in-up">
-          <h3 className="text-xl font-semibold mb-4">Results</h3>
+          <h3 className="text-xl font-semibold mb-4">{t("results")}</h3>
           <div className="flex gap-4">
-            <ResultBar label="Win" value={stats.wins} total={stats.total_games} color="bg-green-500" />
-            <ResultBar label="Loss" value={stats.losses} total={stats.total_games} color="bg-red-500" />
-            <ResultBar label="Draw" value={stats.draws} total={stats.total_games} color="bg-yellow-500" />
+            <ResultBar label={t("win")} value={stats.wins} total={stats.total_games} color="bg-green-500" />
+            <ResultBar label={t("loss")} value={stats.losses} total={stats.total_games} color="bg-red-500" />
+            <ResultBar label={t("draw")} value={stats.draws} total={stats.total_games} color="bg-yellow-500" />
           </div>
 
           {/* Platform counts */}
           <div className="mt-6 pt-4 border-t border-gray-700/50">
-            <h4 className="text-sm text-gray-400 font-medium mb-3">Platforms</h4>
+            <h4 className="text-sm text-gray-400 font-medium mb-3">{t("platforms")}</h4>
             <div className="space-y-2">
               {Object.entries(stats.platforms).map(([platform, count]) => (
                 <div key={platform} className="flex items-center justify-between">
                   <span className="text-gray-300 capitalize font-medium text-sm">{platform}</span>
-                  <span className="text-white font-mono text-sm">{count} games</span>
+                  <span className="text-white font-mono text-sm">{t("gamesCount", { count })}</span>
                 </div>
               ))}
             </div>
@@ -139,6 +141,7 @@ function Dashboard() {
  * ONE button action
  */
 function EmptyState() {
+  const t = useTranslations("dashboard");
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] gap-6 animate-fade-in-up">
       {/* Element 1: Illustration/Icon — contextual, warm */}
@@ -148,10 +151,9 @@ function EmptyState() {
 
       {/* Element 2: Explanation — headline + subline, helpful not apologetic */}
       <div className="text-center space-y-3">
-        <h2 className="font-display text-3xl font-semibold">Your games live here</h2>
+        <h2 className="font-display text-3xl font-semibold">{t("emptyTitle")}</h2>
         <p className="text-gray-400 text-center max-w-md leading-relaxed">
-          Sync your Chess.com and Lichess games, then analyze them to
-          discover your recurring patterns and get personalized coaching.
+          {t("emptyBody")}
         </p>
       </div>
 
@@ -159,17 +161,17 @@ function EmptyState() {
       <div className="flex items-center gap-3 mt-2 text-sm text-gray-500">
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-accent-500 opacity-60" />
-          Sync
+          {t("stepSync")}
         </span>
         <ArrowRight className="w-3.5 h-3.5 text-gray-700" />
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-accent-500 opacity-80" />
-          Analyze
+          {t("stepAnalyze")}
         </span>
         <ArrowRight className="w-3.5 h-3.5 text-gray-700" />
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-accent-500" />
-          Improve
+          {t("stepImprove")}
         </span>
       </div>
     </div>

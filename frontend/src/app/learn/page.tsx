@@ -52,6 +52,7 @@ export default async function LearnPage() {
     { href: "/learn/glossary", title: t("glossaryCardTitle"), body: t("glossaryCardBody") },
   ];
   const improve = [
+    { href: "/learn/capablanca", title: t("capablancaTitle"), body: t("capablancaBody") },
     { href: "/learn/improve-middlegame", title: t("middlegameTitle"), body: t("middlegameBody") },
     { href: "/learn/improve-endgame", title: t("endgameTitle"), body: t("endgameBody") },
   ];

@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState, useEffect, useRef, type ElementType } from "react";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { runAnalysis } from "@/lib/analyze";
@@ -37,58 +39,59 @@ import {
   Lightbulb,
 } from "lucide-react";
 
-type NavItem = { href: string; label: string; icon: ElementType };
+type NavItem = { href: string; labelKey: string; icon: ElementType };
 
 type NavSection = {
   key: string;
-  label: string;
+  labelKey: string;
   icon: ElementType;
   items: NavItem[];
 };
 
+// labelKey values are looked up in the "nav" message namespace at render time.
 const navSections: NavSection[] = [
   {
     key: "overview",
-    label: "Overview",
+    labelKey: "overview",
     icon: Gauge,
     items: [
-      { href: "/", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/games", label: "Games", icon: Swords },
+      { href: "/", labelKey: "dashboard", icon: LayoutDashboard },
+      { href: "/games", labelKey: "games", icon: Swords },
     ],
   },
   {
     key: "training",
-    label: "Training",
+    labelKey: "training",
     icon: GraduationCap,
     items: [
-      { href: "/learn", label: "Learn Chess", icon: Lightbulb },
-      { href: "/puzzles", label: "Puzzles", icon: Puzzle },
-      { href: "/openings", label: "Openings", icon: BookOpen },
-      { href: "/weaknesses", label: "Weaknesses", icon: Target },
-      { href: "/endgame", label: "Endgame Drills", icon: Trophy },
+      { href: "/learn", labelKey: "learnChess", icon: Lightbulb },
+      { href: "/puzzles", labelKey: "puzzles", icon: Puzzle },
+      { href: "/openings", labelKey: "openings", icon: BookOpen },
+      { href: "/weaknesses", labelKey: "weaknesses", icon: Target },
+      { href: "/endgame", labelKey: "endgameDrills", icon: Trophy },
     ],
   },
   {
     key: "analysis",
-    label: "Analysis",
+    labelKey: "analysis",
     icon: BarChart3,
     items: [
-      { href: "/time-management", label: "Time Management", icon: Timer },
-      { href: "/tilt", label: "Tilt Detector", icon: Flame },
-      { href: "/rating-predictor", label: "Rating Predictor", icon: TrendingUp },
-      { href: "/peer-comparison", label: "Peer Comparison", icon: Users },
+      { href: "/time-management", labelKey: "timeManagement", icon: Timer },
+      { href: "/tilt", labelKey: "tilt", icon: Flame },
+      { href: "/rating-predictor", labelKey: "ratingPredictor", icon: TrendingUp },
+      { href: "/peer-comparison", labelKey: "peerComparison", icon: Users },
     ],
   },
   {
     key: "tools",
-    label: "Tools",
+    labelKey: "tools",
     icon: Wrench,
     items: [
-      { href: "/digest", label: "Weekly Digest", icon: Mail },
-      { href: "/scouting", label: "Opponent Scout", icon: UserSearch },
-      { href: "/import", label: "Import PGN", icon: Upload },
-      { href: "/export", label: "Export Data", icon: Download },
-      { href: "/report", label: "AI Coach", icon: BotMessageSquare },
+      { href: "/digest", labelKey: "weeklyDigest", icon: Mail },
+      { href: "/scouting", labelKey: "opponentScout", icon: UserSearch },
+      { href: "/import", labelKey: "importPgn", icon: Upload },
+      { href: "/export", labelKey: "exportData", icon: Download },
+      { href: "/report", labelKey: "aiCoach", icon: BotMessageSquare },
     ],
   },
 ];
@@ -122,6 +125,7 @@ function AccordionSection({
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(0);
+  const t = useTranslations("nav");
 
   useEffect(() => {
     if (contentRef.current) {
@@ -148,7 +152,7 @@ function AccordionSection({
         <span className="flex items-center gap-2.5">
           <section.icon className="w-4 h-4" />
           <span className="font-medium tracking-wide text-xs uppercase">
-            {section.label}
+            {t(section.labelKey)}
           </span>
         </span>
         <ChevronDown
@@ -192,7 +196,7 @@ function AccordionSection({
                     isActive ? "" : "group-hover:scale-110"
                   }`}
                 />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
               </Link>
             );
           })}
@@ -204,6 +208,7 @@ function AccordionSection({
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const tCommon = useTranslations("common");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSection, setOpenSection] = useState(() =>
     findSectionForPath(pathname)
@@ -263,7 +268,7 @@ export default function Sidebar() {
             ChessInt
           </h1>
           <p className="text-[0.65rem] text-gray-500 mt-2.5 ml-0.5 tracking-wider uppercase font-medium">
-            Personal Chess Analyzer
+            {tCommon("appTagline")}
           </p>
         </div>
 
@@ -293,6 +298,7 @@ export default function Sidebar() {
 
 function SyncButton() {
   const { user } = useAuth();
+  const t = useTranslations("nav");
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [analysisDone, setAnalysisDone] = useState(0);
@@ -304,7 +310,7 @@ function SyncButton() {
 
   const handleSync = async () => {
     if (!hasLinkedAccount) {
-      setSyncError("Link an account in Settings first.");
+      setSyncError(t("linkAccountFirst"));
       return;
     }
     setSyncing(true);
@@ -325,22 +331,18 @@ function SyncButton() {
       <button
         onClick={handleSync}
         disabled={syncing || !hasLinkedAccount}
-        title={
-          !hasLinkedAccount
-            ? "Link a Lichess or Chess.com username in Settings first"
-            : undefined
-        }
+        title={!hasLinkedAccount ? t("linkAccountFirst") : undefined}
         className="w-full px-4 py-2.5 bg-accent-600 hover:bg-accent-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg btn-press"
       >
-        {syncing ? "Syncing..." : "Sync Games"}
+        {syncing ? t("syncing") : t("syncGames")}
       </button>
 
       {!hasLinkedAccount && (
         <p className="text-xs text-amber-400 text-center">
           <Link href="/settings" className="underline underline-offset-2 hover:text-amber-300">
-            Link an account
+            {t("linkAccountCta")}
           </Link>
-          {" "}in Settings to sync.
+          {t("linkAccountSuffix")}
         </p>
       )}
 
@@ -392,9 +394,9 @@ function SyncButton() {
       >
         {analyzing
           ? analysisTotal > 0
-            ? `Analyzing… ${analysisDone}/${analysisTotal}`
-            : "Starting…"
-          : "Analyze Games"}
+            ? t("analyzingProgress", { done: analysisDone, total: analysisTotal })
+            : t("starting")
+          : t("analyzeGames")}
       </button>
     </div>
   );
@@ -402,6 +404,7 @@ function SyncButton() {
 
 function UserFooter({ onNavigate }: { onNavigate: () => void }) {
   const { user, logout } = useAuth();
+  const t = useTranslations("common");
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -421,6 +424,11 @@ function UserFooter({ onNavigate }: { onNavigate: () => void }) {
         {user.email}
       </p>
 
+      {/* Language */}
+      <div className="px-2 py-1.5">
+        <LanguageSwitcher />
+      </div>
+
       {/* Settings link */}
       <Link
         href="/settings"
@@ -428,7 +436,7 @@ function UserFooter({ onNavigate }: { onNavigate: () => void }) {
         className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-sm text-gray-400 hover:text-gray-200 hover:bg-white/4 transition-colors"
       >
         <Settings className="w-4 h-4" />
-        <span>Settings</span>
+        <span>{t("settings")}</span>
       </Link>
 
       {/* Logout */}
@@ -438,7 +446,7 @@ function UserFooter({ onNavigate }: { onNavigate: () => void }) {
         className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/6 transition-colors"
       >
         <LogOut className="w-4 h-4" />
-        <span>Logout</span>
+        <span>{t("logout")}</span>
       </button>
     </div>
   );

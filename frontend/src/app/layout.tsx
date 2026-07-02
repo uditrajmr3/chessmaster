@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Fraunces } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import AuthGuard from "@/components/AuthGuard";
@@ -136,14 +138,15 @@ const jsonLd = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${dmSans.variable} ${jetbrainsMono.variable} ${fraunces.variable}`}
     >
       <body className="flex min-h-screen">
@@ -151,10 +154,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <AuthProvider>
-          <AuthGuard>{children}</AuthGuard>
-        </AuthProvider>
-        <footer className="fixed bottom-0 right-0 z-10 px-3 py-1">
+        <NextIntlClientProvider>
+          <AuthProvider>
+            <AuthGuard>{children}</AuthGuard>
+          </AuthProvider>
+          <footer className="fixed bottom-0 right-0 z-10 px-3 py-1">
           <p className="text-[10px] font-mono opacity-40 text-foreground">
             ChessInt — Chess Intelligence by{" "}
             <a href="https://uditraj.site" rel="author" className="underline-offset-2 hover:underline">
@@ -165,7 +169,8 @@ export default function RootLayout({
               Evil Eye
             </a>
           </p>
-        </footer>
+          </footer>
+        </NextIntlClientProvider>
         <Analytics />
       </body>
     </html>

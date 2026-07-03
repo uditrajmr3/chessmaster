@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
+import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import type { Example } from "@/lib/capablancaExamples";
 
@@ -14,8 +15,15 @@ const DOT = "radial-gradient(circle, rgba(20,30,40,0.5) 22%, transparent 24%)";
  * and the reader can walk forward and back through the idea. Every Example is
  * legality-checked in capablancaExamples.test.ts, so nothing broken renders.
  */
-export default function ReplayBoard({ example }: { example: Example }) {
-  const frames = useMemo(() => build(example), [example]);
+export default function ReplayBoard({ example, id }: { example: Example; id: string }) {
+  const t = useTranslations("exampleCaptions");
+  const getCaption = (key: string, fallback?: string) =>
+    t.has(`${id}.${key}`) ? t(`${id}.${key}`) : fallback;
+  const frames = useMemo(
+    () => build(example, getCaption),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [example, id, t]
+  );
   const [ply, setPly] = useState(0);
   const frame = frames[Math.min(ply, frames.length - 1)];
   const last = frames.length - 1;
@@ -81,17 +89,20 @@ type Frame = {
   dots?: string[];
 };
 
-function build(example: Example): Frame[] {
+function build(
+  example: Example,
+  getCaption: (key: string, fallback?: string) => string | undefined
+): Frame[] {
   const game = example.fen ? new Chess(example.fen) : new Chess();
   const frames: Frame[] = [
     {
       fen: game.fen(),
-      caption: example.startCaption,
+      caption: getCaption("start", example.startCaption),
       arrows: example.startArrows,
       dots: example.startDots,
     },
   ];
-  for (const step of example.steps) {
+  for (const [i, step] of example.steps.entries()) {
     let res;
     try {
       res = game.move(step.san);
@@ -101,7 +112,7 @@ function build(example: Example): Frame[] {
     if (!res) break;
     frames.push({
       fen: game.fen(),
-      caption: step.caption,
+      caption: getCaption(String(i), step.caption),
       moveLabel: res.san,
       lastMove: { from: res.from, to: res.to },
       arrows: step.arrows,

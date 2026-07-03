@@ -28,7 +28,7 @@ export default async function GameChapter() {
       </p>
 
       <div className="mt-6 surface-card p-4 sm:p-6">
-        <ReplayBoard example={EXAMPLES.game} />
+        <ReplayBoard example={EXAMPLES.game} id="game" />
       </div>
 
       <h2 className="font-display mt-12 text-2xl font-semibold text-white">{t("gameChNoticeTitle")}</h2>

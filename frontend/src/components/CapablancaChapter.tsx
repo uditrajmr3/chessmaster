@@ -42,7 +42,7 @@ export default function CapablancaChapter({
                 <h2 className="font-display text-2xl font-semibold text-white">{r.title}</h2>
               </div>
               <p className="mt-3 leading-relaxed text-gray-400">{r.body}</p>
-              {example && <ReplayBoard example={example} />}
+              {example && <ReplayBoard example={example} id={r.id} />}
             </section>
           );
         })}

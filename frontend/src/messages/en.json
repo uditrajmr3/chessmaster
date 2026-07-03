@@ -520,5 +520,87 @@
     "mgEyebrow": "The Capablanca method · Chapter 2",
     "egEyebrow": "The Capablanca method · Chapter 3",
     "gameEyebrow": "The Capablanca method · A complete game"
+  },
+  "exampleCaptions": {
+    "O-1": {
+      "start": "A London System — develop every piece before starting anything.",
+      "0": "Stake a claim in the centre.",
+      "2": "Knight toward the centre first.",
+      "4": "Open a path for the bishop.",
+      "6": "Every minor piece gets a job before any attack.",
+      "8": "Nbd2, not Nc3 — it keeps the c-pawn free and guards f3."
+    },
+    "O-2": {
+      "start": "Handling a pin calmly — no panic, no wasted time.",
+      "5": "Black pins the f3-knight against the queen.",
+      "6": "Bring up the other knight first (O-2).",
+      "8": "…then Be2 breaks the pin. Both moves developed a piece — no tempo lost."
+    },
+    "O-3": {
+      "start": "A developing move that also makes a threat.",
+      "4": "The Ruy López: Bb5 develops AND pressures the knight defending e5 (O-3).",
+      "6": "Keep the pressure — every move still develops."
+    },
+    "O-4": {
+      "start": "Castle as early as you reasonably can.",
+      "4": "The Italian — pieces flow out naturally.",
+      "6": "Castle now (O-4): the king is safe and the rook is connected."
+    },
+    "O-5": {
+      "start": "Don't move the same piece twice — spend every move developing a new one.",
+      "6": "Opening the last bishop's diagonal.",
+      "8": "Castled and nearly fully developed — no move wasted moving a piece twice (O-5)."
+    },
+    "M-1": {
+      "start": "The knight on d5 is a permanent outpost — no black pawn can ever chase it off. That is a maximally active piece (M-1)."
+    },
+    "M-2": {
+      "start": "Before your own plan, ask what your opponent just threatened (M-2).",
+      "6": "White threatens Nxf7 — a real threat that must be met at once.",
+      "7": "d5! Identify the threat and answer it before doing anything else.",
+      "9": "…and only now continue with your own plan, hitting the bishop."
+    },
+    "M-3": {
+      "start": "Black's knight has crashed into d3, deep in White's camp — it even checks the king. Deal with an intruder at once (M-3).",
+      "0": "cxd3 — the intruder is eliminated immediately. Don't let enemy pieces settle on your half."
+    },
+    "M-5": {
+      "start": "A protected passed c-pawn (defended by b4), with no black pawn able to stop it — a simple, powerful plan (M-5).",
+      "0": "c6! It rolls forward and Black's pieces must drop everything to watch it.",
+      "2": "c7 — one step from a new queen. The passed pawn has tied Black down completely."
+    },
+    "E-1": {
+      "start": "Queens are off — the king becomes a fighting piece. March it to the centre (E-1).",
+      "0": "Ke3 — heading for the middle.",
+      "2": "The king is centralised and active, worth about a minor piece here."
+    },
+    "E-2": {
+      "start": "Black's d4-pawn is isolated and weak — the primary endgame target (E-2).",
+      "0": "Rxd4 — win the weak pawn. Every pawn you collect is a step toward a new queen."
+    },
+    "E-3": {
+      "start": "The rook sits BEHIND its passed pawn (E-3) — it will grow stronger with every push.",
+      "0": "b4 — the pawn advances, the rook still behind it.",
+      "4": "The rook-and-pawn battery is almost impossible to stop."
+    },
+    "E-5": {
+      "start": "Black has weak pawns on both wings (a7 and h7). One can be defended — two cannot (E-5).",
+      "0": "Attack the a-pawn — Black must rush to defend it.",
+      "2": "Switch wings! Now the h-pawn is hanging. The king can't guard both.",
+      "4": "Back again — shuttling between two weaknesses until one falls."
+    },
+    "game": {
+      "start": "A quiet model game in Capablanca's style — every move develops or improves a piece.",
+      "2": "Develop toward the centre (O-1).",
+      "4": "The Italian — pieces flow out naturally.",
+      "6": "Castle early (O-4).",
+      "8": "Open the last bishop and support e4.",
+      "10": "Preparing the d4 break.",
+      "12": "The rook takes the e-file, freeing f1 for the knight.",
+      "14": "Nbd2 — heading for a better square (M-1).",
+      "16": "The knight reroutes via f1…",
+      "18": "…to g3, eyeing f5 — a far more active post.",
+      "20": "d4! With every piece improved, White finally takes the centre — the payoff of patient play."
+    }
   }
 }

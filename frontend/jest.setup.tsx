@@ -8,13 +8,17 @@ jest.mock("next-intl", () => {
   // Resolved through moduleNameMapper (@/ -> src/).
   const messages: Record<string, unknown> = require("@/messages/en.json");
 
-  const lookup = (ns: string | undefined, key: string): string | undefined => {
+  const lookupRaw = (ns: string | undefined, key: string): unknown => {
     const root = (ns ? (messages as Record<string, unknown>)[ns] : messages) as
       | Record<string, unknown>
       | undefined;
-    const val = key
+    return key
       .split(".")
       .reduce<unknown>((o, k) => (o == null ? undefined : (o as Record<string, unknown>)[k]), root);
+  };
+
+  const lookup = (ns: string | undefined, key: string): string | undefined => {
+    const val = lookupRaw(ns, key);
     return typeof val === "string" ? val : undefined;
   };
 
@@ -27,7 +31,8 @@ jest.mock("next-intl", () => {
       }
       return s;
     };
-    t.has = (key: string) => lookup(ns, key) != null;
+    t.has = (key: string) => lookupRaw(ns, key) != null;
+    t.raw = (key: string) => lookupRaw(ns, key);
     t.rich = (key: string, tags: Record<string, unknown> = {}) => {
       let s = lookup(ns, key) ?? key;
       // Plain value substitutions ({name}).
@@ -54,6 +59,8 @@ jest.mock("next-intl", () => {
     return t;
   };
 
+  (globalThis as unknown as { __makeT: typeof makeT }).__makeT = makeT;
+
   return {
     __esModule: true,
     useTranslations: (ns?: string) => makeT(ns),
@@ -61,3 +68,10 @@ jest.mock("next-intl", () => {
     NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => children,
   };
 });
+
+jest.mock("next-intl/server", () => ({
+  __esModule: true,
+  getTranslations: async (ns?: string) =>
+    (globalThis as unknown as { __makeT: (ns?: string) => unknown }).__makeT(ns),
+  getLocale: async () => "en",
+}));

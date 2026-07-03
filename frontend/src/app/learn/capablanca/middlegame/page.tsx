@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import CapablancaChapter from "@/components/CapablancaChapter";
 import { MIDDLEGAME_RULES } from "@/lib/capablanca";
 
@@ -10,25 +11,27 @@ export const metadata: Metadata = {
   keywords: ["chess middlegame strategy", "positional chess principles", "capablanca middlegame"],
 };
 
-export default function MiddlegameChapter() {
+export default async function MiddlegameChapter() {
+  const t = await getTranslations("capablanca");
+  const rules = MIDDLEGAME_RULES.map((r) => ({
+    id: r.id,
+    title: t(`rules.${r.id}.title`),
+    short: t(`rules.${r.id}.short`),
+    body: t(`rules.${r.id}.body`),
+  }));
+
   return (
     <CapablancaChapter
-      eyebrow="The Capablanca method · Chapter 2"
-      title="The middlegame"
-      intro="This is where Capablanca's method shone: keep improving your pieces until the position is overwhelming, and let tactics appear on their own. Work through the ideas below."
-      rules={MIDDLEGAME_RULES}
+      eyebrow={t("mgEyebrow")}
+      title={t("mgChTitle")}
+      intro={t("mgChIntro")}
+      rules={rules}
       checklist={{
-        title: "Middlegame decision tree — work through it in order",
-        items: [
-          "Is there a concrete threat? If yes — address it first.",
-          "Is any piece passive? If yes — improve it before anything else.",
-          "Any opponent pieces on your half? If yes — neutralise them.",
-          "Can you attack a weak pawn, or create and advance a passed pawn?",
-          "If none of the above — improve your best-placed piece and repeat next move.",
-        ],
+        title: t("middlegameChecklistTitle"),
+        items: t.raw("middlegameChecklist") as string[],
       }}
-      prev={{ href: "/learn/capablanca/opening", label: "The opening" }}
-      next={{ href: "/learn/capablanca/endgame", label: "The endgame" }}
+      prev={{ href: "/learn/capablanca/opening", label: t("ch1Title") }}
+      next={{ href: "/learn/capablanca/endgame", label: t("toEndgame") }}
     />
   );
 }

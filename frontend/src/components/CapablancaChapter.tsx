@@ -63,13 +63,9 @@ export default function CapablancaChapter({
       )}
 
       <div className="mt-16 flex items-center justify-between border-t border-ink-600 pt-8 text-sm">
-        {prev ? (
+        {prev && (
           <Link href={prev.href} className="text-accent-300 hover:text-accent-200">
             ← {prev.label}
-          </Link>
-        ) : (
-          <Link href="/learn/capablanca" className="text-accent-300 hover:text-accent-200">
-            ← Overview
           </Link>
         )}
         {next && (

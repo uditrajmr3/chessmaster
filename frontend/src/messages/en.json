@@ -289,5 +289,236 @@
     "glossaryTitle": "Chess & analysis glossary",
     "glossaryIntro": "Every term ChessInt uses, explained in plain English. If a word in your report or game review ever stops you, it is defined here.",
     "backToAllGuides": "Back to <link>all guides</link>."
+  },
+  "capablanca": {
+    "eyebrow": "Strategy · The Capablanca method",
+    "title": "Play like Capablanca",
+    "intro": "José Raúl Capablanca won by <b>radical simplicity</b>. He avoided opening theory, disliked long calculation, and almost never blundered. His secret was a small set of positional rules, applied consistently — build a position where all your pieces are active and your opponent's are passive, and the tactics appear on their own. Here is that whole system, for improving players.",
+    "chaptersHeading": "Work through it, with interactive boards",
+    "chaptersIntro": "Each phase is a chapter you can step through move by move on a live board.",
+    "ch1Title": "The opening",
+    "ch2Title": "The middlegame",
+    "ch3Title": "The endgame",
+    "ch4Title": "A complete game",
+    "chFiveRules": "Five rules, each on a live board.",
+    "ch4Desc": "The whole method in one steppable model game.",
+    "quickRefTitle": "Quick reference on this page",
+    "quickRefLoop": "The three-question loop",
+    "quickRefOpening": "Opening rules",
+    "quickRefMiddlegame": "Middlegame rules",
+    "quickRefEndgame": "Endgame rules",
+    "quickRefMindset": "The mindset",
+    "quickRefGame": "A complete game",
+    "loopHeading": "The three-question loop",
+    "loopIntro": "This is the habit that drives everything. Before <em>every</em> move, in any phase, ask these three questions in order:",
+    "q1": {
+      "q": "What did my opponent just threaten?",
+      "hint": "If the threat is real, deal with it before anything else. Most games are lost by the player who stops asking this."
+    },
+    "q2": {
+      "q": "Which of my pieces is the least active?",
+      "hint": "If a piece is doing nothing — undeveloped, or stuck with no squares — improving it is usually your best move."
+    },
+    "q3": {
+      "q": "Are any enemy pieces or pawns on my half of the board?",
+      "hint": "An intruder in your camp is dangerous. Trade it, chase it back, or blockade it before it settles in."
+    },
+    "openingHeading": "Opening rules",
+    "openingIntro": "Capablanca didn't memorise openings — he followed five principles and trusted his understanding for the rest.",
+    "middlegameHeading": "Middlegame rules",
+    "middlegameIntro": "The middlegame is where his method shone: keep improving your pieces until the position becomes overwhelming, and let tactics follow.",
+    "endgameHeading": "Endgame rules",
+    "endgameIntro": "Endgames are simpler than they look: win a weak pawn and promote one of your own. Five rules do most of the work.",
+    "rules": {
+      "O-1": {
+        "title": "Develop every piece before you attack",
+        "short": "Give every piece a job before starting a plan.",
+        "body": "An attack launched with half your army still on the back rank fizzles out — and those sleeping pieces can't defend either. Give every piece a job first. A knight on f3 is working; a knight still on g1 is not."
+      },
+      "O-2": {
+        "title": "Break pins calmly",
+        "short": "Pinned knight? Support it with the other knight on d2/e2, then unpin.",
+        "body": "If a bishop pins your knight, don't panic. Develop your other knight to d2 or e2 to add support, then reposition your queen to undo the pin. You lose no time, because the supporting knight was a useful developing move anyway."
+      },
+      "O-3": {
+        "title": "Prefer moves that make a threat",
+        "short": "A developing move that also threatens something forces your opponent to react.",
+        "body": "The best opening moves develop a piece and create a threat on the opponent's side, forcing them to react and lose time. A check or an attack on a piece can be worth it even if it means moving the same piece twice."
+      },
+      "O-4": {
+        "title": "Castle early — usually kingside",
+        "short": "Get your king safe as soon as you can; an uncastled king is a liability.",
+        "body": "Castle as soon as you reasonably can. Kingside is usually safer — the king hides behind untouched pawns. Queenside is sharper (your rook lands on an open file immediately) but the king is more exposed."
+      },
+      "O-5": {
+        "title": "Don't move the same piece twice without a reason",
+        "short": "Every wasted tempo gives your opponent a free developing move.",
+        "body": "Moving a piece a second time delays developing the rest of your army. The only excuse is a concrete threat — a check, a capture, a fork — that forces your opponent to reply."
+      },
+      "M-1": {
+        "title": "Make every piece active before you make a plan",
+        "short": "Find your most passive piece and improve it before doing anything else.",
+        "body": "The single most important middlegame habit. Before any attack or pawn push, improve your most passive piece. Rooks want open files, knights want strong central squares (d5/e5/d4/e4), bishops want open diagonals, and the queen wants an active but safe post."
+      },
+      "M-2": {
+        "title": "After every opponent move, ask what it threatens",
+        "short": "Answer 'what does this threaten?' before you look for your own plan.",
+        "body": "Before hunting for your own idea, ask what your opponent's move just threatened. This single habit prevents most tactical losses — Capablanca went undefeated for eight years largely because he never stopped asking."
+      },
+      "M-3": {
+        "title": "Neutralise enemy pieces on your half",
+        "short": "Trade, chase back, or blockade any enemy piece that reaches your side.",
+        "body": "Any enemy piece that reaches your half of the board is a problem — deal with it immediately. A knight on d3 is far more dangerous than one on d6. Don't let intruders settle in."
+      },
+      "M-4": {
+        "title": "Build domination — tactics appear on their own",
+        "short": "Don't hunt tactics; make your pieces active and your opponent's passive.",
+        "body": "Don't go looking for combinations. Make all your pieces active and force your opponent's pieces to be passive; once they've run out of good squares, the winning tactic appears by itself. You rarely need to calculate more than a couple of moves ahead."
+      },
+      "M-5": {
+        "title": "Choose simple plans",
+        "short": "Either attack a weak pawn, or make a passed pawn and push it.",
+        "body": "When your pieces are active and you need a plan, pick one of two: attack a weak pawn (isolated, doubled, or backward), or create a passed pawn and advance it. Both build lasting pressure with almost no calculation."
+      },
+      "E-1": {
+        "title": "Activate your king",
+        "short": "Once queens are off, march the king to the centre — it's a fighting piece.",
+        "body": "In the endgame the king becomes a strong piece. The moment the queens come off, march it toward the centre (d4/e4/d5/e5). A centralised king is worth about a minor piece; a king hiding in the corner is wasted."
+      },
+      "E-2": {
+        "title": "Attack the pawns",
+        "short": "Aim your king and rook at the weakest enemy pawn.",
+        "body": "You can't checkmate with few pieces, but you can win pawns and promote one of your own. Find the weakest enemy pawn — isolated, doubled, or backward — and direct your king and rook at it."
+      },
+      "E-3": {
+        "title": "Rooks belong behind passed pawns",
+        "short": "Put your rook behind a passed pawn — yours or theirs.",
+        "body": "Behind your own passed pawn, the rook grows stronger as the pawn advances. Behind the opponent's, it restrains the pawn cheaply while your king does other work. A rook in front of a passed pawn is passive and weak."
+      },
+      "E-4": {
+        "title": "Don't push pawns without a reason",
+        "short": "Every careless pawn move leaves a permanent weakness.",
+        "body": "Pawn moves can't be taken back. Advance a pawn only to open a file for your rook, make or support a passed pawn, restrict the enemy king, or escape an attack. Otherwise, leave it alone."
+      },
+      "E-5": {
+        "title": "Play on two weaknesses",
+        "short": "One target can be defended; two on opposite wings cannot.",
+        "body": "Create or find two weak points on opposite sides of the board. Attack one to drag the defender across, then switch to the other — your opponent can't be in two places at once. This is how Capablanca won 'equal' endgames."
+      }
+    },
+    "mindsetHeading": "The mindset",
+    "mindset1Title": "Simplicity over complexity.",
+    "mindset1Body": "Consistent good play with no blunders beats occasional brilliance with occasional disasters. Choose the clear move over the flashy one.",
+    "mindset2Title": "Trade when your pieces are better.",
+    "mindset2Body": "Swapping into an endgame where your pieces are more active is how a positional edge becomes a win. Trading while passive is the mistake.",
+    "mindset3Title": "Patience is a weapon.",
+    "mindset3Body": "When there's nothing better, improve your least-active piece by one square and ask again next move. Quiet pressure makes opponents crack.",
+    "mindset4Title": "Never stop asking about threats.",
+    "mindset4Body": "The question that prevents the loss is the one you actually ask. Make it automatic.",
+    "gameHeading": "A complete game: Capablanca vs. Bernstein, 1914",
+    "gameIntro": "Every rule above appears in this one 36-move masterpiece — develop everything, plant a knight on an outpost, break through only when dominant, then convert with king and passed pawn.",
+    "gameMoves": [
+      {
+        "mv": "1. e4 e5",
+        "note": "An open game — Capablanca was comfortable in any structure."
+      },
+      {
+        "mv": "2. Nf3 Nc6",
+        "note": "Both sides develop a knight toward the centre first (O-1)."
+      },
+      {
+        "mv": "3. Bb5 a6",
+        "note": "The Ruy López. Black challenges the bishop straight away."
+      },
+      {
+        "mv": "4. Ba4 Nf6",
+        "note": "Everyone keeps developing — nobody wastes a move (O-5)."
+      },
+      {
+        "mv": "5. O-O Be7",
+        "note": "Capablanca castles as early as he can (O-4)."
+      },
+      {
+        "mv": "6. Re1",
+        "note": "The rook takes the e-file — every piece gets a job (O-1)."
+      },
+      {
+        "mv": "17. Nd5!",
+        "note": "A knight lands on an outpost it can never be kicked off (M-1)."
+      },
+      {
+        "mv": "19. Bxb6!",
+        "note": "A break that works only because every white piece was already ideal (M-4)."
+      },
+      {
+        "mv": "27. Re7",
+        "note": "In the endgame the rook invades the 7th rank (E-2)."
+      },
+      {
+        "mv": "29. Ke2–d3–c4",
+        "note": "The king marches to the centre to escort the passed pawn (E-1)."
+      },
+      {
+        "mv": "30. c5–c6–c7",
+        "note": "The passed pawn rolls, rook behind it the whole way (E-3). Black resigns."
+      }
+    ],
+    "faqHeading": "Frequently asked questions",
+    "faq1Q": "Who was Capablanca?",
+    "faq1A": "José Raúl Capablanca (1888–1942) was the third World Chess Champion and is widely regarded as the greatest natural talent in the game's history. He was famous for winning 'equal' positions through pure technique — Magnus Carlsen has named him a major inspiration.",
+    "faq2Q": "Do I need to memorise openings to play this way?",
+    "faq2A": "No. Capablanca deliberately avoided opening theory. He played natural developing moves and trusted a small set of positional rules. This system is about principles you apply every move, not lines you memorise.",
+    "faq3Q": "How does this help me stop blundering?",
+    "faq3A": "The core habit is asking 'what did my opponent just threaten?' before every move. Most losses aren't failures of calculation — they're moments of inattention where a threat was missed. Making that question automatic prevents the majority of tactical losses.",
+    "faq4Q": "Is this suitable for beginners?",
+    "faq4A": "Yes — it's arguably the best system for beginners, because it replaces guesswork with a clear procedure: deal with threats, activate your worst piece, keep intruders out, and choose a simple plan.",
+    "closingTitle": "See these rules in your own games.",
+    "closingBody": "ChessInt reviews every game you play and shows exactly where a threat was missed or a piece sat idle — the Capablanca rules, applied to you.",
+    "opChTitle": "The opening",
+    "opChIntro": "Capablanca never memorised opening theory. He followed five simple principles — develop everything, keep your king safe, and never waste a move. Step through each on the board below.",
+    "mgChTitle": "The middlegame",
+    "mgChIntro": "This is where Capablanca's method shone: keep improving your pieces until the position is overwhelming, and let tactics appear on their own. Work through the ideas below.",
+    "egChTitle": "The endgame",
+    "egChIntro": "Endgames are simpler than they look: win a weak pawn and promote one of your own. These five rules do most of the work — step through the key techniques on the board.",
+    "openingChecklistTitle": "Opening checklist — ask before each move",
+    "openingChecklist": [
+      "Have I developed a new piece? (Prefer developing over pawn moves.)",
+      "Am I moving the same piece a second time? If so — is the reason a concrete threat?",
+      "Does my opponent have an immediate threat I need to address?",
+      "Am I ready to castle? If yes — castle now.",
+      "After castling: which is my least active piece?"
+    ],
+    "middlegameChecklistTitle": "Middlegame decision tree — work through it in order",
+    "middlegameChecklist": [
+      "Is there a concrete threat? If yes — address it first.",
+      "Is any piece passive? If yes — improve it before anything else.",
+      "Any opponent pieces on your half? If yes — neutralise them.",
+      "Can you attack a weak pawn, or create and advance a passed pawn?",
+      "If none of the above — improve your best-placed piece and repeat next move."
+    ],
+    "endgameChecklistTitle": "Endgame checklist",
+    "endgameChecklist": [
+      "Has my king moved toward the centre yet? (Priority one.)",
+      "Which is the weakest pawn on the board? Is my king heading there?",
+      "Is my rook behind my passed pawn (or behind the opponent's)?",
+      "Have I avoided pawn moves without a clear reason?",
+      "Am I pressing two weaknesses — or only one?"
+    ],
+    "gameChTitle": "A complete game, move by move",
+    "gameChIntro": "Here is the whole method in one short game — an <em>illustrative model game</em> (not a specific historical one), chosen so every move is either developing a piece or improving one. Step through it and watch a quiet position turn into a strong one, with no tactics forced and nothing left on the back rank.",
+    "gameChNoticeTitle": "What to notice",
+    "gameChNotice1": "<b>Every piece got a job first (O-1)</b> — knights and bishops out before any plan.",
+    "gameChNotice2": "<b>The king was tucked away early (O-4)</b> — castling before the position opened.",
+    "gameChNotice3": "<b>The worst piece was improved (M-1)</b> — the d2-knight rerouted f1–g3, aiming at f5, instead of sitting passively.",
+    "gameChNotice4": "<b>The payoff came last</b> — only once every piece was active did White strike in the centre with d4. Patience, then the break.",
+    "backToEndgame": "The endgame",
+    "toOverview": "Overview",
+    "toMiddlegame": "The middlegame",
+    "toEndgame": "The endgame",
+    "toGame": "A complete game",
+    "opEyebrow": "The Capablanca method · Chapter 1",
+    "mgEyebrow": "The Capablanca method · Chapter 2",
+    "egEyebrow": "The Capablanca method · Chapter 3",
+    "gameEyebrow": "The Capablanca method · A complete game"
   }
 }

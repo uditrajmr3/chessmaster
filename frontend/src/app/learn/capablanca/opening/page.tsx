@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import CapablancaChapter from "@/components/CapablancaChapter";
 import { OPENING_RULES } from "@/lib/capablanca";
 
@@ -10,24 +11,27 @@ export const metadata: Metadata = {
   keywords: ["chess opening principles", "how to play the opening in chess", "capablanca opening rules"],
 };
 
-export default function OpeningChapter() {
+export default async function OpeningChapter() {
+  const t = await getTranslations("capablanca");
+  const rules = OPENING_RULES.map((r) => ({
+    id: r.id,
+    title: t(`rules.${r.id}.title`),
+    short: t(`rules.${r.id}.short`),
+    body: t(`rules.${r.id}.body`),
+  }));
+
   return (
     <CapablancaChapter
-      eyebrow="The Capablanca method · Chapter 1"
-      title="The opening"
-      intro="Capablanca never memorised opening theory. He followed five simple principles — develop everything, keep your king safe, and never waste a move. Step through each on the board below."
-      rules={OPENING_RULES}
+      eyebrow={t("opEyebrow")}
+      title={t("opChTitle")}
+      intro={t("opChIntro")}
+      rules={rules}
       checklist={{
-        title: "Opening checklist — ask before each move",
-        items: [
-          "Have I developed a new piece? (Prefer developing over pawn moves.)",
-          "Am I moving the same piece a second time? If so — is the reason a concrete threat?",
-          "Does my opponent have an immediate threat I need to address?",
-          "Am I ready to castle? If yes — castle now.",
-          "After castling: which is my least active piece?",
-        ],
+        title: t("openingChecklistTitle"),
+        items: t.raw("openingChecklist") as string[],
       }}
-      next={{ href: "/learn/capablanca/middlegame", label: "The middlegame" }}
+      prev={{ href: "/learn/capablanca", label: t("toOverview") }}
+      next={{ href: "/learn/capablanca/middlegame", label: t("toMiddlegame") }}
     />
   );
 }

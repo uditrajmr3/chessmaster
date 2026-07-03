@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import CapablancaChapter from "@/components/CapablancaChapter";
 import { ENDGAME_RULES } from "@/lib/capablanca";
 
@@ -10,25 +11,27 @@ export const metadata: Metadata = {
   keywords: ["chess endgame principles", "rook endgame rules", "capablanca endgame technique"],
 };
 
-export default function EndgameChapter() {
+export default async function EndgameChapter() {
+  const t = await getTranslations("capablanca");
+  const rules = ENDGAME_RULES.map((r) => ({
+    id: r.id,
+    title: t(`rules.${r.id}.title`),
+    short: t(`rules.${r.id}.short`),
+    body: t(`rules.${r.id}.body`),
+  }));
+
   return (
     <CapablancaChapter
-      eyebrow="The Capablanca method · Chapter 3"
-      title="The endgame"
-      intro="Endgames are simpler than they look: win a weak pawn and promote one of your own. These five rules do most of the work — step through the key techniques on the board."
-      rules={ENDGAME_RULES}
+      eyebrow={t("egEyebrow")}
+      title={t("egChTitle")}
+      intro={t("egChIntro")}
+      rules={rules}
       checklist={{
-        title: "Endgame checklist",
-        items: [
-          "Has my king moved toward the centre yet? (Priority one.)",
-          "Which is the weakest pawn on the board? Is my king heading there?",
-          "Is my rook behind my passed pawn (or behind the opponent's)?",
-          "Have I avoided pawn moves without a clear reason?",
-          "Am I pressing two weaknesses — or only one?",
-        ],
+        title: t("endgameChecklistTitle"),
+        items: t.raw("endgameChecklist") as string[],
       }}
-      prev={{ href: "/learn/capablanca/middlegame", label: "The middlegame" }}
-      next={{ href: "/learn/capablanca/game", label: "A complete game" }}
+      prev={{ href: "/learn/capablanca/middlegame", label: t("ch2Title") }}
+      next={{ href: "/learn/capablanca/game", label: t("toGame") }}
     />
   );
 }

@@ -12,6 +12,7 @@ export default function CapablancaChapter({
   title,
   intro,
   rules,
+  checklist,
   prev,
   next,
 }: {
@@ -19,6 +20,7 @@ export default function CapablancaChapter({
   title: string;
   intro: string;
   rules: Rule[];
+  checklist?: { title: string; items: string[] };
   prev?: { href: string; label: string };
   next?: { href: string; label: string };
 }) {
@@ -45,6 +47,20 @@ export default function CapablancaChapter({
           );
         })}
       </div>
+
+      {checklist && (
+        <div className="mt-14 surface-card p-6">
+          <h2 className="font-display text-xl font-semibold text-white">{checklist.title}</h2>
+          <ul className="mt-4 space-y-2">
+            {checklist.items.map((item, i) => (
+              <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-gray-400">
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500/70" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mt-16 flex items-center justify-between border-t border-ink-600 pt-8 text-sm">
         {prev ? (

@@ -17,7 +17,18 @@ export default function EndgameChapter() {
       title="The endgame"
       intro="Endgames are simpler than they look: win a weak pawn and promote one of your own. These five rules do most of the work — step through the key techniques on the board."
       rules={ENDGAME_RULES}
+      checklist={{
+        title: "Endgame checklist",
+        items: [
+          "Has my king moved toward the centre yet? (Priority one.)",
+          "Which is the weakest pawn on the board? Is my king heading there?",
+          "Is my rook behind my passed pawn (or behind the opponent's)?",
+          "Have I avoided pawn moves without a clear reason?",
+          "Am I pressing two weaknesses — or only one?",
+        ],
+      }}
       prev={{ href: "/learn/capablanca/middlegame", label: "The middlegame" }}
+      next={{ href: "/learn/capablanca/game", label: "A complete game" }}
     />
   );
 }

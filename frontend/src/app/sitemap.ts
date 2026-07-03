@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/learn/capablanca/opening`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/learn/capablanca/middlegame`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/learn/capablanca/endgame`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/learn/capablanca/game`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/learn/coach`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/register`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },

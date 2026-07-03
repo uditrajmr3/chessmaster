@@ -17,6 +17,16 @@ export default function MiddlegameChapter() {
       title="The middlegame"
       intro="This is where Capablanca's method shone: keep improving your pieces until the position is overwhelming, and let tactics appear on their own. Work through the ideas below."
       rules={MIDDLEGAME_RULES}
+      checklist={{
+        title: "Middlegame decision tree — work through it in order",
+        items: [
+          "Is there a concrete threat? If yes — address it first.",
+          "Is any piece passive? If yes — improve it before anything else.",
+          "Any opponent pieces on your half? If yes — neutralise them.",
+          "Can you attack a weak pawn, or create and advance a passed pawn?",
+          "If none of the above — improve your best-placed piece and repeat next move.",
+        ],
+      }}
       prev={{ href: "/learn/capablanca/opening", label: "The opening" }}
       next={{ href: "/learn/capablanca/endgame", label: "The endgame" }}
     />

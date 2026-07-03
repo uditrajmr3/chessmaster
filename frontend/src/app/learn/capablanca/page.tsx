@@ -131,16 +131,17 @@ export default function CapablancaPage() {
       <p className="mt-3 leading-relaxed text-gray-400">
         Each phase is a chapter you can step through move by move on a live board.
       </p>
-      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {[
-          { href: "/learn/capablanca/opening", n: "Chapter 1", t: "The opening" },
-          { href: "/learn/capablanca/middlegame", n: "Chapter 2", t: "The middlegame" },
-          { href: "/learn/capablanca/endgame", n: "Chapter 3", t: "The endgame" },
+          { href: "/learn/capablanca/opening", n: "Chapter 1", t: "The opening", d: "Five rules, each on a live board." },
+          { href: "/learn/capablanca/middlegame", n: "Chapter 2", t: "The middlegame", d: "Five rules, each on a live board." },
+          { href: "/learn/capablanca/endgame", n: "Chapter 3", t: "The endgame", d: "Five rules, each on a live board." },
+          { href: "/learn/capablanca/game", n: "Chapter 4", t: "A complete game", d: "The whole method in one steppable model game." },
         ].map((c) => (
           <Link key={c.href} href={c.href} className="surface-card block p-5 card-hover">
             <span className="font-mono text-xs text-accent-300">{c.n}</span>
             <h3 className="font-display mt-1 text-lg font-semibold text-white">{c.t}</h3>
-            <p className="mt-1 text-sm text-gray-400">Five rules, each on a live board.</p>
+            <p className="mt-1 text-sm text-gray-400">{c.d}</p>
           </Link>
         ))}
       </div>

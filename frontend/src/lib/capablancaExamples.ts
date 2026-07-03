@@ -110,7 +110,31 @@ export const EXAMPLES: Record<string, Example> = {
     ],
   },
 
+  "M-2": {
+    startCaption: "Before your own plan, ask what your opponent just threatened (M-2).",
+    steps: [
+      { san: "e4" },
+      { san: "e5" },
+      { san: "Nf3" },
+      { san: "Nc6" },
+      { san: "Bc4" },
+      { san: "Nf6" },
+      { san: "Ng5", caption: "White threatens Nxf7 — a real threat that must be met at once." },
+      { san: "d5", caption: "d5! Identify the threat and answer it before doing anything else." },
+      { san: "exd5" },
+      { san: "Na5", caption: "…and only now continue with your own plan, hitting the bishop." },
+    ],
+  },
+
   // ── Endgame (demonstration positions) ──
+  "E-2": {
+    fen: "6k1/5ppp/8/8/3p4/8/5PPP/3R2K1 w - - 0 1",
+    startCaption: "Black's d4-pawn is isolated and weak — the primary endgame target (E-2).",
+    startArrows: [{ from: "d1", to: "d4" }],
+    steps: [
+      { san: "Rxd4", caption: "Rxd4 — win the weak pawn. Every pawn you collect is a step toward a new queen." },
+    ],
+  },
   "E-1": {
     fen: "8/8/8/4k3/8/8/4KP2/8 w - - 0 1",
     startCaption: "Queens are off — the king becomes a fighting piece. March it to the centre (E-1).",
@@ -141,6 +165,36 @@ export const EXAMPLES: Record<string, Example> = {
       { san: "Rh6", caption: "Switch wings! Now the h-pawn is hanging. The king can't guard both." },
       { san: "Kg7" },
       { san: "Ra6", caption: "Back again — shuttling between two weaknesses until one falls." },
+    ],
+  },
+
+  // A short, legal model game (illustrative — not a specific historical game)
+  // showing the method: develop everything, castle, reroute a knight to a strong
+  // square, and take the centre. Step through it move by move.
+  game: {
+    startCaption: "A quiet model game in Capablanca's style — every move develops or improves a piece.",
+    steps: [
+      { san: "e4" },
+      { san: "e5" },
+      { san: "Nf3", caption: "Develop toward the centre (O-1)." },
+      { san: "Nc6" },
+      { san: "Bc4", caption: "The Italian — pieces flow out naturally." },
+      { san: "Bc5" },
+      { san: "O-O", caption: "Castle early (O-4)." },
+      { san: "Nf6" },
+      { san: "d3", caption: "Open the last bishop and support e4." },
+      { san: "O-O" },
+      { san: "c3", caption: "Preparing the d4 break." },
+      { san: "d6" },
+      { san: "Re1", caption: "The rook takes the e-file, freeing f1 for the knight." },
+      { san: "a6" },
+      { san: "Nbd2", caption: "Nbd2 — heading for a better square (M-1)." },
+      { san: "Ba7" },
+      { san: "Nf1", caption: "The knight reroutes via f1…" },
+      { san: "Ne7" },
+      { san: "Ng3", caption: "…to g3, eyeing f5 — a far more active post." },
+      { san: "Ng6" },
+      { san: "d4", caption: "d4! With every piece improved, White finally takes the centre — the payoff of patient play." },
     ],
   },
 };

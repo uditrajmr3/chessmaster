@@ -111,11 +111,14 @@ def verify_premium_payment(
     payment.razorpay_payment_id = body.razorpay_payment_id
     payment.verified_at = datetime.utcnow()
 
-    user.is_premium = True
-    user.premium_expires_at = datetime.utcnow() + timedelta(
-        days=settings.premium_duration_days
+    # `user` is loaded via fastapi-users' async session (see auth/users.py),
+    # while `db` here is the sync session — mutating `user` and calling
+    # db.add(user) raises a cross-session InvalidRequestError. Update by id
+    # through the sync session instead, never touching the async-bound object.
+    new_expiry = datetime.utcnow() + timedelta(days=settings.premium_duration_days)
+    db.query(User).filter(User.id == user.id).update(
+        {"is_premium": True, "premium_expires_at": new_expiry}
     )
-    db.add(user)
     db.commit()
 
-    return {"premium": True, "expires_at": user.premium_expires_at.isoformat()}
+    return {"premium": True, "expires_at": new_expiry.isoformat()}

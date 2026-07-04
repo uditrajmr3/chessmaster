@@ -38,6 +38,12 @@ class Settings(BaseSettings):
     # Razorpay (payment processor for the premium position-analyzer unlock).
     razorpay_key_id: str = ""
     razorpay_key_secret: str = ""
+    # Separate secret for the /payments/premium/webhook endpoint (Razorpay
+    # dashboard -> Settings -> Webhooks), distinct from the API key secret.
+    # Authoritative confirmation path — the browser checkout callback alone
+    # can't be trusted if the tab closes/crashes right after a successful
+    # payment, so the webhook is what actually unlocks premium in that case.
+    razorpay_webhook_secret: str = ""
     # One-time purchase price, in paise (smallest INR unit), for a 30-day
     # premium unlock of the position analyzer. ₹149.00 by default.
     premium_price_paise: int = 14900

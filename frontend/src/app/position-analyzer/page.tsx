@@ -12,10 +12,11 @@ import {
   KeyRound,
   Sparkles,
   RefreshCw,
+  Eraser,
 } from "lucide-react";
 import TeachingBoard from "@/components/TeachingBoard";
 import { Engine } from "@/lib/engine";
-import { freeMove } from "@/lib/teaching";
+import { freeMove, setSquare } from "@/lib/teaching";
 import { coachReport, findThreats, ruleForMove } from "@/lib/coach";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -267,6 +268,9 @@ function ConfirmAndAnalyze({
   const [fen, setFen] = useState(initialFen);
   const [confirmed, setConfirmed] = useState(false);
   const [legalError, setLegalError] = useState<string | null>(null);
+  // FEN piece char ("Q", "n", ...) to stamp onto the next clicked square, or
+  // "erase" to clear it, or null when no tool is selected (drag-to-move only).
+  const [selectedTool, setSelectedTool] = useState<string | "erase" | null>(null);
   const [engineOffline, setEngineOffline] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [best, setBest] = useState<{ san: string; ruleId: string; ruleTitle: string; why: string } | null>(
@@ -287,6 +291,11 @@ function ConfirmAndAnalyze({
   function onPieceDrop(from: string, to: string): boolean {
     setFen((f) => freeMove(f, from, to));
     return true;
+  }
+
+  function onSquareClick(square: string) {
+    if (!selectedTool) return;
+    setFen((f) => setSquare(f, square, selectedTool === "erase" ? null : selectedTool));
   }
 
   const chess = useMemo(() => {
@@ -354,6 +363,7 @@ function ConfirmAndAnalyze({
           position={fen}
           allowDragging={!confirmed}
           onPieceDrop={onPieceDrop}
+          onSquareClick={confirmed ? undefined : onSquareClick}
           squareStyles={confirmed ? squareStyles : {}}
           controls={["flip", "coords"]}
         />
@@ -361,6 +371,9 @@ function ConfirmAndAnalyze({
           <p className="mt-3 flex items-center gap-2 text-sm text-amber-300">
             <AlertTriangle className="h-4 w-4 shrink-0" /> {legalError}
           </p>
+        )}
+        {!confirmed && (
+          <PiecePalette selected={selectedTool} onSelect={setSelectedTool} />
         )}
         {!confirmed && (
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
@@ -468,6 +481,87 @@ function ConfirmAndAnalyze({
             </>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+const WHITE_PIECES: { char: string; glyph: string }[] = [
+  { char: "K", glyph: "♔" },
+  { char: "Q", glyph: "♕" },
+  { char: "R", glyph: "♖" },
+  { char: "B", glyph: "♗" },
+  { char: "N", glyph: "♘" },
+  { char: "P", glyph: "♙" },
+];
+const BLACK_PIECES: { char: string; glyph: string }[] = [
+  { char: "k", glyph: "♚" },
+  { char: "q", glyph: "♛" },
+  { char: "r", glyph: "♜" },
+  { char: "b", glyph: "♝" },
+  { char: "n", glyph: "♞" },
+  { char: "p", glyph: "♟" },
+];
+
+function PiecePalette({
+  selected,
+  onSelect,
+}: {
+  selected: string | "erase" | null;
+  onSelect: (tool: string | "erase" | null) => void;
+}) {
+  function pick(tool: string | "erase") {
+    // Clicking the already-selected tool deselects it (back to drag-only).
+    onSelect(selected === tool ? null : tool);
+  }
+
+  return (
+    <div className="mt-4 flex flex-col items-center gap-2">
+      <p className="text-xs text-gray-500">
+        Misread a piece type (not just its square)? Pick one below, then click the square to fix it.
+      </p>
+      <div className="flex flex-wrap items-center justify-center gap-1.5">
+        {WHITE_PIECES.map((p) => (
+          <button
+            key={p.char}
+            onClick={() => pick(p.char)}
+            aria-label={`Place white ${p.char}`}
+            className={`flex h-9 w-9 items-center justify-center rounded-lg border text-xl leading-none btn-press ${
+              selected === p.char
+                ? "border-accent-500 bg-accent-500/20 text-white"
+                : "border-white/10 bg-ink-800 text-gray-200 hover:border-white/20"
+            }`}
+          >
+            {p.glyph}
+          </button>
+        ))}
+        <span className="mx-1 h-6 w-px bg-white/10" />
+        {BLACK_PIECES.map((p) => (
+          <button
+            key={p.char}
+            onClick={() => pick(p.char)}
+            aria-label={`Place black ${p.char.toUpperCase()}`}
+            className={`flex h-9 w-9 items-center justify-center rounded-lg border text-xl leading-none btn-press ${
+              selected === p.char
+                ? "border-accent-500 bg-accent-500/20 text-white"
+                : "border-white/10 bg-ink-800 text-gray-200 hover:border-white/20"
+            }`}
+          >
+            {p.glyph}
+          </button>
+        ))}
+        <span className="mx-1 h-6 w-px bg-white/10" />
+        <button
+          onClick={() => pick("erase")}
+          aria-label="Erase piece"
+          className={`flex h-9 w-9 items-center justify-center rounded-lg border btn-press ${
+            selected === "erase"
+              ? "border-accent-500 bg-accent-500/20 text-white"
+              : "border-white/10 bg-ink-800 text-gray-300 hover:border-white/20"
+          }`}
+        >
+          <Eraser className="h-4 w-4" />
+        </button>
       </div>
     </div>
   );

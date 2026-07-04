@@ -106,26 +106,20 @@ export function singlePieceFen(pieceChar: string, square: string): string {
   return rows.join("/") + " w - - 0 1";
 }
 
-/** Relocate a piece from `from` to `to` ignoring legality — for free setup. */
-export function freeMove(fen: string, from: string, to: string): string {
-  const parts = fen.split(" ");
-  const placement = parts[0];
-  const rest = parts.slice(1).join(" ") || "w - - 0 1";
-  const grid: (string | null)[][] = placement.split("/").map((row) => {
+/** Parse a FEN's piece-placement field into an 8x8 grid, grid[0] = rank 8. */
+function parsePlacement(placement: string): (string | null)[][] {
+  return placement.split("/").map((row) => {
     const cells: (string | null)[] = [];
     for (const ch of row) {
       if (/\d/.test(ch)) for (let i = 0; i < Number(ch); i++) cells.push(null);
       else cells.push(ch);
     }
     return cells;
-  }); // grid[0] = rank 8
-  const [ff, fr] = parseSquare(from);
-  const [tf, tr] = parseSquare(to);
-  const piece = grid[7 - fr]?.[ff];
-  if (!piece) return fen;
-  grid[7 - fr][ff] = null;
-  grid[7 - tr][tf] = piece;
-  const newPlacement = grid
+  });
+}
+
+function encodePlacement(grid: (string | null)[][]): string {
+  return grid
     .map((cells) => {
       let row = "";
       let empty = 0;
@@ -140,5 +134,31 @@ export function freeMove(fen: string, from: string, to: string): string {
       return row;
     })
     .join("/");
-  return `${newPlacement} ${rest}`;
+}
+
+/** Relocate a piece from `from` to `to` ignoring legality — for free setup. */
+export function freeMove(fen: string, from: string, to: string): string {
+  const parts = fen.split(" ");
+  const rest = parts.slice(1).join(" ") || "w - - 0 1";
+  const grid = parsePlacement(parts[0]);
+  const [ff, fr] = parseSquare(from);
+  const [tf, tr] = parseSquare(to);
+  const piece = grid[7 - fr]?.[ff];
+  if (!piece) return fen;
+  grid[7 - fr][ff] = null;
+  grid[7 - tr][tf] = piece;
+  return `${encodePlacement(grid)} ${rest}`;
+}
+
+/**
+ * Place `piece` (a FEN piece char, e.g. "Q", "n") on `square`, or clear it if
+ * `piece` is null — ignoring legality, for free position setup/correction.
+ */
+export function setSquare(fen: string, square: string, piece: string | null): string {
+  const parts = fen.split(" ");
+  const rest = parts.slice(1).join(" ") || "w - - 0 1";
+  const grid = parsePlacement(parts[0]);
+  const [f, r] = parseSquare(square);
+  grid[7 - r][f] = piece;
+  return `${encodePlacement(grid)} ${rest}`;
 }

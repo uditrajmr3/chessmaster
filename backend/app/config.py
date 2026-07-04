@@ -24,6 +24,25 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
     cookie_secure: bool = False
     cookie_samesite: str = "lax"
+
+    # Fernet key used to encrypt user-supplied secrets (own Anthropic API key)
+    # at rest. Generate with:
+    #   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    encryption_key: str = ""
+
+    # Vision-based position analyzer. Free for users with their own Anthropic
+    # key (own_anthropic_api_key on the user); otherwise gated on is_premium
+    # and billed against ChessInt's own key.
+    position_analyzer_model: str = "claude-opus-4-8"
+
+    # Razorpay (payment processor for the premium position-analyzer unlock).
+    razorpay_key_id: str = ""
+    razorpay_key_secret: str = ""
+    # One-time purchase price, in paise (smallest INR unit), for a 30-day
+    # premium unlock of the position analyzer. ₹149.00 by default.
+    premium_price_paise: int = 14900
+    premium_duration_days: int = 30
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
     @field_validator("database_url")

@@ -68,6 +68,9 @@ const verifiedUser = {
   is_active: true,
   lichess_username: null,
   chesscom_username: null,
+  has_own_api_key: false,
+  is_premium: false,
+  premium_active: false,
 };
 
 const unverifiedUser = { ...verifiedUser, is_verified: false };

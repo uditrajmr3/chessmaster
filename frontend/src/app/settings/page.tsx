@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
-import { Settings } from "lucide-react";
+import { Settings, KeyRound, Check } from "lucide-react";
 
 export default function SettingsPage() {
   const { user, refresh } = useAuth();
@@ -15,6 +15,11 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [apiKey, setApiKey] = useState("");
+  const [apiKeySaving, setApiKeySaving] = useState(false);
+  const [apiKeySaved, setApiKeySaved] = useState(false);
+  const [apiKeyError, setApiKeyError] = useState<string | null>(null);
 
   // Pre-fill from the auth context user on mount / when user changes
   useEffect(() => {
@@ -39,6 +44,37 @@ export default function SettingsPage() {
       setError(err instanceof Error ? err.message : t("saveFailed"));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSaveApiKey = async () => {
+    setApiKeySaving(true);
+    setApiKeySaved(false);
+    setApiKeyError(null);
+    try {
+      await api.updateMe({ own_anthropic_api_key: apiKey.trim() });
+      await refresh();
+      setApiKey("");
+      setApiKeySaved(true);
+    } catch (err) {
+      setApiKeyError(err instanceof Error ? err.message : t("saveFailed"));
+    } finally {
+      setApiKeySaving(false);
+    }
+  };
+
+  const handleRemoveApiKey = async () => {
+    setApiKeySaving(true);
+    setApiKeySaved(false);
+    setApiKeyError(null);
+    try {
+      await api.updateMe({ own_anthropic_api_key: "" });
+      await refresh();
+      setApiKey("");
+    } catch (err) {
+      setApiKeyError(err instanceof Error ? err.message : t("saveFailed"));
+    } finally {
+      setApiKeySaving(false);
     }
   };
 
@@ -123,6 +159,61 @@ export default function SettingsPage() {
         >
           {saving ? t("saving") : t("save")}
         </button>
+      </div>
+
+      {/* Bring-your-own Anthropic API key */}
+      <div className="surface-card mt-6 p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <KeyRound className="h-4 w-4 text-accent-400" />
+          <h2 className="text-sm font-semibold text-white">{t("apiKeyTitle")}</h2>
+        </div>
+        <p className="text-xs leading-relaxed text-gray-500">{t("apiKeyHint")}</p>
+
+        {user?.has_own_api_key ? (
+          <div className="flex items-center justify-between rounded-lg border border-green-700/40 bg-green-500/10 p-3">
+            <p className="flex items-center gap-2 text-sm text-green-300">
+              <Check className="h-4 w-4" />
+              {t("apiKeyActive")}
+            </p>
+            <button
+              onClick={handleRemoveApiKey}
+              disabled={apiKeySaving}
+              className="text-xs font-medium text-gray-400 underline underline-offset-4 hover:text-white disabled:opacity-50"
+            >
+              {t("apiKeyRemove")}
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <input
+              id="own-api-key"
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder={t("apiKeyPlaceholder")}
+              autoComplete="off"
+              className="w-full px-3 py-2 bg-white/[0.04] border border-gray-700/60 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-accent-500 transition-colors"
+            />
+            <button
+              onClick={handleSaveApiKey}
+              disabled={apiKeySaving || !apiKey.trim()}
+              className="shrink-0 px-4 py-2 bg-accent-600 hover:bg-accent-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors btn-press"
+            >
+              {apiKeySaving ? t("saving") : t("apiKeySave")}
+            </button>
+          </div>
+        )}
+
+        {apiKeyError && (
+          <p role="alert" className="text-sm text-red-400">
+            {apiKeyError}
+          </p>
+        )}
+        {apiKeySaved && (
+          <p role="status" className="text-sm text-green-400">
+            {t("apiKeySavedMsg")}
+          </p>
+        )}
       </div>
     </div>
   );

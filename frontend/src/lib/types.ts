@@ -467,6 +467,36 @@ export interface User {
   is_active: boolean;
   lichess_username: string | null;
   chesscom_username: string | null;
+  has_own_api_key: boolean;
+  is_premium: boolean;
+  premium_active: boolean;
+}
+
+// ── Position Analyzer ──
+
+export interface PositionAccess {
+  allowed: boolean;
+  reason: "own_key" | "premium" | "locked";
+}
+
+export interface PositionReadResult {
+  fen: string;
+  confidence: "high" | "medium" | "low";
+  notes: string;
+}
+
+export interface PaymentConfig {
+  key_id: string;
+  amount_paise: number;
+  currency: string;
+  duration_days: number;
+}
+
+export interface PremiumOrder {
+  order_id: string;
+  amount_paise: number;
+  currency: string;
+  key_id: string;
 }
 
 // ── Client-side Analysis ──

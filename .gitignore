@@ -32,3 +32,7 @@ Thumbs.db
 # Superpowers control-plane scratch (plans/ledger/reports)
 .superpowers/
 .checkpoint/
+
+# Secrets accidentally dropped inside the repo (this repo is public)
+*.secret
+docs/render.secret

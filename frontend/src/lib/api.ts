@@ -99,6 +99,23 @@ async function fetchFormAPI<T>(path: string, body: Record<string, string>): Prom
   return parseBody<T>(res);
 }
 
+// FormData upload — no Content-Type header (the browser sets the multipart
+// boundary itself; setting one manually breaks the boundary parsing server-side).
+async function fetchMultipartAPI<T>(path: string, formData: FormData): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+  if (res.status === 401) {
+    throw new AuthError(`API error: ${res.status} ${res.statusText}`);
+  }
+  if (!res.ok) {
+    throw await errorFromResponse(res);
+  }
+  return parseBody<T>(res);
+}
+
 export const api = {
   // Auth
   register: ({ email, password }: { email: string; password: string }) =>
@@ -137,7 +154,11 @@ export const api = {
   // Users
   getMe: () =>
     fetchAPI<import("./types").User>("/users/me"),
-  updateMe: (data: { lichess_username?: string; chesscom_username?: string }) =>
+  updateMe: (data: {
+    lichess_username?: string;
+    chesscom_username?: string;
+    own_anthropic_api_key?: string;
+  }) =>
     fetchAPI<import("./types").User>("/users/me", {
       method: "PATCH",
       body: JSON.stringify(data),
@@ -284,4 +305,33 @@ export const api = {
     ).toString() : "";
     return fetchAPI<Record<string, unknown>>(`/export/summary${query}`);
   },
+
+  // Position Analyzer
+  getPositionAccess: () =>
+    fetchAPI<import("./types").PositionAccess>("/position/access"),
+  analyzePosition: (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    return fetchMultipartAPI<import("./types").PositionReadResult>(
+      "/position/analyze",
+      formData
+    );
+  },
+
+  // Payments (Razorpay premium unlock)
+  getPaymentConfig: () =>
+    fetchAPI<import("./types").PaymentConfig>("/payments/config"),
+  createPremiumOrder: () =>
+    fetchAPI<import("./types").PremiumOrder>("/payments/premium/create-order", {
+      method: "POST",
+    }),
+  verifyPremiumPayment: (data: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }) =>
+    fetchAPI<{ premium: boolean; expires_at?: string }>(
+      "/payments/premium/verify",
+      { method: "POST", body: JSON.stringify(data) }
+    ),
 };

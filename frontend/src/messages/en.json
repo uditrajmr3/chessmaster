@@ -40,7 +40,8 @@
     "analyzingProgress": "Analyzing… {done}/{total}",
     "linkAccountCta": "Link an account",
     "linkAccountSuffix": " in Settings to sync.",
-    "linkAccountFirst": "Link a Lichess or Chess.com username in Settings first"
+    "linkAccountFirst": "Link a Lichess or Chess.com username in Settings first",
+    "positionAnalyzer": "Position Analyzer"
   },
   "landing": {
     "eyebrow": "Chess Intelligence · Since 2026",
@@ -174,7 +175,14 @@
     "saved": "Settings saved successfully.",
     "saving": "Saving…",
     "save": "Save settings",
-    "saveFailed": "Failed to save settings"
+    "saveFailed": "Failed to save settings",
+    "apiKeyTitle": "Your Anthropic API key (optional)",
+    "apiKeyHint": "Add your own Anthropic API key to use the Position Analyzer and any future AI features for free — usage is billed to your own key, not ours. We store it encrypted and never display it again.",
+    "apiKeyActive": "Using your own API key",
+    "apiKeyRemove": "Remove",
+    "apiKeyPlaceholder": "sk-ant-...",
+    "apiKeySave": "Save key",
+    "apiKeySavedMsg": "API key saved."
   },
   "glossary": {
     "accuracy": {

@@ -119,3 +119,21 @@ class PuzzleProgress(Base):
     ease_factor = Column(Float, nullable=False, default=2.5)  # SM-2 ease factor
     interval_days = Column(Float, nullable=False, default=0)  # current interval in days
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Payment(Base):
+    """A Razorpay order for the position-analyzer premium unlock. Created in
+    'created' status when the checkout order is opened; moves to 'paid' only
+    after the payment signature is verified server-side."""
+
+    __tablename__ = "payments"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(GUID, ForeignKey("users.id"), nullable=False, index=True)
+    razorpay_order_id = Column(String, unique=True, nullable=False)
+    razorpay_payment_id = Column(String, nullable=True)
+    amount_paise = Column(Integer, nullable=False)
+    currency = Column(String, nullable=False)
+    status = Column(String, nullable=False, default="created")
+    created_at = Column(DateTime, default=datetime.utcnow)
+    verified_at = Column(DateTime, nullable=True)

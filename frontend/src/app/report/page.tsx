@@ -1,15 +1,52 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FileText } from "lucide-react";
+import { FileText, Download, Share2, Check } from "lucide-react";
 import { api } from "@/lib/api";
 import type { ReportData } from "@/lib/types";
 import { PageHeader, EmptyState } from "@/components/ui/page-kit";
+
+// Plain-text version of the report for sharing (Web Share API / clipboard) —
+// strips the light markdown syntax the on-screen MarkdownRenderer parses.
+function reportToPlainText(report: ReportData): string {
+  const header = `ChessInt AI Coach Report\nGenerated ${new Date(
+    report.generated_at
+  ).toLocaleDateString()} · ${report.games_count} games analyzed\n\n`;
+  const body = report.report_text
+    .split("\n")
+    .map((line) =>
+      line
+        .replace(/^#{1,3}\s+/, "")
+        .replace(/\*\*(.*?)\*\*/g, "$1")
+        .replace(/\*(.*?)\*/g, "$1")
+        .replace(/`([^`]+)`/g, "$1")
+    )
+    .join("\n");
+  return header + body;
+}
 
 export default function ReportPage() {
   const [report, setReport] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [shared, setShared] = useState(false);
+
+  async function handleShare() {
+    if (!report) return;
+    const text = reportToPlainText(report);
+    if (navigator.share && navigator.canShare?.({ text })) {
+      try {
+        await navigator.share({ title: "My ChessInt AI Coach Report", text });
+      } catch {
+        // user cancelled the share sheet — not an error
+      }
+      return;
+    }
+    // Desktop / unsupported browsers: copy to clipboard instead.
+    await navigator.clipboard.writeText(text);
+    setShared(true);
+    setTimeout(() => setShared(false), 2000);
+  }
 
   useEffect(() => {
     loadReport();
@@ -83,21 +120,55 @@ export default function ReportPage() {
         />
       ) : (
         <div className="space-y-4 animate-fade-in-up">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/45">
-            <span>
-              Generated{" "}
-              <span className="text-white/70">
-                {new Date(report.generated_at).toLocaleString()}
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 print:hidden">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/45">
+              <span>
+                Generated{" "}
+                <span className="text-white/70">
+                  {new Date(report.generated_at).toLocaleString()}
+                </span>
               </span>
-            </span>
-            <span aria-hidden="true">·</span>
-            <span>
-              <span className="font-mono text-white/70">{report.games_count}</span>{" "}
-              games analyzed
-            </span>
+              <span aria-hidden="true">·</span>
+              <span>
+                <span className="font-mono text-white/70">{report.games_count}</span>{" "}
+                games analyzed
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-white/10 hover:border-white/20 text-white/80 text-sm font-medium rounded-lg btn-press"
+              >
+                <Download className="w-3.5 h-3.5" /> Download PDF
+              </button>
+              <button
+                onClick={handleShare}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-white/10 hover:border-white/20 text-white/80 text-sm font-medium rounded-lg btn-press"
+              >
+                {shared ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-green-400" /> Copied
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-3.5 h-3.5" /> Share
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
-          <div className="surface-card p-6 sm:p-8">
+          {/* Print-only header — the app chrome and buttons above are hidden
+              when printing (see print:hidden), so the PDF needs its own. */}
+          <div className="hidden print:block print:text-black">
+            <h1 className="text-xl font-bold">ChessInt AI Coach Report</h1>
+            <p className="text-sm mt-1">
+              Generated {new Date(report.generated_at).toLocaleString()} ·{" "}
+              {report.games_count} games analyzed
+            </p>
+          </div>
+
+          <div className="surface-card p-6 sm:p-8 print:bg-white! print:text-black! print:border-none! print:shadow-none! print:**:text-black!">
             <div className="max-w-[72ch]">
               <MarkdownRenderer text={report.report_text} />
             </div>

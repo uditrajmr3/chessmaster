@@ -53,9 +53,13 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   const chrome = (
     <>
-      <Sidebar />
-      <StatusBar />
-      <main className="flex-1 lg:ml-64 pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8 pb-8">{children}</main>
+      <div className="print:hidden">
+        <Sidebar />
+        <StatusBar />
+      </div>
+      <main className="flex-1 lg:ml-64 pt-16 lg:pt-8 px-4 sm:px-6 lg:px-8 pb-8 print:ml-0 print:p-0">
+        {children}
+      </main>
     </>
   );
 

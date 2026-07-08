@@ -1,6 +1,6 @@
 from datetime import datetime
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID
-from sqlalchemy import Boolean, DateTime, String
+from sqlalchemy import Boolean, DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 from ..database import Base
 
@@ -10,6 +10,14 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     lichess_username: Mapped[str | None] = mapped_column(String, nullable=True)
     chesscom_username: Mapped[str | None] = mapped_column(String, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    # Signup email verification — a 6-digit code (hashed at rest), not
+    # fastapi-users' built-in token+link flow. Password reset still uses the
+    # link flow untouched; this only replaces first-time signup verification.
+    verification_code_hash: Mapped[str | None] = mapped_column(String, nullable=True)
+    verification_code_expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    verification_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    verification_code_sent_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     # Bring-your-own-key: stored encrypted (see app/services/crypto.py). Never
     # exposed in API responses — only a derived `has_own_api_key` boolean is.

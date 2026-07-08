@@ -140,6 +140,16 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ token }),
     }),
+  verifyEmailCode: (email: string, code: string) =>
+    fetchAPI<{ verified: boolean }>("/auth/verify-code", {
+      method: "POST",
+      body: JSON.stringify({ email, code }),
+    }),
+  resendVerificationCode: (email: string) =>
+    fetchAPI<{ sent: boolean }>("/auth/resend-code", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
   forgotPassword: (email: string) =>
     fetchAPI<void>("/auth/forgot-password", {
       method: "POST",

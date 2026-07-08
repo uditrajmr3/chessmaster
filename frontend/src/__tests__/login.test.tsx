@@ -142,7 +142,7 @@ describe("RegisterPage", () => {
     jest.clearAllMocks();
   });
 
-  it("calls api.register with email and password on submit, then shows success message", async () => {
+  it("calls api.register with email and password, then navigates to the code-entry screen", async () => {
     mockRegister.mockResolvedValueOnce(undefined);
 
     render(<RegisterPage />);
@@ -166,9 +166,11 @@ describe("RegisterPage", () => {
       password: "strongpass1",
     });
 
-    await waitFor(() => {
-      expect(screen.getByText(/check your email/i)).toBeInTheDocument();
-    });
+    // Registration sends a 6-digit code, not a link — the user goes straight
+    // to entering it rather than seeing an inline "check your email" card.
+    expect(mockPush).toHaveBeenCalledWith(
+      "/verify-email?email=newuser%40example.com"
+    );
   });
 
   it("shows duplicate-account error when api.register rejects with 'already exists'", async () => {

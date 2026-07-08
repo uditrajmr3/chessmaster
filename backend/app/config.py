@@ -49,6 +49,12 @@ class Settings(BaseSettings):
     premium_price_paise: int = 14900
     premium_duration_days: int = 30
 
+    # Signup email verification code (first-time signup only — password reset
+    # keeps the existing link flow untouched).
+    verification_code_ttl_minutes: int = 15
+    verification_code_max_attempts: int = 5
+    verification_resend_cooldown_seconds: int = 60
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
     @field_validator("database_url")

@@ -139,7 +139,16 @@
     "confirmNewPassword": "Confirm new password",
     "resetLinkExpired": "The reset link is expired or invalid. Please request a new one.",
     "resetting": "Resetting…",
-    "resetPassword": "Reset password"
+    "resetPassword": "Reset password",
+    "enterCodeTitle": "Enter verification code",
+    "enterCodeSubtitle": "We sent a 6-digit code to {email}",
+    "verifyCode": "Verify",
+    "verifyingCode": "Verifying…",
+    "resendCode": "Resend code",
+    "resendCodeIn": "Resend code in {seconds}s",
+    "codeSent": "A new code has been sent.",
+    "wrongEmail": "Wrong email?",
+    "startOver": "Start over"
   },
   "dashboard": {
     "title": "Dashboard",

@@ -31,12 +31,34 @@ def verified_user_client(client, db):
     return client
 
 
-def test_register_then_login_sets_cookie(client):
-    """Register returns 201; login returns 200/204 and sets an auth cookie."""
+def test_unverified_login_is_rejected(client):
+    """Login now requires a verified email (requires_verification=True) —
+    an unverified account gets LOGIN_USER_NOT_VERIFIED, not a session."""
     r = client.post("/api/auth/register", json={"email": "b@test.com", "password": "pw12345678"})
     assert r.status_code == 201, r.text
 
     login = client.post("/api/auth/login", data={"username": "b@test.com", "password": "pw12345678"})
+    assert login.status_code == 400
+    assert login.json()["detail"] == "LOGIN_USER_NOT_VERIFIED"
+
+
+def test_register_then_verify_then_login_sets_cookie(client):
+    """Register returns 201; after verifying, login returns 200/204 and sets an auth cookie."""
+    r = client.post("/api/auth/register", json={"email": "b2@test.com", "password": "pw12345678"})
+    assert r.status_code == 201, r.text
+
+    async def _verify_user():
+        async with AsyncTestSession() as session:
+            result = await session.execute(
+                select(User).where(func.lower(User.email) == "b2@test.com")
+            )
+            u = result.scalar_one()
+            u.is_verified = True
+            await session.commit()
+
+    asyncio.run(_verify_user())
+
+    login = client.post("/api/auth/login", data={"username": "b2@test.com", "password": "pw12345678"})
     assert login.status_code in (200, 204), login.text
     # Cookie should be set either in response cookies or the client jar
     has_cookie = bool(login.cookies) or bool(client.cookies)

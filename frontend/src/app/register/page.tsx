@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import {
   AuthShell,
   AuthButton,
-  AuthNotice,
   AuthError,
   AuthLink,
   authInputClass,
@@ -15,11 +15,11 @@ import {
 
 export default function RegisterPage() {
   const t = useTranslations("auth");
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -38,7 +38,9 @@ export default function RegisterPage() {
     setSubmitting(true);
     try {
       await api.register({ email, password });
-      setSuccess(true);
+      // Registration sends a 6-digit code (not a link) — go straight to
+      // entering it rather than showing an inline "check your email" card.
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
       const message = err instanceof Error ? err.message : "";
       if (
@@ -49,24 +51,8 @@ export default function RegisterPage() {
       } else {
         setError(message || t("registrationFailed"));
       }
-    } finally {
       setSubmitting(false);
     }
-  }
-
-  if (success) {
-    return (
-      <AuthShell
-        title={t("accountCreatedTitle")}
-        subtitle={t("accountCreatedSubtitle")}
-        footer={<>{t("alreadyVerified")} <AuthLink href="/login">{t("signIn")}</AuthLink></>}
-      >
-        <AuthNotice>
-          <p className="font-semibold mb-1 text-accent-100">{t("checkEmailTitle")}</p>
-          <p>{t("checkEmailBody")}</p>
-        </AuthNotice>
-      </AuthShell>
-    );
   }
 
   return (

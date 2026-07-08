@@ -70,5 +70,9 @@ app.include_router(fastapi_users.get_users_router(UserRead, UserUpdate), prefix=
 
 
 @app.get("/api/health")
+@app.head("/api/health")
 def health():
+    # HEAD must work here too, not just GET — uptime monitors (UptimeRobot,
+    # load balancers, etc.) commonly default to HEAD for health checks, and a
+    # 405 there reads as "down" to them even though the app is fine.
     return {"status": "ok"}

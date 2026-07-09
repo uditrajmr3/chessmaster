@@ -100,10 +100,21 @@ def send_reset_email(email: str, token: str) -> None:
 # ── Signup verification code email — custom-coded HTML (not the Resend  ──────
 # dashboard template), table-based for email-client compatibility.
 
+# Same rook mark as frontend/src/components/Logo.tsx, rasterized to a PNG —
+# inline <svg> is unreliably supported in HTML email (Gmail among others has
+# historically stripped it), so an <img> with a base64 data URI is the safe
+# choice. Regenerate with ImageMagick if the mark ever changes:
+#   convert -background none -density 300 rook.svg -resize 96x96 rook.png
+_ROOK_LOGO_BASE64 = (
+    "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAIoUExURQAAAOi5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5iui5igAAAMGYZ4oAAAC2dFJOUwAAAQwREAoCDQkOCA8VpN3a34kXqdzbfbRxxWoYwaIbyJMc1YYZ6b+hxpLTheZ8oJEahKoWLpgw1P4v577C3sTv1/l7HYEDs/Tk/FmCevo/Y5DojUGe8lVf2SM99iHNjwf98zlK7uCcC8OAVjcTu3RRbzTtml5y6yxS9yaWumuV8UvLtgTwtXY2YVCtYkUFVOOHQCfW4jLPaSgUd07JrPhCEvUGV7kxJMB1q3DhvG0e+8c+g2gi75A7CgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAAASwAAAEsAHOI6VIAAAAHdElNRQfqBwkEDhunzE1gAAADiklEQVRo3u3Z91MTQRQH8LxQQm+hiYCgkIAEFUUgFFHAqAEUUUEBFVAQRbEhYm8goqjYC1gQK2DX+/vcDLkLDMzt27fjjDPm+9ububzPXNvb3RgM3njjjTf/aIAaNGD08fWbjq8/gCnAT00gq4K0KphVITMrNBAaFh4xncgoAHN0jLuKjWNVfKy7ilgAEJqgVrELjXggMUlRkwywKEWrUgEWL9GqNIB0i1bFiQBW7WcZDMjUqqWsytIqGwOytWqZF/hLwHLWxAOsAMjxACvZMyUNrMrNXe0B8sy5+QVqYY9KNBdaZIGiYmuJ1sS+xmotXatV66zWhDJZAJ//CQAaUG5EjnZs2K0oIQDrHWigcMNGArApzQ8J+CcT2rM4K5FATikNsFchgRljj1hsSMBcTASqkYCjajOpf9EW7FMUUrPVldRaZOeEba7Do7Y70O+BOztw/evqRect6uE77ShgV4PovEhlGptQQKa/YGcN2L0HBew10QADNGdg+rfUi14bzynYMEDrPjqwvw0BJOVQAQNUtCOAA8jHfz6g4yC/v72afAIGMB3iA5ZGCQA6+UCMmdyfAYezuUB8oAxwpIsLHKVfIZfA/Xraj8kBx3mfhvBCGcAAJ07ybkGATH82AYjkAN1SJ8CmMGH6/ZtOSQLQow+c7pUFzpzVBQpCpfoz4FyWLnC+WQ4wQPAFXeCi3BVyncIlvf6Xr8gDujfhaoUsYIDeOh3gWp90f+jt1wGu98lfogGnDtB+QxKYtZczX2z0D7IbGCzTBSIa5AZT8OV8cZwDwlPS2cBN3nIwReZBBfC/xemvtAxJAbf7eYBS6icxbbnTze2vtN6lzxwhf5gPKNE+RAHAeA/RX2m7TwYePMQASjdxvOB+LtU8ekwCAMxPcIASRVpDATzFrscjn1FOAZ7z56Xu2EcIAMAobhHrygvxVRRA8Et0f+VVjSDgWrW/tuABpWtMbFBlR4/lCfRX3nSOiwgA42/f4e+AK0V570X+w4FK3qx9bjI/CAAdAjdYjX1QACBtqlWLbC1/JADorWV2s/Av8Yx8wm1JsYOMQYkThHsw5PpTjy8ApE+mTNURzqA2cmK0mSuwQXrCSeg+nbZJE08AKG8h91eUYe7mFAR+luivKF+4QEiSFDDABfoIL7EnTu6ymS2ZKH9OqEn5yn+MmnumqO2/ff/BfxEAHI0jNlJ+/vo99037A2K1gt7cAK4mAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDI2LTA3LTA5VDA0OjE0OjI3KzAwOjAwZnaVOAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyNi0wNy0wOVQwNDoxNDoyNyswMDowMBcrLYQAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjYtMDctMDlUMDQ6MTQ6MjcrMDA6MDBAPgxbAAAAAElFTkSuQmCC"
+)
+
 _LOGO_SVG = (
     '<div style="width:48px;height:48px;background:#1a120c;border-radius:12px;'
-    'display:inline-block;line-height:48px;color:#e8b98a;font-family:Georgia,serif;'
-    'font-weight:700;font-size:22px;text-align:center;">&#9822;</div>'
+    'display:inline-block;text-align:center;line-height:48px;">'
+    f'<img src="data:image/png;base64,{_ROOK_LOGO_BASE64}" width="24" height="24" '
+    'alt="ChessInt" style="vertical-align:middle;"/>'
+    '</div>'
 )
 
 

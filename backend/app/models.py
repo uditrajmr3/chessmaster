@@ -1,5 +1,6 @@
 from .auth.models import User  # noqa: F401
 from datetime import datetime
+import uuid
 
 from fastapi_users_db_sqlalchemy.generics import GUID
 from sqlalchemy import (
@@ -9,10 +10,12 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
+    JSON,
     String,
     Text,
     UniqueConstraint,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 
 from .database import Base
 
@@ -137,3 +140,30 @@ class Payment(Base):
     status = Column(String, nullable=False, default="created")
     created_at = Column(DateTime, default=datetime.utcnow)
     verified_at = Column(DateTime, nullable=True)
+
+
+class AwardScan(Base):
+    """Cached measurement payload for one public Chess.com profile.
+
+    Holds only public data: a username and derived counts. No opponent
+    identities are persisted beyond ISO country codes. Unauthenticated —
+    this is the one table the public /api/awards router writes to.
+
+    `measurements` uses the generic JSON type with a JSONB variant for
+    Postgres: plain JSON also compiles under the SQLite engine the test
+    suite runs against (JSONB is Postgres-only and fails to compile there).
+    """
+
+    __tablename__ = "award_scan"
+
+    id = Column(GUID, primary_key=True, default=uuid.uuid4)
+    platform = Column(String, nullable=False, default="chesscom")
+    username = Column(String, nullable=False, index=True)
+    measurements = Column(JSON().with_variant(JSONB, "postgresql"), nullable=False, default=dict)
+    archive_watermark = Column(String, nullable=True)
+    games_parsed = Column(Integer, nullable=False, default=0)
+    scanned_at = Column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        UniqueConstraint("platform", "username", name="uq_award_scan_platform_username"),
+    )

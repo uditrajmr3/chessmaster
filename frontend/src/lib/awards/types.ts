@@ -1,10 +1,10 @@
 export type Provenance = "verified" | "community" | "inferred";
-export type RuleOp = ">=" | ">" | "<=" | "<" | "==" | "set_size" | "has_key";
+export type RuleOp = ">=" | ">" | "<=" | "<" | "==" | "set_size" | "has_key" | "contains";
 
 export interface AwardRule {
   measurement: string;
   op: RuleOp;
-  target: number;
+  target: number | string;
 }
 
 export interface AwardEntry {

@@ -7,7 +7,12 @@
     "description": "Play a game against an opponent based in Afghanistan.",
     "howTo": "Look for opponents whose Chess.com profile lists Afghanistan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AF"
+    }
   },
   {
     "id": "passport-ax",
@@ -17,7 +22,12 @@
     "description": "Play a game against an opponent based in Åland Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Åland Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AX"
+    }
   },
   {
     "id": "passport-al",
@@ -27,7 +37,12 @@
     "description": "Play a game against an opponent based in Albania.",
     "howTo": "Look for opponents whose Chess.com profile lists Albania as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AL"
+    }
   },
   {
     "id": "passport-dz",
@@ -37,7 +52,12 @@
     "description": "Play a game against an opponent based in Algeria.",
     "howTo": "Look for opponents whose Chess.com profile lists Algeria as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "DZ"
+    }
   },
   {
     "id": "passport-as",
@@ -47,7 +67,12 @@
     "description": "Play a game against an opponent based in American Samoa.",
     "howTo": "Look for opponents whose Chess.com profile lists American Samoa as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AS"
+    }
   },
   {
     "id": "passport-ad",
@@ -57,7 +82,12 @@
     "description": "Play a game against an opponent based in Andorra.",
     "howTo": "Look for opponents whose Chess.com profile lists Andorra as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AD"
+    }
   },
   {
     "id": "passport-ao",
@@ -67,7 +97,12 @@
     "description": "Play a game against an opponent based in Angola.",
     "howTo": "Look for opponents whose Chess.com profile lists Angola as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AO"
+    }
   },
   {
     "id": "passport-ai",
@@ -77,7 +112,12 @@
     "description": "Play a game against an opponent based in Anguilla.",
     "howTo": "Look for opponents whose Chess.com profile lists Anguilla as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AI"
+    }
   },
   {
     "id": "passport-aq",
@@ -87,7 +127,12 @@
     "description": "Play a game against an opponent based in Antarctica.",
     "howTo": "Look for opponents whose Chess.com profile lists Antarctica as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AQ"
+    }
   },
   {
     "id": "passport-ag",
@@ -97,7 +142,12 @@
     "description": "Play a game against an opponent based in Antigua & Barbuda.",
     "howTo": "Look for opponents whose Chess.com profile lists Antigua & Barbuda as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AG"
+    }
   },
   {
     "id": "passport-ar",
@@ -107,7 +157,12 @@
     "description": "Play a game against an opponent based in Argentina.",
     "howTo": "Look for opponents whose Chess.com profile lists Argentina as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AR"
+    }
   },
   {
     "id": "passport-am",
@@ -117,7 +172,12 @@
     "description": "Play a game against an opponent based in Armenia.",
     "howTo": "Look for opponents whose Chess.com profile lists Armenia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AM"
+    }
   },
   {
     "id": "passport-aw",
@@ -127,7 +187,12 @@
     "description": "Play a game against an opponent based in Aruba.",
     "howTo": "Look for opponents whose Chess.com profile lists Aruba as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AW"
+    }
   },
   {
     "id": "passport-au",
@@ -137,7 +202,12 @@
     "description": "Play a game against an opponent based in Australia.",
     "howTo": "Look for opponents whose Chess.com profile lists Australia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AU"
+    }
   },
   {
     "id": "passport-at",
@@ -147,7 +217,12 @@
     "description": "Play a game against an opponent based in Austria.",
     "howTo": "Look for opponents whose Chess.com profile lists Austria as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AT"
+    }
   },
   {
     "id": "passport-az",
@@ -157,7 +232,12 @@
     "description": "Play a game against an opponent based in Azerbaijan.",
     "howTo": "Look for opponents whose Chess.com profile lists Azerbaijan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AZ"
+    }
   },
   {
     "id": "passport-bs",
@@ -167,7 +247,12 @@
     "description": "Play a game against an opponent based in Bahamas.",
     "howTo": "Look for opponents whose Chess.com profile lists Bahamas as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BS"
+    }
   },
   {
     "id": "passport-bh",
@@ -177,7 +262,12 @@
     "description": "Play a game against an opponent based in Bahrain.",
     "howTo": "Look for opponents whose Chess.com profile lists Bahrain as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BH"
+    }
   },
   {
     "id": "passport-bd",
@@ -187,7 +277,12 @@
     "description": "Play a game against an opponent based in Bangladesh.",
     "howTo": "Look for opponents whose Chess.com profile lists Bangladesh as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BD"
+    }
   },
   {
     "id": "passport-bb",
@@ -197,7 +292,12 @@
     "description": "Play a game against an opponent based in Barbados.",
     "howTo": "Look for opponents whose Chess.com profile lists Barbados as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BB"
+    }
   },
   {
     "id": "passport-by",
@@ -207,7 +307,12 @@
     "description": "Play a game against an opponent based in Belarus.",
     "howTo": "Look for opponents whose Chess.com profile lists Belarus as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BY"
+    }
   },
   {
     "id": "passport-be",
@@ -217,7 +322,12 @@
     "description": "Play a game against an opponent based in Belgium.",
     "howTo": "Look for opponents whose Chess.com profile lists Belgium as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BE"
+    }
   },
   {
     "id": "passport-bz",
@@ -227,7 +337,12 @@
     "description": "Play a game against an opponent based in Belize.",
     "howTo": "Look for opponents whose Chess.com profile lists Belize as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BZ"
+    }
   },
   {
     "id": "passport-bj",
@@ -237,7 +352,12 @@
     "description": "Play a game against an opponent based in Benin.",
     "howTo": "Look for opponents whose Chess.com profile lists Benin as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BJ"
+    }
   },
   {
     "id": "passport-bm",
@@ -247,7 +367,12 @@
     "description": "Play a game against an opponent based in Bermuda.",
     "howTo": "Look for opponents whose Chess.com profile lists Bermuda as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BM"
+    }
   },
   {
     "id": "passport-bt",
@@ -257,7 +382,12 @@
     "description": "Play a game against an opponent based in Bhutan.",
     "howTo": "Look for opponents whose Chess.com profile lists Bhutan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BT"
+    }
   },
   {
     "id": "passport-bo",
@@ -267,7 +397,12 @@
     "description": "Play a game against an opponent based in Bolivia.",
     "howTo": "Look for opponents whose Chess.com profile lists Bolivia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BO"
+    }
   },
   {
     "id": "passport-bq",
@@ -277,7 +412,12 @@
     "description": "Play a game against an opponent based in Caribbean Netherlands.",
     "howTo": "Look for opponents whose Chess.com profile lists Caribbean Netherlands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BQ"
+    }
   },
   {
     "id": "passport-ba",
@@ -287,7 +427,12 @@
     "description": "Play a game against an opponent based in Bosnia & Herzegovina.",
     "howTo": "Look for opponents whose Chess.com profile lists Bosnia & Herzegovina as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BA"
+    }
   },
   {
     "id": "passport-bw",
@@ -297,7 +442,12 @@
     "description": "Play a game against an opponent based in Botswana.",
     "howTo": "Look for opponents whose Chess.com profile lists Botswana as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BW"
+    }
   },
   {
     "id": "passport-bv",
@@ -307,7 +457,12 @@
     "description": "Play a game against an opponent based in Bouvet Island.",
     "howTo": "Look for opponents whose Chess.com profile lists Bouvet Island as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BV"
+    }
   },
   {
     "id": "passport-br",
@@ -317,7 +472,12 @@
     "description": "Play a game against an opponent based in Brazil.",
     "howTo": "Look for opponents whose Chess.com profile lists Brazil as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BR"
+    }
   },
   {
     "id": "passport-io",
@@ -327,7 +487,12 @@
     "description": "Play a game against an opponent based in British Indian Ocean Territory.",
     "howTo": "Look for opponents whose Chess.com profile lists British Indian Ocean Territory as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IO"
+    }
   },
   {
     "id": "passport-bn",
@@ -337,7 +502,12 @@
     "description": "Play a game against an opponent based in Brunei.",
     "howTo": "Look for opponents whose Chess.com profile lists Brunei as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BN"
+    }
   },
   {
     "id": "passport-bg",
@@ -347,7 +517,12 @@
     "description": "Play a game against an opponent based in Bulgaria.",
     "howTo": "Look for opponents whose Chess.com profile lists Bulgaria as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BG"
+    }
   },
   {
     "id": "passport-bf",
@@ -357,7 +532,12 @@
     "description": "Play a game against an opponent based in Burkina Faso.",
     "howTo": "Look for opponents whose Chess.com profile lists Burkina Faso as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BF"
+    }
   },
   {
     "id": "passport-bi",
@@ -367,7 +547,12 @@
     "description": "Play a game against an opponent based in Burundi.",
     "howTo": "Look for opponents whose Chess.com profile lists Burundi as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BI"
+    }
   },
   {
     "id": "passport-cv",
@@ -377,7 +562,12 @@
     "description": "Play a game against an opponent based in Cape Verde.",
     "howTo": "Look for opponents whose Chess.com profile lists Cape Verde as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CV"
+    }
   },
   {
     "id": "passport-kh",
@@ -387,7 +577,12 @@
     "description": "Play a game against an opponent based in Cambodia.",
     "howTo": "Look for opponents whose Chess.com profile lists Cambodia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KH"
+    }
   },
   {
     "id": "passport-cm",
@@ -397,7 +592,12 @@
     "description": "Play a game against an opponent based in Cameroon.",
     "howTo": "Look for opponents whose Chess.com profile lists Cameroon as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CM"
+    }
   },
   {
     "id": "passport-ca",
@@ -407,7 +607,12 @@
     "description": "Play a game against an opponent based in Canada.",
     "howTo": "Look for opponents whose Chess.com profile lists Canada as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CA"
+    }
   },
   {
     "id": "passport-ky",
@@ -417,7 +622,12 @@
     "description": "Play a game against an opponent based in Cayman Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Cayman Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KY"
+    }
   },
   {
     "id": "passport-cf",
@@ -427,7 +637,12 @@
     "description": "Play a game against an opponent based in Central African Republic.",
     "howTo": "Look for opponents whose Chess.com profile lists Central African Republic as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CF"
+    }
   },
   {
     "id": "passport-td",
@@ -437,7 +652,12 @@
     "description": "Play a game against an opponent based in Chad.",
     "howTo": "Look for opponents whose Chess.com profile lists Chad as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TD"
+    }
   },
   {
     "id": "passport-cl",
@@ -447,7 +667,12 @@
     "description": "Play a game against an opponent based in Chile.",
     "howTo": "Look for opponents whose Chess.com profile lists Chile as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CL"
+    }
   },
   {
     "id": "passport-cn",
@@ -457,7 +682,12 @@
     "description": "Play a game against an opponent based in China.",
     "howTo": "Look for opponents whose Chess.com profile lists China as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CN"
+    }
   },
   {
     "id": "passport-cx",
@@ -467,7 +697,12 @@
     "description": "Play a game against an opponent based in Christmas Island.",
     "howTo": "Look for opponents whose Chess.com profile lists Christmas Island as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CX"
+    }
   },
   {
     "id": "passport-cc",
@@ -477,7 +712,12 @@
     "description": "Play a game against an opponent based in Cocos (Keeling) Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Cocos (Keeling) Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CC"
+    }
   },
   {
     "id": "passport-co",
@@ -487,7 +727,12 @@
     "description": "Play a game against an opponent based in Colombia.",
     "howTo": "Look for opponents whose Chess.com profile lists Colombia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CO"
+    }
   },
   {
     "id": "passport-km",
@@ -497,7 +742,12 @@
     "description": "Play a game against an opponent based in Comoros.",
     "howTo": "Look for opponents whose Chess.com profile lists Comoros as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KM"
+    }
   },
   {
     "id": "passport-cg",
@@ -507,7 +757,12 @@
     "description": "Play a game against an opponent based in Congo - Brazzaville.",
     "howTo": "Look for opponents whose Chess.com profile lists Congo - Brazzaville as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CG"
+    }
   },
   {
     "id": "passport-cd",
@@ -517,7 +772,12 @@
     "description": "Play a game against an opponent based in Congo - Kinshasa.",
     "howTo": "Look for opponents whose Chess.com profile lists Congo - Kinshasa as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CD"
+    }
   },
   {
     "id": "passport-ck",
@@ -527,7 +787,12 @@
     "description": "Play a game against an opponent based in Cook Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Cook Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CK"
+    }
   },
   {
     "id": "passport-cr",
@@ -537,7 +802,12 @@
     "description": "Play a game against an opponent based in Costa Rica.",
     "howTo": "Look for opponents whose Chess.com profile lists Costa Rica as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CR"
+    }
   },
   {
     "id": "passport-ci",
@@ -547,7 +817,12 @@
     "description": "Play a game against an opponent based in Côte d’Ivoire.",
     "howTo": "Look for opponents whose Chess.com profile lists Côte d’Ivoire as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CI"
+    }
   },
   {
     "id": "passport-hr",
@@ -557,7 +832,12 @@
     "description": "Play a game against an opponent based in Croatia.",
     "howTo": "Look for opponents whose Chess.com profile lists Croatia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "HR"
+    }
   },
   {
     "id": "passport-cu",
@@ -567,7 +847,12 @@
     "description": "Play a game against an opponent based in Cuba.",
     "howTo": "Look for opponents whose Chess.com profile lists Cuba as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CU"
+    }
   },
   {
     "id": "passport-cw",
@@ -577,7 +862,12 @@
     "description": "Play a game against an opponent based in Curaçao.",
     "howTo": "Look for opponents whose Chess.com profile lists Curaçao as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CW"
+    }
   },
   {
     "id": "passport-cy",
@@ -587,7 +877,12 @@
     "description": "Play a game against an opponent based in Cyprus.",
     "howTo": "Look for opponents whose Chess.com profile lists Cyprus as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CY"
+    }
   },
   {
     "id": "passport-cz",
@@ -597,7 +892,12 @@
     "description": "Play a game against an opponent based in Czechia.",
     "howTo": "Look for opponents whose Chess.com profile lists Czechia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CZ"
+    }
   },
   {
     "id": "passport-dk",
@@ -607,7 +907,12 @@
     "description": "Play a game against an opponent based in Denmark.",
     "howTo": "Look for opponents whose Chess.com profile lists Denmark as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "DK"
+    }
   },
   {
     "id": "passport-dj",
@@ -617,7 +922,12 @@
     "description": "Play a game against an opponent based in Djibouti.",
     "howTo": "Look for opponents whose Chess.com profile lists Djibouti as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "DJ"
+    }
   },
   {
     "id": "passport-dm",
@@ -627,7 +937,12 @@
     "description": "Play a game against an opponent based in Dominica.",
     "howTo": "Look for opponents whose Chess.com profile lists Dominica as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "DM"
+    }
   },
   {
     "id": "passport-do",
@@ -637,7 +952,12 @@
     "description": "Play a game against an opponent based in Dominican Republic.",
     "howTo": "Look for opponents whose Chess.com profile lists Dominican Republic as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "DO"
+    }
   },
   {
     "id": "passport-ec",
@@ -647,7 +967,12 @@
     "description": "Play a game against an opponent based in Ecuador.",
     "howTo": "Look for opponents whose Chess.com profile lists Ecuador as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "EC"
+    }
   },
   {
     "id": "passport-eg",
@@ -657,7 +982,12 @@
     "description": "Play a game against an opponent based in Egypt.",
     "howTo": "Look for opponents whose Chess.com profile lists Egypt as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "EG"
+    }
   },
   {
     "id": "passport-sv",
@@ -667,7 +997,12 @@
     "description": "Play a game against an opponent based in El Salvador.",
     "howTo": "Look for opponents whose Chess.com profile lists El Salvador as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SV"
+    }
   },
   {
     "id": "passport-gq",
@@ -677,7 +1012,12 @@
     "description": "Play a game against an opponent based in Equatorial Guinea.",
     "howTo": "Look for opponents whose Chess.com profile lists Equatorial Guinea as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GQ"
+    }
   },
   {
     "id": "passport-er",
@@ -687,7 +1027,12 @@
     "description": "Play a game against an opponent based in Eritrea.",
     "howTo": "Look for opponents whose Chess.com profile lists Eritrea as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ER"
+    }
   },
   {
     "id": "passport-ee",
@@ -697,7 +1042,12 @@
     "description": "Play a game against an opponent based in Estonia.",
     "howTo": "Look for opponents whose Chess.com profile lists Estonia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "EE"
+    }
   },
   {
     "id": "passport-sz",
@@ -707,7 +1057,12 @@
     "description": "Play a game against an opponent based in Eswatini.",
     "howTo": "Look for opponents whose Chess.com profile lists Eswatini as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SZ"
+    }
   },
   {
     "id": "passport-et",
@@ -717,7 +1072,12 @@
     "description": "Play a game against an opponent based in Ethiopia.",
     "howTo": "Look for opponents whose Chess.com profile lists Ethiopia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ET"
+    }
   },
   {
     "id": "passport-fk",
@@ -727,7 +1087,12 @@
     "description": "Play a game against an opponent based in Falkland Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Falkland Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "FK"
+    }
   },
   {
     "id": "passport-fo",
@@ -737,7 +1102,12 @@
     "description": "Play a game against an opponent based in Faroe Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Faroe Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "FO"
+    }
   },
   {
     "id": "passport-fj",
@@ -747,7 +1117,12 @@
     "description": "Play a game against an opponent based in Fiji.",
     "howTo": "Look for opponents whose Chess.com profile lists Fiji as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "FJ"
+    }
   },
   {
     "id": "passport-fi",
@@ -757,7 +1132,12 @@
     "description": "Play a game against an opponent based in Finland.",
     "howTo": "Look for opponents whose Chess.com profile lists Finland as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "FI"
+    }
   },
   {
     "id": "passport-fr",
@@ -767,7 +1147,12 @@
     "description": "Play a game against an opponent based in France.",
     "howTo": "Look for opponents whose Chess.com profile lists France as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "FR"
+    }
   },
   {
     "id": "passport-gf",
@@ -777,7 +1162,12 @@
     "description": "Play a game against an opponent based in French Guiana.",
     "howTo": "Look for opponents whose Chess.com profile lists French Guiana as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GF"
+    }
   },
   {
     "id": "passport-pf",
@@ -787,7 +1177,12 @@
     "description": "Play a game against an opponent based in French Polynesia.",
     "howTo": "Look for opponents whose Chess.com profile lists French Polynesia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PF"
+    }
   },
   {
     "id": "passport-tf",
@@ -797,7 +1192,12 @@
     "description": "Play a game against an opponent based in French Southern Territories.",
     "howTo": "Look for opponents whose Chess.com profile lists French Southern Territories as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TF"
+    }
   },
   {
     "id": "passport-ga",
@@ -807,7 +1207,12 @@
     "description": "Play a game against an opponent based in Gabon.",
     "howTo": "Look for opponents whose Chess.com profile lists Gabon as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GA"
+    }
   },
   {
     "id": "passport-gm",
@@ -817,7 +1222,12 @@
     "description": "Play a game against an opponent based in Gambia.",
     "howTo": "Look for opponents whose Chess.com profile lists Gambia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GM"
+    }
   },
   {
     "id": "passport-ge",
@@ -827,7 +1237,12 @@
     "description": "Play a game against an opponent based in Georgia.",
     "howTo": "Look for opponents whose Chess.com profile lists Georgia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GE"
+    }
   },
   {
     "id": "passport-de",
@@ -837,7 +1252,12 @@
     "description": "Play a game against an opponent based in Germany.",
     "howTo": "Look for opponents whose Chess.com profile lists Germany as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "DE"
+    }
   },
   {
     "id": "passport-gh",
@@ -847,7 +1267,12 @@
     "description": "Play a game against an opponent based in Ghana.",
     "howTo": "Look for opponents whose Chess.com profile lists Ghana as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GH"
+    }
   },
   {
     "id": "passport-gi",
@@ -857,7 +1282,12 @@
     "description": "Play a game against an opponent based in Gibraltar.",
     "howTo": "Look for opponents whose Chess.com profile lists Gibraltar as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GI"
+    }
   },
   {
     "id": "passport-gr",
@@ -867,7 +1297,12 @@
     "description": "Play a game against an opponent based in Greece.",
     "howTo": "Look for opponents whose Chess.com profile lists Greece as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GR"
+    }
   },
   {
     "id": "passport-gl",
@@ -877,7 +1312,12 @@
     "description": "Play a game against an opponent based in Greenland.",
     "howTo": "Look for opponents whose Chess.com profile lists Greenland as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GL"
+    }
   },
   {
     "id": "passport-gd",
@@ -887,7 +1327,12 @@
     "description": "Play a game against an opponent based in Grenada.",
     "howTo": "Look for opponents whose Chess.com profile lists Grenada as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GD"
+    }
   },
   {
     "id": "passport-gp",
@@ -897,7 +1342,12 @@
     "description": "Play a game against an opponent based in Guadeloupe.",
     "howTo": "Look for opponents whose Chess.com profile lists Guadeloupe as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GP"
+    }
   },
   {
     "id": "passport-gu",
@@ -907,7 +1357,12 @@
     "description": "Play a game against an opponent based in Guam.",
     "howTo": "Look for opponents whose Chess.com profile lists Guam as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GU"
+    }
   },
   {
     "id": "passport-gt",
@@ -917,7 +1372,12 @@
     "description": "Play a game against an opponent based in Guatemala.",
     "howTo": "Look for opponents whose Chess.com profile lists Guatemala as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GT"
+    }
   },
   {
     "id": "passport-gg",
@@ -927,7 +1387,12 @@
     "description": "Play a game against an opponent based in Guernsey.",
     "howTo": "Look for opponents whose Chess.com profile lists Guernsey as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GG"
+    }
   },
   {
     "id": "passport-gn",
@@ -937,7 +1402,12 @@
     "description": "Play a game against an opponent based in Guinea.",
     "howTo": "Look for opponents whose Chess.com profile lists Guinea as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GN"
+    }
   },
   {
     "id": "passport-gw",
@@ -947,7 +1417,12 @@
     "description": "Play a game against an opponent based in Guinea-Bissau.",
     "howTo": "Look for opponents whose Chess.com profile lists Guinea-Bissau as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GW"
+    }
   },
   {
     "id": "passport-gy",
@@ -957,7 +1432,12 @@
     "description": "Play a game against an opponent based in Guyana.",
     "howTo": "Look for opponents whose Chess.com profile lists Guyana as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GY"
+    }
   },
   {
     "id": "passport-ht",
@@ -967,7 +1447,12 @@
     "description": "Play a game against an opponent based in Haiti.",
     "howTo": "Look for opponents whose Chess.com profile lists Haiti as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "HT"
+    }
   },
   {
     "id": "passport-hm",
@@ -977,7 +1462,12 @@
     "description": "Play a game against an opponent based in Heard & McDonald Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Heard & McDonald Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "HM"
+    }
   },
   {
     "id": "passport-va",
@@ -987,7 +1477,12 @@
     "description": "Play a game against an opponent based in Vatican City.",
     "howTo": "Look for opponents whose Chess.com profile lists Vatican City as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "VA"
+    }
   },
   {
     "id": "passport-hn",
@@ -997,7 +1492,12 @@
     "description": "Play a game against an opponent based in Honduras.",
     "howTo": "Look for opponents whose Chess.com profile lists Honduras as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "HN"
+    }
   },
   {
     "id": "passport-hk",
@@ -1007,7 +1507,12 @@
     "description": "Play a game against an opponent based in Hong Kong SAR China.",
     "howTo": "Look for opponents whose Chess.com profile lists Hong Kong SAR China as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "HK"
+    }
   },
   {
     "id": "passport-hu",
@@ -1017,7 +1522,12 @@
     "description": "Play a game against an opponent based in Hungary.",
     "howTo": "Look for opponents whose Chess.com profile lists Hungary as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "HU"
+    }
   },
   {
     "id": "passport-is",
@@ -1027,7 +1537,12 @@
     "description": "Play a game against an opponent based in Iceland.",
     "howTo": "Look for opponents whose Chess.com profile lists Iceland as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IS"
+    }
   },
   {
     "id": "passport-in",
@@ -1037,7 +1552,12 @@
     "description": "Play a game against an opponent based in India.",
     "howTo": "Look for opponents whose Chess.com profile lists India as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IN"
+    }
   },
   {
     "id": "passport-id",
@@ -1047,7 +1567,12 @@
     "description": "Play a game against an opponent based in Indonesia.",
     "howTo": "Look for opponents whose Chess.com profile lists Indonesia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ID"
+    }
   },
   {
     "id": "passport-ir",
@@ -1057,7 +1582,12 @@
     "description": "Play a game against an opponent based in Iran.",
     "howTo": "Look for opponents whose Chess.com profile lists Iran as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IR"
+    }
   },
   {
     "id": "passport-iq",
@@ -1067,7 +1597,12 @@
     "description": "Play a game against an opponent based in Iraq.",
     "howTo": "Look for opponents whose Chess.com profile lists Iraq as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IQ"
+    }
   },
   {
     "id": "passport-ie",
@@ -1077,7 +1612,12 @@
     "description": "Play a game against an opponent based in Ireland.",
     "howTo": "Look for opponents whose Chess.com profile lists Ireland as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IE"
+    }
   },
   {
     "id": "passport-im",
@@ -1087,7 +1627,12 @@
     "description": "Play a game against an opponent based in Isle of Man.",
     "howTo": "Look for opponents whose Chess.com profile lists Isle of Man as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IM"
+    }
   },
   {
     "id": "passport-il",
@@ -1097,7 +1642,12 @@
     "description": "Play a game against an opponent based in Israel.",
     "howTo": "Look for opponents whose Chess.com profile lists Israel as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IL"
+    }
   },
   {
     "id": "passport-it",
@@ -1107,7 +1657,12 @@
     "description": "Play a game against an opponent based in Italy.",
     "howTo": "Look for opponents whose Chess.com profile lists Italy as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "IT"
+    }
   },
   {
     "id": "passport-jm",
@@ -1117,7 +1672,12 @@
     "description": "Play a game against an opponent based in Jamaica.",
     "howTo": "Look for opponents whose Chess.com profile lists Jamaica as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "JM"
+    }
   },
   {
     "id": "passport-jp",
@@ -1127,7 +1687,12 @@
     "description": "Play a game against an opponent based in Japan.",
     "howTo": "Look for opponents whose Chess.com profile lists Japan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "JP"
+    }
   },
   {
     "id": "passport-je",
@@ -1137,7 +1702,12 @@
     "description": "Play a game against an opponent based in Jersey.",
     "howTo": "Look for opponents whose Chess.com profile lists Jersey as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "JE"
+    }
   },
   {
     "id": "passport-jo",
@@ -1147,7 +1717,12 @@
     "description": "Play a game against an opponent based in Jordan.",
     "howTo": "Look for opponents whose Chess.com profile lists Jordan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "JO"
+    }
   },
   {
     "id": "passport-kz",
@@ -1157,7 +1732,12 @@
     "description": "Play a game against an opponent based in Kazakhstan.",
     "howTo": "Look for opponents whose Chess.com profile lists Kazakhstan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KZ"
+    }
   },
   {
     "id": "passport-ke",
@@ -1167,7 +1747,12 @@
     "description": "Play a game against an opponent based in Kenya.",
     "howTo": "Look for opponents whose Chess.com profile lists Kenya as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KE"
+    }
   },
   {
     "id": "passport-ki",
@@ -1177,7 +1762,12 @@
     "description": "Play a game against an opponent based in Kiribati.",
     "howTo": "Look for opponents whose Chess.com profile lists Kiribati as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KI"
+    }
   },
   {
     "id": "passport-kp",
@@ -1187,7 +1777,12 @@
     "description": "Play a game against an opponent based in North Korea.",
     "howTo": "Look for opponents whose Chess.com profile lists North Korea as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KP"
+    }
   },
   {
     "id": "passport-kr",
@@ -1197,7 +1792,12 @@
     "description": "Play a game against an opponent based in South Korea.",
     "howTo": "Look for opponents whose Chess.com profile lists South Korea as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KR"
+    }
   },
   {
     "id": "passport-kw",
@@ -1207,7 +1807,12 @@
     "description": "Play a game against an opponent based in Kuwait.",
     "howTo": "Look for opponents whose Chess.com profile lists Kuwait as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KW"
+    }
   },
   {
     "id": "passport-kg",
@@ -1217,7 +1822,12 @@
     "description": "Play a game against an opponent based in Kyrgyzstan.",
     "howTo": "Look for opponents whose Chess.com profile lists Kyrgyzstan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KG"
+    }
   },
   {
     "id": "passport-la",
@@ -1227,7 +1837,12 @@
     "description": "Play a game against an opponent based in Laos.",
     "howTo": "Look for opponents whose Chess.com profile lists Laos as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LA"
+    }
   },
   {
     "id": "passport-lv",
@@ -1237,7 +1852,12 @@
     "description": "Play a game against an opponent based in Latvia.",
     "howTo": "Look for opponents whose Chess.com profile lists Latvia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LV"
+    }
   },
   {
     "id": "passport-lb",
@@ -1247,7 +1867,12 @@
     "description": "Play a game against an opponent based in Lebanon.",
     "howTo": "Look for opponents whose Chess.com profile lists Lebanon as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LB"
+    }
   },
   {
     "id": "passport-ls",
@@ -1257,7 +1882,12 @@
     "description": "Play a game against an opponent based in Lesotho.",
     "howTo": "Look for opponents whose Chess.com profile lists Lesotho as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LS"
+    }
   },
   {
     "id": "passport-lr",
@@ -1267,7 +1897,12 @@
     "description": "Play a game against an opponent based in Liberia.",
     "howTo": "Look for opponents whose Chess.com profile lists Liberia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LR"
+    }
   },
   {
     "id": "passport-ly",
@@ -1277,7 +1912,12 @@
     "description": "Play a game against an opponent based in Libya.",
     "howTo": "Look for opponents whose Chess.com profile lists Libya as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LY"
+    }
   },
   {
     "id": "passport-li",
@@ -1287,7 +1927,12 @@
     "description": "Play a game against an opponent based in Liechtenstein.",
     "howTo": "Look for opponents whose Chess.com profile lists Liechtenstein as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LI"
+    }
   },
   {
     "id": "passport-lt",
@@ -1297,7 +1942,12 @@
     "description": "Play a game against an opponent based in Lithuania.",
     "howTo": "Look for opponents whose Chess.com profile lists Lithuania as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LT"
+    }
   },
   {
     "id": "passport-lu",
@@ -1307,7 +1957,12 @@
     "description": "Play a game against an opponent based in Luxembourg.",
     "howTo": "Look for opponents whose Chess.com profile lists Luxembourg as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LU"
+    }
   },
   {
     "id": "passport-mo",
@@ -1317,7 +1972,12 @@
     "description": "Play a game against an opponent based in Macao SAR China.",
     "howTo": "Look for opponents whose Chess.com profile lists Macao SAR China as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MO"
+    }
   },
   {
     "id": "passport-mg",
@@ -1327,7 +1987,12 @@
     "description": "Play a game against an opponent based in Madagascar.",
     "howTo": "Look for opponents whose Chess.com profile lists Madagascar as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MG"
+    }
   },
   {
     "id": "passport-mw",
@@ -1337,7 +2002,12 @@
     "description": "Play a game against an opponent based in Malawi.",
     "howTo": "Look for opponents whose Chess.com profile lists Malawi as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MW"
+    }
   },
   {
     "id": "passport-my",
@@ -1347,7 +2017,12 @@
     "description": "Play a game against an opponent based in Malaysia.",
     "howTo": "Look for opponents whose Chess.com profile lists Malaysia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MY"
+    }
   },
   {
     "id": "passport-mv",
@@ -1357,7 +2032,12 @@
     "description": "Play a game against an opponent based in Maldives.",
     "howTo": "Look for opponents whose Chess.com profile lists Maldives as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MV"
+    }
   },
   {
     "id": "passport-ml",
@@ -1367,7 +2047,12 @@
     "description": "Play a game against an opponent based in Mali.",
     "howTo": "Look for opponents whose Chess.com profile lists Mali as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ML"
+    }
   },
   {
     "id": "passport-mt",
@@ -1377,7 +2062,12 @@
     "description": "Play a game against an opponent based in Malta.",
     "howTo": "Look for opponents whose Chess.com profile lists Malta as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MT"
+    }
   },
   {
     "id": "passport-mh",
@@ -1387,7 +2077,12 @@
     "description": "Play a game against an opponent based in Marshall Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Marshall Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MH"
+    }
   },
   {
     "id": "passport-mq",
@@ -1397,7 +2092,12 @@
     "description": "Play a game against an opponent based in Martinique.",
     "howTo": "Look for opponents whose Chess.com profile lists Martinique as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MQ"
+    }
   },
   {
     "id": "passport-mr",
@@ -1407,7 +2107,12 @@
     "description": "Play a game against an opponent based in Mauritania.",
     "howTo": "Look for opponents whose Chess.com profile lists Mauritania as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MR"
+    }
   },
   {
     "id": "passport-mu",
@@ -1417,7 +2122,12 @@
     "description": "Play a game against an opponent based in Mauritius.",
     "howTo": "Look for opponents whose Chess.com profile lists Mauritius as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MU"
+    }
   },
   {
     "id": "passport-yt",
@@ -1427,7 +2137,12 @@
     "description": "Play a game against an opponent based in Mayotte.",
     "howTo": "Look for opponents whose Chess.com profile lists Mayotte as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "YT"
+    }
   },
   {
     "id": "passport-mx",
@@ -1437,7 +2152,12 @@
     "description": "Play a game against an opponent based in Mexico.",
     "howTo": "Look for opponents whose Chess.com profile lists Mexico as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MX"
+    }
   },
   {
     "id": "passport-fm",
@@ -1447,7 +2167,12 @@
     "description": "Play a game against an opponent based in Micronesia.",
     "howTo": "Look for opponents whose Chess.com profile lists Micronesia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "FM"
+    }
   },
   {
     "id": "passport-md",
@@ -1457,7 +2182,12 @@
     "description": "Play a game against an opponent based in Moldova.",
     "howTo": "Look for opponents whose Chess.com profile lists Moldova as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MD"
+    }
   },
   {
     "id": "passport-mc",
@@ -1467,7 +2197,12 @@
     "description": "Play a game against an opponent based in Monaco.",
     "howTo": "Look for opponents whose Chess.com profile lists Monaco as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MC"
+    }
   },
   {
     "id": "passport-mn",
@@ -1477,7 +2212,12 @@
     "description": "Play a game against an opponent based in Mongolia.",
     "howTo": "Look for opponents whose Chess.com profile lists Mongolia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MN"
+    }
   },
   {
     "id": "passport-me",
@@ -1487,7 +2227,12 @@
     "description": "Play a game against an opponent based in Montenegro.",
     "howTo": "Look for opponents whose Chess.com profile lists Montenegro as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ME"
+    }
   },
   {
     "id": "passport-ms",
@@ -1497,7 +2242,12 @@
     "description": "Play a game against an opponent based in Montserrat.",
     "howTo": "Look for opponents whose Chess.com profile lists Montserrat as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MS"
+    }
   },
   {
     "id": "passport-ma",
@@ -1507,7 +2257,12 @@
     "description": "Play a game against an opponent based in Morocco.",
     "howTo": "Look for opponents whose Chess.com profile lists Morocco as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MA"
+    }
   },
   {
     "id": "passport-mz",
@@ -1517,7 +2272,12 @@
     "description": "Play a game against an opponent based in Mozambique.",
     "howTo": "Look for opponents whose Chess.com profile lists Mozambique as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MZ"
+    }
   },
   {
     "id": "passport-mm",
@@ -1527,7 +2287,12 @@
     "description": "Play a game against an opponent based in Myanmar (Burma).",
     "howTo": "Look for opponents whose Chess.com profile lists Myanmar (Burma) as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MM"
+    }
   },
   {
     "id": "passport-na",
@@ -1537,7 +2302,12 @@
     "description": "Play a game against an opponent based in Namibia.",
     "howTo": "Look for opponents whose Chess.com profile lists Namibia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NA"
+    }
   },
   {
     "id": "passport-nr",
@@ -1547,7 +2317,12 @@
     "description": "Play a game against an opponent based in Nauru.",
     "howTo": "Look for opponents whose Chess.com profile lists Nauru as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NR"
+    }
   },
   {
     "id": "passport-np",
@@ -1557,7 +2332,12 @@
     "description": "Play a game against an opponent based in Nepal.",
     "howTo": "Look for opponents whose Chess.com profile lists Nepal as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NP"
+    }
   },
   {
     "id": "passport-nl",
@@ -1567,7 +2347,12 @@
     "description": "Play a game against an opponent based in Netherlands.",
     "howTo": "Look for opponents whose Chess.com profile lists Netherlands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NL"
+    }
   },
   {
     "id": "passport-nc",
@@ -1577,7 +2362,12 @@
     "description": "Play a game against an opponent based in New Caledonia.",
     "howTo": "Look for opponents whose Chess.com profile lists New Caledonia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NC"
+    }
   },
   {
     "id": "passport-nz",
@@ -1587,7 +2377,12 @@
     "description": "Play a game against an opponent based in New Zealand.",
     "howTo": "Look for opponents whose Chess.com profile lists New Zealand as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NZ"
+    }
   },
   {
     "id": "passport-ni",
@@ -1597,7 +2392,12 @@
     "description": "Play a game against an opponent based in Nicaragua.",
     "howTo": "Look for opponents whose Chess.com profile lists Nicaragua as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NI"
+    }
   },
   {
     "id": "passport-ne",
@@ -1607,7 +2407,12 @@
     "description": "Play a game against an opponent based in Niger.",
     "howTo": "Look for opponents whose Chess.com profile lists Niger as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NE"
+    }
   },
   {
     "id": "passport-ng",
@@ -1617,7 +2422,12 @@
     "description": "Play a game against an opponent based in Nigeria.",
     "howTo": "Look for opponents whose Chess.com profile lists Nigeria as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NG"
+    }
   },
   {
     "id": "passport-nu",
@@ -1627,7 +2437,12 @@
     "description": "Play a game against an opponent based in Niue.",
     "howTo": "Look for opponents whose Chess.com profile lists Niue as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NU"
+    }
   },
   {
     "id": "passport-nf",
@@ -1637,7 +2452,12 @@
     "description": "Play a game against an opponent based in Norfolk Island.",
     "howTo": "Look for opponents whose Chess.com profile lists Norfolk Island as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NF"
+    }
   },
   {
     "id": "passport-mk",
@@ -1647,7 +2467,12 @@
     "description": "Play a game against an opponent based in North Macedonia.",
     "howTo": "Look for opponents whose Chess.com profile lists North Macedonia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MK"
+    }
   },
   {
     "id": "passport-mp",
@@ -1657,7 +2482,12 @@
     "description": "Play a game against an opponent based in Northern Mariana Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Northern Mariana Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MP"
+    }
   },
   {
     "id": "passport-no",
@@ -1667,7 +2497,12 @@
     "description": "Play a game against an opponent based in Norway.",
     "howTo": "Look for opponents whose Chess.com profile lists Norway as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "NO"
+    }
   },
   {
     "id": "passport-om",
@@ -1677,7 +2512,12 @@
     "description": "Play a game against an opponent based in Oman.",
     "howTo": "Look for opponents whose Chess.com profile lists Oman as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "OM"
+    }
   },
   {
     "id": "passport-pk",
@@ -1687,7 +2527,12 @@
     "description": "Play a game against an opponent based in Pakistan.",
     "howTo": "Look for opponents whose Chess.com profile lists Pakistan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PK"
+    }
   },
   {
     "id": "passport-pw",
@@ -1697,7 +2542,12 @@
     "description": "Play a game against an opponent based in Palau.",
     "howTo": "Look for opponents whose Chess.com profile lists Palau as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PW"
+    }
   },
   {
     "id": "passport-ps",
@@ -1707,7 +2557,12 @@
     "description": "Play a game against an opponent based in Palestinian Territories.",
     "howTo": "Look for opponents whose Chess.com profile lists Palestinian Territories as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PS"
+    }
   },
   {
     "id": "passport-pa",
@@ -1717,7 +2572,12 @@
     "description": "Play a game against an opponent based in Panama.",
     "howTo": "Look for opponents whose Chess.com profile lists Panama as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PA"
+    }
   },
   {
     "id": "passport-pg",
@@ -1727,7 +2587,12 @@
     "description": "Play a game against an opponent based in Papua New Guinea.",
     "howTo": "Look for opponents whose Chess.com profile lists Papua New Guinea as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PG"
+    }
   },
   {
     "id": "passport-py",
@@ -1737,7 +2602,12 @@
     "description": "Play a game against an opponent based in Paraguay.",
     "howTo": "Look for opponents whose Chess.com profile lists Paraguay as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PY"
+    }
   },
   {
     "id": "passport-pe",
@@ -1747,7 +2617,12 @@
     "description": "Play a game against an opponent based in Peru.",
     "howTo": "Look for opponents whose Chess.com profile lists Peru as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PE"
+    }
   },
   {
     "id": "passport-ph",
@@ -1757,7 +2632,12 @@
     "description": "Play a game against an opponent based in Philippines.",
     "howTo": "Look for opponents whose Chess.com profile lists Philippines as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PH"
+    }
   },
   {
     "id": "passport-pn",
@@ -1767,7 +2647,12 @@
     "description": "Play a game against an opponent based in Pitcairn Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Pitcairn Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PN"
+    }
   },
   {
     "id": "passport-pl",
@@ -1777,7 +2662,12 @@
     "description": "Play a game against an opponent based in Poland.",
     "howTo": "Look for opponents whose Chess.com profile lists Poland as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PL"
+    }
   },
   {
     "id": "passport-pt",
@@ -1787,7 +2677,12 @@
     "description": "Play a game against an opponent based in Portugal.",
     "howTo": "Look for opponents whose Chess.com profile lists Portugal as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PT"
+    }
   },
   {
     "id": "passport-pr",
@@ -1797,7 +2692,12 @@
     "description": "Play a game against an opponent based in Puerto Rico.",
     "howTo": "Look for opponents whose Chess.com profile lists Puerto Rico as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PR"
+    }
   },
   {
     "id": "passport-qa",
@@ -1807,7 +2707,12 @@
     "description": "Play a game against an opponent based in Qatar.",
     "howTo": "Look for opponents whose Chess.com profile lists Qatar as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "QA"
+    }
   },
   {
     "id": "passport-re",
@@ -1817,7 +2722,12 @@
     "description": "Play a game against an opponent based in Réunion.",
     "howTo": "Look for opponents whose Chess.com profile lists Réunion as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "RE"
+    }
   },
   {
     "id": "passport-ro",
@@ -1827,7 +2737,12 @@
     "description": "Play a game against an opponent based in Romania.",
     "howTo": "Look for opponents whose Chess.com profile lists Romania as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "RO"
+    }
   },
   {
     "id": "passport-ru",
@@ -1837,7 +2752,12 @@
     "description": "Play a game against an opponent based in Russia.",
     "howTo": "Look for opponents whose Chess.com profile lists Russia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "RU"
+    }
   },
   {
     "id": "passport-rw",
@@ -1847,7 +2767,12 @@
     "description": "Play a game against an opponent based in Rwanda.",
     "howTo": "Look for opponents whose Chess.com profile lists Rwanda as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "RW"
+    }
   },
   {
     "id": "passport-bl",
@@ -1857,7 +2782,12 @@
     "description": "Play a game against an opponent based in St. Barthélemy.",
     "howTo": "Look for opponents whose Chess.com profile lists St. Barthélemy as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "BL"
+    }
   },
   {
     "id": "passport-sh",
@@ -1867,7 +2797,12 @@
     "description": "Play a game against an opponent based in St. Helena.",
     "howTo": "Look for opponents whose Chess.com profile lists St. Helena as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SH"
+    }
   },
   {
     "id": "passport-kn",
@@ -1877,7 +2812,12 @@
     "description": "Play a game against an opponent based in St. Kitts & Nevis.",
     "howTo": "Look for opponents whose Chess.com profile lists St. Kitts & Nevis as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "KN"
+    }
   },
   {
     "id": "passport-lc",
@@ -1887,7 +2827,12 @@
     "description": "Play a game against an opponent based in St. Lucia.",
     "howTo": "Look for opponents whose Chess.com profile lists St. Lucia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LC"
+    }
   },
   {
     "id": "passport-mf",
@@ -1897,7 +2842,12 @@
     "description": "Play a game against an opponent based in St. Martin.",
     "howTo": "Look for opponents whose Chess.com profile lists St. Martin as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "MF"
+    }
   },
   {
     "id": "passport-pm",
@@ -1907,7 +2857,12 @@
     "description": "Play a game against an opponent based in St. Pierre & Miquelon.",
     "howTo": "Look for opponents whose Chess.com profile lists St. Pierre & Miquelon as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "PM"
+    }
   },
   {
     "id": "passport-vc",
@@ -1917,7 +2872,12 @@
     "description": "Play a game against an opponent based in St. Vincent & Grenadines.",
     "howTo": "Look for opponents whose Chess.com profile lists St. Vincent & Grenadines as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "VC"
+    }
   },
   {
     "id": "passport-ws",
@@ -1927,7 +2887,12 @@
     "description": "Play a game against an opponent based in Samoa.",
     "howTo": "Look for opponents whose Chess.com profile lists Samoa as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "WS"
+    }
   },
   {
     "id": "passport-sm",
@@ -1937,7 +2902,12 @@
     "description": "Play a game against an opponent based in San Marino.",
     "howTo": "Look for opponents whose Chess.com profile lists San Marino as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SM"
+    }
   },
   {
     "id": "passport-st",
@@ -1947,7 +2917,12 @@
     "description": "Play a game against an opponent based in São Tomé & Príncipe.",
     "howTo": "Look for opponents whose Chess.com profile lists São Tomé & Príncipe as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ST"
+    }
   },
   {
     "id": "passport-sa",
@@ -1957,7 +2932,12 @@
     "description": "Play a game against an opponent based in Saudi Arabia.",
     "howTo": "Look for opponents whose Chess.com profile lists Saudi Arabia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SA"
+    }
   },
   {
     "id": "passport-sn",
@@ -1967,7 +2947,12 @@
     "description": "Play a game against an opponent based in Senegal.",
     "howTo": "Look for opponents whose Chess.com profile lists Senegal as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SN"
+    }
   },
   {
     "id": "passport-rs",
@@ -1977,7 +2962,12 @@
     "description": "Play a game against an opponent based in Serbia.",
     "howTo": "Look for opponents whose Chess.com profile lists Serbia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "RS"
+    }
   },
   {
     "id": "passport-sc",
@@ -1987,7 +2977,12 @@
     "description": "Play a game against an opponent based in Seychelles.",
     "howTo": "Look for opponents whose Chess.com profile lists Seychelles as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SC"
+    }
   },
   {
     "id": "passport-sl",
@@ -1997,7 +2992,12 @@
     "description": "Play a game against an opponent based in Sierra Leone.",
     "howTo": "Look for opponents whose Chess.com profile lists Sierra Leone as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SL"
+    }
   },
   {
     "id": "passport-sg",
@@ -2007,7 +3007,12 @@
     "description": "Play a game against an opponent based in Singapore.",
     "howTo": "Look for opponents whose Chess.com profile lists Singapore as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SG"
+    }
   },
   {
     "id": "passport-sx",
@@ -2017,7 +3022,12 @@
     "description": "Play a game against an opponent based in Sint Maarten.",
     "howTo": "Look for opponents whose Chess.com profile lists Sint Maarten as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SX"
+    }
   },
   {
     "id": "passport-sk",
@@ -2027,7 +3037,12 @@
     "description": "Play a game against an opponent based in Slovakia.",
     "howTo": "Look for opponents whose Chess.com profile lists Slovakia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SK"
+    }
   },
   {
     "id": "passport-si",
@@ -2037,7 +3052,12 @@
     "description": "Play a game against an opponent based in Slovenia.",
     "howTo": "Look for opponents whose Chess.com profile lists Slovenia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SI"
+    }
   },
   {
     "id": "passport-sb",
@@ -2047,7 +3067,12 @@
     "description": "Play a game against an opponent based in Solomon Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Solomon Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SB"
+    }
   },
   {
     "id": "passport-so",
@@ -2057,7 +3082,12 @@
     "description": "Play a game against an opponent based in Somalia.",
     "howTo": "Look for opponents whose Chess.com profile lists Somalia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SO"
+    }
   },
   {
     "id": "passport-za",
@@ -2067,7 +3097,12 @@
     "description": "Play a game against an opponent based in South Africa.",
     "howTo": "Look for opponents whose Chess.com profile lists South Africa as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ZA"
+    }
   },
   {
     "id": "passport-gs",
@@ -2077,7 +3112,12 @@
     "description": "Play a game against an opponent based in South Georgia & South Sandwich Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists South Georgia & South Sandwich Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GS"
+    }
   },
   {
     "id": "passport-ss",
@@ -2087,7 +3127,12 @@
     "description": "Play a game against an opponent based in South Sudan.",
     "howTo": "Look for opponents whose Chess.com profile lists South Sudan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SS"
+    }
   },
   {
     "id": "passport-es",
@@ -2097,7 +3142,12 @@
     "description": "Play a game against an opponent based in Spain.",
     "howTo": "Look for opponents whose Chess.com profile lists Spain as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ES"
+    }
   },
   {
     "id": "passport-lk",
@@ -2107,7 +3157,12 @@
     "description": "Play a game against an opponent based in Sri Lanka.",
     "howTo": "Look for opponents whose Chess.com profile lists Sri Lanka as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "LK"
+    }
   },
   {
     "id": "passport-sd",
@@ -2117,7 +3172,12 @@
     "description": "Play a game against an opponent based in Sudan.",
     "howTo": "Look for opponents whose Chess.com profile lists Sudan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SD"
+    }
   },
   {
     "id": "passport-sr",
@@ -2127,7 +3187,12 @@
     "description": "Play a game against an opponent based in Suriname.",
     "howTo": "Look for opponents whose Chess.com profile lists Suriname as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SR"
+    }
   },
   {
     "id": "passport-sj",
@@ -2137,7 +3202,12 @@
     "description": "Play a game against an opponent based in Svalbard & Jan Mayen.",
     "howTo": "Look for opponents whose Chess.com profile lists Svalbard & Jan Mayen as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SJ"
+    }
   },
   {
     "id": "passport-se",
@@ -2147,7 +3217,12 @@
     "description": "Play a game against an opponent based in Sweden.",
     "howTo": "Look for opponents whose Chess.com profile lists Sweden as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SE"
+    }
   },
   {
     "id": "passport-ch",
@@ -2157,7 +3232,12 @@
     "description": "Play a game against an opponent based in Switzerland.",
     "howTo": "Look for opponents whose Chess.com profile lists Switzerland as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "CH"
+    }
   },
   {
     "id": "passport-sy",
@@ -2167,7 +3247,12 @@
     "description": "Play a game against an opponent based in Syria.",
     "howTo": "Look for opponents whose Chess.com profile lists Syria as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "SY"
+    }
   },
   {
     "id": "passport-tw",
@@ -2177,7 +3262,12 @@
     "description": "Play a game against an opponent based in Taiwan.",
     "howTo": "Look for opponents whose Chess.com profile lists Taiwan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TW"
+    }
   },
   {
     "id": "passport-tj",
@@ -2187,7 +3277,12 @@
     "description": "Play a game against an opponent based in Tajikistan.",
     "howTo": "Look for opponents whose Chess.com profile lists Tajikistan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TJ"
+    }
   },
   {
     "id": "passport-tz",
@@ -2197,7 +3292,12 @@
     "description": "Play a game against an opponent based in Tanzania.",
     "howTo": "Look for opponents whose Chess.com profile lists Tanzania as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TZ"
+    }
   },
   {
     "id": "passport-th",
@@ -2207,7 +3307,12 @@
     "description": "Play a game against an opponent based in Thailand.",
     "howTo": "Look for opponents whose Chess.com profile lists Thailand as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TH"
+    }
   },
   {
     "id": "passport-tl",
@@ -2217,7 +3322,12 @@
     "description": "Play a game against an opponent based in Timor-Leste.",
     "howTo": "Look for opponents whose Chess.com profile lists Timor-Leste as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TL"
+    }
   },
   {
     "id": "passport-tg",
@@ -2227,7 +3337,12 @@
     "description": "Play a game against an opponent based in Togo.",
     "howTo": "Look for opponents whose Chess.com profile lists Togo as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TG"
+    }
   },
   {
     "id": "passport-tk",
@@ -2237,7 +3352,12 @@
     "description": "Play a game against an opponent based in Tokelau.",
     "howTo": "Look for opponents whose Chess.com profile lists Tokelau as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TK"
+    }
   },
   {
     "id": "passport-to",
@@ -2247,7 +3367,12 @@
     "description": "Play a game against an opponent based in Tonga.",
     "howTo": "Look for opponents whose Chess.com profile lists Tonga as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TO"
+    }
   },
   {
     "id": "passport-tt",
@@ -2257,7 +3382,12 @@
     "description": "Play a game against an opponent based in Trinidad & Tobago.",
     "howTo": "Look for opponents whose Chess.com profile lists Trinidad & Tobago as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TT"
+    }
   },
   {
     "id": "passport-tn",
@@ -2267,7 +3397,12 @@
     "description": "Play a game against an opponent based in Tunisia.",
     "howTo": "Look for opponents whose Chess.com profile lists Tunisia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TN"
+    }
   },
   {
     "id": "passport-tr",
@@ -2277,7 +3412,12 @@
     "description": "Play a game against an opponent based in Türkiye.",
     "howTo": "Look for opponents whose Chess.com profile lists Türkiye as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TR"
+    }
   },
   {
     "id": "passport-tm",
@@ -2287,7 +3427,12 @@
     "description": "Play a game against an opponent based in Turkmenistan.",
     "howTo": "Look for opponents whose Chess.com profile lists Turkmenistan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TM"
+    }
   },
   {
     "id": "passport-tc",
@@ -2297,7 +3442,12 @@
     "description": "Play a game against an opponent based in Turks & Caicos Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists Turks & Caicos Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TC"
+    }
   },
   {
     "id": "passport-tv",
@@ -2307,7 +3457,12 @@
     "description": "Play a game against an opponent based in Tuvalu.",
     "howTo": "Look for opponents whose Chess.com profile lists Tuvalu as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "TV"
+    }
   },
   {
     "id": "passport-ug",
@@ -2317,7 +3472,12 @@
     "description": "Play a game against an opponent based in Uganda.",
     "howTo": "Look for opponents whose Chess.com profile lists Uganda as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "UG"
+    }
   },
   {
     "id": "passport-ua",
@@ -2327,7 +3487,12 @@
     "description": "Play a game against an opponent based in Ukraine.",
     "howTo": "Look for opponents whose Chess.com profile lists Ukraine as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "UA"
+    }
   },
   {
     "id": "passport-ae",
@@ -2337,7 +3502,12 @@
     "description": "Play a game against an opponent based in United Arab Emirates.",
     "howTo": "Look for opponents whose Chess.com profile lists United Arab Emirates as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "AE"
+    }
   },
   {
     "id": "passport-gb",
@@ -2347,7 +3517,12 @@
     "description": "Play a game against an opponent based in United Kingdom.",
     "howTo": "Look for opponents whose Chess.com profile lists United Kingdom as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "GB"
+    }
   },
   {
     "id": "passport-us",
@@ -2357,7 +3532,12 @@
     "description": "Play a game against an opponent based in United States.",
     "howTo": "Look for opponents whose Chess.com profile lists United States as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "US"
+    }
   },
   {
     "id": "passport-um",
@@ -2367,7 +3547,12 @@
     "description": "Play a game against an opponent based in U.S. Outlying Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists U.S. Outlying Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "UM"
+    }
   },
   {
     "id": "passport-uy",
@@ -2377,7 +3562,12 @@
     "description": "Play a game against an opponent based in Uruguay.",
     "howTo": "Look for opponents whose Chess.com profile lists Uruguay as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "UY"
+    }
   },
   {
     "id": "passport-uz",
@@ -2387,7 +3577,12 @@
     "description": "Play a game against an opponent based in Uzbekistan.",
     "howTo": "Look for opponents whose Chess.com profile lists Uzbekistan as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "UZ"
+    }
   },
   {
     "id": "passport-vu",
@@ -2397,7 +3592,12 @@
     "description": "Play a game against an opponent based in Vanuatu.",
     "howTo": "Look for opponents whose Chess.com profile lists Vanuatu as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "VU"
+    }
   },
   {
     "id": "passport-ve",
@@ -2407,7 +3607,12 @@
     "description": "Play a game against an opponent based in Venezuela.",
     "howTo": "Look for opponents whose Chess.com profile lists Venezuela as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "VE"
+    }
   },
   {
     "id": "passport-vn",
@@ -2417,7 +3622,12 @@
     "description": "Play a game against an opponent based in Vietnam.",
     "howTo": "Look for opponents whose Chess.com profile lists Vietnam as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "VN"
+    }
   },
   {
     "id": "passport-vg",
@@ -2427,7 +3637,12 @@
     "description": "Play a game against an opponent based in British Virgin Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists British Virgin Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "VG"
+    }
   },
   {
     "id": "passport-vi",
@@ -2437,7 +3652,12 @@
     "description": "Play a game against an opponent based in U.S. Virgin Islands.",
     "howTo": "Look for opponents whose Chess.com profile lists U.S. Virgin Islands as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "VI"
+    }
   },
   {
     "id": "passport-wf",
@@ -2447,7 +3667,12 @@
     "description": "Play a game against an opponent based in Wallis & Futuna.",
     "howTo": "Look for opponents whose Chess.com profile lists Wallis & Futuna as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "WF"
+    }
   },
   {
     "id": "passport-eh",
@@ -2457,7 +3682,12 @@
     "description": "Play a game against an opponent based in Western Sahara.",
     "howTo": "Look for opponents whose Chess.com profile lists Western Sahara as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "EH"
+    }
   },
   {
     "id": "passport-ye",
@@ -2467,7 +3697,12 @@
     "description": "Play a game against an opponent based in Yemen.",
     "howTo": "Look for opponents whose Chess.com profile lists Yemen as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "YE"
+    }
   },
   {
     "id": "passport-zm",
@@ -2477,7 +3712,12 @@
     "description": "Play a game against an opponent based in Zambia.",
     "howTo": "Look for opponents whose Chess.com profile lists Zambia as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ZM"
+    }
   },
   {
     "id": "passport-zw",
@@ -2487,6 +3727,11 @@
     "description": "Play a game against an opponent based in Zimbabwe.",
     "howTo": "Look for opponents whose Chess.com profile lists Zimbabwe as their country — check the flag next to their username before or after a game, or search the community/clubs for players based there. Chess.com also grants passport awards for a few sub-regions outside the ISO-3166 country list, such as the Basque Country and Catalonia. Those are not tracked here since they have no ISO country code to key off.",
     "provenance": "inferred",
-    "hidden": false
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "contains",
+      "target": "ZW"
+    }
   }
 ]

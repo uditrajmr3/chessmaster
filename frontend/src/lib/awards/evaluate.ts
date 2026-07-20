@@ -33,6 +33,15 @@ export function evaluate(
     }
 
     const raw = readMeasurement(measurements, a.rule.measurement);
+
+    // Membership check: earned iff the measurement is an array containing the
+    // target. There is no meaningful "how close am I" for set membership, so
+    // progress is always null — unlike set_size, this never shows a bar.
+    if (a.rule.op === "contains") {
+      const earned = Array.isArray(raw) && raw.includes(a.rule.target);
+      return { id: a.id, earned, manual: false, progress: null };
+    }
+
     const value = numeric(raw, a.rule.op);
 
     // A missing measurement is never a pass. `null <= target` is true in JS.
@@ -40,14 +49,15 @@ export function evaluate(
       return { id: a.id, earned: false, manual: false, progress: null };
     }
 
-    const earned = satisfied(value, a.rule.op, a.rule.target);
+    const target = a.rule.target as number;
+    const earned = satisfied(value, a.rule.op, target);
     // Progress bars only make sense for accumulating rules.
     const showProgress = a.rule.op === ">=" || a.rule.op === ">" || a.rule.op === "set_size";
     return {
       id: a.id,
       earned,
       manual: false,
-      progress: showProgress ? { current: value, target: a.rule.target } : null,
+      progress: showProgress ? { current: value, target } : null,
     };
   });
 }

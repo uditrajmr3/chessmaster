@@ -30,6 +30,15 @@ RUN npm run fetch-stockfish
 ARG BACKEND_URL
 ENV BACKEND_URL=${BACKEND_URL}
 
+# NEXT_PUBLIC_* vars are inlined into the client bundle by Next.js at BUILD
+# time, not read at runtime — env_file in docker-compose.prod.yml is too
+# late for these. They MUST arrive as build args here, or the bundle bakes
+# in whatever fallback frontend/src/lib/api.ts defaults to.
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ARG NEXT_PUBLIC_GA_ID
+ENV NEXT_PUBLIC_GA_ID=${NEXT_PUBLIC_GA_ID}
+
 RUN npm run build
 
 FROM node:22-alpine AS runner

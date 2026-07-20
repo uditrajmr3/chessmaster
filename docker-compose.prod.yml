@@ -52,6 +52,10 @@ services:
         # before it reaches this service, so this is mostly a defensive
         # fallback — see frontend/Dockerfile for details.
         BACKEND_URL: ${BACKEND_URL:-http://api:8000}
+        # NEXT_PUBLIC_* vars are inlined at build time, so env_file below
+        # (runtime-only) can't supply them — they have to be build args too.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
     restart: unless-stopped
     env_file: .env
     depends_on:

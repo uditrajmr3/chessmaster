@@ -24,7 +24,7 @@ const AUTH_ROUTES = [
 // (rendered bare so they're crawlable), but shown *inside* the app chrome when a
 // signed-in user navigates to them (e.g. the Learn guides linked from the
 // sidebar), so they don't feel like they left the app.
-const CONTENT_ROUTES = ["/about", "/game-review", "/chess-analysis", "/learn"];
+const CONTENT_ROUTES = ["/about", "/game-review", "/chess-analysis", "/learn", "/awards"];
 
 function matches(routes: string[], pathname: string): boolean {
   return routes.some(

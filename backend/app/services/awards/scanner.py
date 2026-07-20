@@ -180,7 +180,9 @@ async def run_scan(
     # the scan succeeded and it is safe to advance.
     archive_watermark = max(completed_months) if completed_months else watermark
 
-    now = datetime.now(timezone.utc)
+    # Naive UTC, matching AwardScan.scanned_at's plain DateTime column (the
+    # convention every other timestamp column in app/models.py already uses).
+    now = datetime.utcnow()
     if db is not None:
         if cached_row is not None:
             cached_row.measurements = measurements

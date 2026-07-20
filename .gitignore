@@ -36,3 +36,10 @@ Thumbs.db
 # Secrets accidentally dropped inside the repo (this repo is public)
 *.secret
 docs/render.secret
+
+# Root .env — read by docker-compose.prod.yml on the Azure VM. Holds the LIVE
+# Razorpay keys, SECRET_KEY and ENCRYPTION_KEY. Never commit it.
+/.env
+.env
+.env.*
+!.env.example

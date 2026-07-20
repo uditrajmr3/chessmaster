@@ -1,0 +1,80 @@
+# Production topology for the Azure Ubuntu VM: Caddy is the only container
+# exposed to the host network; everything else talks over the internal
+# compose network only. Secrets all come from the gitignored `.env` file
+# next to this compose file at runtime — nothing here is a secret.
+#
+# Usage: docker compose -f docker-compose.prod.yml up -d --build
+#
+# This is a separate file from docker-compose.yml (the dev setup, postgres:16,
+# no Caddy, publishes 5432) — that file is left untouched.
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # postgres:18+ REQUIRES the mount at /var/lib/postgresql (not .../data).
+      # The 18 images store data in a major-version subdirectory so that
+      # `pg_upgrade --link` works without crossing a mount boundary, and the
+      # entrypoint refuses to start if it finds data at the old path.
+      # See docker-library/postgres#1259.
+      - chessmaster_pg_prod:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    # No `ports:` — reachable only from other services on the compose
+    # network, as `db:5432`.
+
+  api:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    # No `ports:` — reachable only from other services, as `api:8000`
+    # (Dockerfile EXPOSEs 8000; alembic migrations run on container start).
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        # Backend's internal compose hostname, baked in at build time by
+        # next.config.mjs. Caddy already routes /api/* straight to `api`
+        # before it reaches this service, so this is mostly a defensive
+        # fallback — see frontend/Dockerfile for details.
+        BACKEND_URL: ${BACKEND_URL:-http://api:8000}
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - api
+    # No `ports:` — reachable only from other services, as `web:3000`.
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    env_file: .env
+    depends_on:
+      - api
+      - web
+    # Only this service publishes host ports.
+
+volumes:
+  chessmaster_pg_prod:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,42 @@
+# ChessInt (chessmaster.cyou) — Caddy reverse proxy, TLS via Let's Encrypt.
+#
+# Single-origin routing, mirroring the render.yaml setup this replaces:
+# the frontend serves everything, /api/* goes straight to the FastAPI
+# backend, so the browser only ever talks to one origin (cookie stays
+# first-party, no CORS / SameSite=None needed).
+
+{
+	# ACME contact email for Let's Encrypt. Set ACME_EMAIL in the root .env
+	# (loaded into this container via `env_file: .env` in
+	# docker-compose.prod.yml) — Caddy substitutes {$VAR} placeholders from
+	# its own process environment. If ACME_EMAIL is unset, Caddy proceeds
+	# without a contact address rather than failing.
+	#
+	# >>> PLACEHOLDER: replace with a real address if you'd rather not use
+	# >>> an env var: e.g. `email admin@chessmaster.cyou`
+	email {$ACME_EMAIL}
+}
+
+chessmaster.cyou, www.chessmaster.cyou {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		# Don't advertise the proxy implementation.
+		-Server
+	}
+
+	# Backend API — matches render.yaml's "/api/* -> backend service" rewrite.
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	# Everything else — the Next.js frontend.
+	handle {
+		reverse_proxy web:3000
+	}
+}

@@ -19,6 +19,11 @@ function resolveBackend() {
 const backend = resolveBackend();
 
 const nextConfig = {
+  // Standalone runtime output: bundles a minimal server + only the
+  // node_modules each page actually needs into .next/standalone, so the
+  // production Docker image doesn't have to ship the full node_modules
+  // tree. Required by frontend/Dockerfile's copy-standalone-output stage.
+  output: "standalone",
   async rewrites() {
     return [
       { source: "/api/:path*", destination: `${backend}/api/:path*` },

@@ -1153,5 +1153,170 @@
       "op": ">=",
       "target": 1
     }
+  },
+  {
+    "id": "ach-juggler",
+    "slug": "juggler",
+    "name": "Juggler",
+    "category": "achievements",
+    "description": "Have 20 Daily games in progress at once.",
+    "howTo": "Daily chess gives each side days per move, so you can run many games in parallel. Start new Daily games or accept incoming Daily challenges from the New Game menu until 20 are running simultaneously, and use the Daily dashboard's filters to keep track so none time out on you.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-chess-marathon",
+    "slug": "chess-marathon",
+    "name": "Chess Marathon",
+    "category": "achievements",
+    "description": "Play a game that goes past 100 moves.",
+    "howTo": "Long games happen naturally in balanced, drawish structures: closed pawn chains, opposite-colored-bishop endgames, or rook endgames where neither side can force a breakthrough. Play patiently instead of forcing complications, and a slower time control (rapid or daily) gives you the room to reach move 100 without losing on time.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "marathon_games",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-nick-of-time",
+    "slug": "nick-of-time",
+    "name": "Nick of Time",
+    "category": "achievements",
+    "description": "Win a game with less than a second left on your clock.",
+    "howTo": "This needs a low time control (bullet is easiest) and a genuine time scramble: keep playing a lost-on-the-board-but-still-live-on-time position instead of resigning, and premove forcing replies (checks, forced recaptures) to shave clock time in the final seconds.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "min_clock_win_ms",
+      "op": "<",
+      "target": 1000
+    }
+  },
+  {
+    "id": "ach-killer-king",
+    "slug": "killer-king",
+    "name": "Killer King",
+    "category": "achievements",
+    "description": "Deliver a discovered checkmate by moving your king.",
+    "howTo": "This needs a king move that isn't itself the checking move: your king steps aside, often out of a pin or off a blocking square, and unmasks an attack from a rook, bishop, or queen standing behind it. Look for it in open-file or open-diagonal endgames where your king already sits on the attacking piece's line.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "mates_by_king_discovery",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-castle-victory",
+    "slug": "castle-victory",
+    "name": "Castle Victory",
+    "category": "achievements",
+    "description": "Deliver checkmate on the move you castle.",
+    "howTo": "Castling checkmate needs the castling rook (or the king itself) to deliver the final blow the instant you castle. These come up in cramped positions where the opponent's king is already boxed in and your rook lands on the back rank, or the king steps onto a mating square, as part of the castling move itself.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "mate_by_castling",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-full-house",
+    "slug": "full-house",
+    "name": "Full House",
+    "category": "achievements",
+    "description": "Win a game without losing a single piece.",
+    "howTo": "Play solid, low-risk chess and avoid trades or tactical complications where you could drop material. A clean positional squeeze, or a mating attack that never required a sacrifice, is the most reliable path to a flawless win.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "flawless_wins",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-full-day",
+    "slug": "full-day",
+    "name": "Full Day",
+    "category": "achievements",
+    "description": "Spend a cumulative 24 hours solving puzzles (not continuous).",
+    "howTo": "This tracks total time in the Puzzles trainer across sessions, not one sitting. Make puzzles part of your daily routine and the hours accumulate over weeks; there's no need to grind it in a single stretch.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-searching-for-bobby-fischer",
+    "slug": "searching-for-bobby-fischer",
+    "name": "Searching for Bobby Fischer",
+    "category": "achievements",
+    "description": "View a Bobby Fischer game in the Master Games database.",
+    "howTo": "Open the Explorer or Master Games database from the Learn or Analysis menu, search for Bobby Fischer as a player, and open any one of his games. The 1972 World Championship match against Spassky is a good place to start.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-precious-snowflake",
+    "slug": "precious-snowflake",
+    "name": "Precious Snowflake",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Powder the Snowman\" bot (rated 800).",
+    "howTo": "This is a holiday-seasonal bot Chess.com rotates in and out of the Play a Bot menu. Check the bot roster during the winter holiday period and challenge Powder the Snowman directly once it's available; at an 800 rating, solid fundamentals are enough to win.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-nutcracker",
+    "slug": "nutcracker",
+    "name": "Nutcracker",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Eve the Elf\" bot (rated 1000).",
+    "howTo": "This holiday-seasonal bot only appears in the Play a Bot menu during winter events. Check back when Chess.com's holiday bot lineup is live and challenge Eve the Elf directly; treat it like a game against a 1000-rated opponent.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-full-stocking",
+    "slug": "full-stocking",
+    "name": "Full Stocking",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Santa\" bot (rated 1200).",
+    "howTo": "Santa is one of Chess.com's holiday-seasonal bots, available in the Play a Bot menu only during winter events. Santa plays at a solid club level, so approach the game like a real rapid game against a roughly 1200-rated opponent.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-jingle-bell",
+    "slug": "jingle-bell",
+    "name": "Jingle Bell",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Dash the Reindeer\" bot (rated 1600).",
+    "howTo": "Dash is a stronger holiday-seasonal bot in the Play a Bot menu, rated around 1600. You'll need solid tactical awareness and endgame technique, since bots at this level punish loose piece placement quickly.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-holly-berry",
+    "slug": "holly-berry",
+    "name": "Holly Berry",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Holly\" bot, Santa's wife (rated 2000).",
+    "howTo": "Holly is the toughest of the winter holiday bots, rated around 2000. Play a careful, theory-backed opening and avoid early tactical fireworks, since a bot at this rating punishes inaccuracies immediately.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-good-read",
+    "slug": "good-read",
+    "name": "Good Read",
+    "category": "achievements",
+    "description": "Get 100 views on one of your own Chess.com blog posts.",
+    "howTo": "Publish a blog post with content people actually want to read, such as a well-annotated game, an opening guide, or a tournament recap, and share it in relevant forums or clubs to help it reach 100 views.",
+    "provenance": "community",
+    "hidden": true
   }
 ]

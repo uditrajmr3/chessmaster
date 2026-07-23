@@ -1,0 +1,497 @@
+[
+  {
+    "id": "book-alekhines-defense",
+    "slug": "alekhines-defense",
+    "name": "Alekhine's Defense",
+    "category": "books",
+    "description": "Unlock the Alekhine's Defense book by playing games in this opening.",
+    "howTo": "Play 1.e4 as White and answer with 1...Nf6 as Black, inviting White's pawns forward so you can attack them later with piece play — a fine practical try if you enjoy provoking overextension.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.B02",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-benko-gambit",
+    "slug": "benko-gambit",
+    "name": "Benko Gambit",
+    "category": "books",
+    "description": "Unlock the Benko Gambit book by playing games in this opening.",
+    "howTo": "As Black, meet 1.d4 Nf6 2.c4 c5 3.d5 with 3...b5, offering a pawn for long-term pressure down the open a- and b-files against White's queenside.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A57",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-benoni-defense-modern-variation",
+    "slug": "benoni-defense-modern-variation",
+    "name": "Benoni Defense: Modern Variation",
+    "category": "books",
+    "description": "Unlock the Benoni Defense: Modern Variation book by playing games in this opening.",
+    "howTo": "As Black, play 1.d4 Nf6 2.c4 c5 3.d5 e6, aiming to meet d5 with a pawn break and generate dynamic counterplay against White's center rather than equalizing quietly.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A60",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-bird-opening",
+    "slug": "bird-opening",
+    "name": "Bird Opening",
+    "category": "books",
+    "description": "Unlock the Bird Opening book by playing games in this opening.",
+    "howTo": "As White, open with 1.f4, staking a claim on e5 and preparing quick kingside development — study the Froms Gambit reply (1...e5) so you're not caught off guard.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A02",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-bogo-indian-defense",
+    "slug": "bogo-indian-defense",
+    "name": "Bogo-Indian Defense",
+    "category": "books",
+    "description": "Unlock the Bogo-Indian Defense book by playing games in this opening.",
+    "howTo": "As Black, play 1.d4 Nf6 2.c4 e6 3.Nf3 Bb4+, a quieter Indian setup that avoids heavy theory while still fighting for the center with pieces.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.E11",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-caro-kann-defense",
+    "slug": "caro-kann-defense",
+    "name": "Caro-Kann Defense",
+    "category": "books",
+    "description": "Unlock the Caro-Kann Defense book by playing games in this opening.",
+    "howTo": "As Black, meet 1.e4 with 1...c6, preparing ...d5 without blocking your light-squared bishop — a solid, low-risk defense favored by players who want fewer forced lines.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.B10",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-catalan-opening",
+    "slug": "catalan-opening",
+    "name": "Catalan Opening",
+    "category": "books",
+    "description": "Unlock the Catalan Opening book by playing games in this opening.",
+    "howTo": "As White, combine d4/c4 with an early g3 fianchetto, pressuring Black's queenside and the long diagonal simultaneously — a strategically rich system rather than a sharp trap-based one.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.E00",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-dutch-defense",
+    "slug": "dutch-defense",
+    "name": "Dutch Defense",
+    "category": "books",
+    "description": "Unlock the Dutch Defense book by playing games in this opening.",
+    "howTo": "As Black, answer 1.d4 with 1...f5, grabbing kingside space early — commit to understanding the resulting king safety trade-offs before playing it in serious games.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A80",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-english-opening",
+    "slug": "english-opening",
+    "name": "English Opening",
+    "category": "books",
+    "description": "Unlock the English Opening book by playing games in this opening.",
+    "howTo": "As White, open with 1.c4, a flexible flank opening that can transpose into many structures — decide early whether you want a Reversed Sicilian or a symmetrical setup.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A10",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-french-defense",
+    "slug": "french-defense",
+    "name": "French Defense",
+    "category": "books",
+    "description": "Unlock the French Defense book by playing games in this opening.",
+    "howTo": "As Black, meet 1.e4 with 1...e6, preparing ...d5 while accepting a temporarily passive light-squared bishop in exchange for a solid pawn chain.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.C00",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-grob-opening",
+    "slug": "grob-opening",
+    "name": "Grob Opening",
+    "category": "books",
+    "description": "Unlock the Grob Opening book by playing games in this opening.",
+    "howTo": "As White, play the unconventional 1.g4 — treat it as a surprise weapon against unprepared opponents rather than a mainstream repertoire choice.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A00",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-grunfeld-defense",
+    "slug": "grunfeld-defense",
+    "name": "Grünfeld Defense",
+    "category": "books",
+    "description": "Unlock the Grünfeld Defense book by playing games in this opening.",
+    "howTo": "As Black, play 1.d4 Nf6 2.c4 g6 3.Nc3 d5, striking at White's center with a pawn break rather than occupying it directly, then pressuring it with pieces from the fianchetto.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.D80",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-italian-game",
+    "slug": "italian-game",
+    "name": "Italian Game",
+    "category": "books",
+    "description": "Unlock the Italian Game book by playing games in this opening.",
+    "howTo": "As White, play 1.e4 e5 2.Nf3 Nc6 3.Bc4, developing quickly toward f7 — a great opening for beginners to learn tactics and rapid development around a classical center.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.C50",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-kings-indian-attack",
+    "slug": "kings-indian-attack",
+    "name": "King's Indian Attack",
+    "category": "books",
+    "description": "Unlock the King's Indian Attack book by playing games in this opening.",
+    "howTo": "As White, set up with 1.Nf3, 2.g3, and a kingside fianchetto regardless of Black's reply — the same plan works against nearly anything, which makes it easy to learn once.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A07",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-kings-indian-defense",
+    "slug": "kings-indian-defense",
+    "name": "King's Indian Defense",
+    "category": "books",
+    "description": "Unlock the King's Indian Defense book by playing games in this opening.",
+    "howTo": "As Black, meet 1.d4 Nf6 2.c4 g6 with a kingside fianchetto, letting White build a big center before striking it with ...e5 or ...c5 — a sharp, counterattacking choice.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.E60",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-kings-fianchetto-opening",
+    "slug": "kings-fianchetto-opening",
+    "name": "King's Fianchetto Opening",
+    "category": "books",
+    "description": "Unlock the King's Fianchetto Opening book by playing games in this opening.",
+    "howTo": "As White, open with 1.g3, developing the bishop to g2 before committing your central pawns — a quiet, flexible move-order that sidesteps a lot of mainstream opening theory.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A00",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-kings-gambit",
+    "slug": "kings-gambit",
+    "name": "King's Gambit",
+    "category": "books",
+    "description": "Unlock the King's Gambit book by playing games in this opening.",
+    "howTo": "As White, play 1.e4 e5 2.f4, offering a pawn to rip open the f-file and center lines for a quick attack — a romantic, high-risk opening best studied with its tactical traps.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.C30",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-london-system",
+    "slug": "london-system",
+    "name": "London System",
+    "category": "books",
+    "description": "Unlock the London System book by playing games in this opening.",
+    "howTo": "As White, set up pawns on d4/e3 with the bishop developed to f4 before Black can contest it — a repeatable structure you can play against almost any Black setup.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.D02",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-nimzo-indian-defense",
+    "slug": "nimzo-indian-defense",
+    "name": "Nimzo-Indian Defense",
+    "category": "books",
+    "description": "Unlock the Nimzo-Indian Defense book by playing games in this opening.",
+    "howTo": "As Black, play 1.d4 Nf6 2.c4 e6 3.Nc3 Bb4, pinning White's knight immediately to fight for the center with pieces rather than pawns — one of the most respected defenses at every level.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.E20",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-nimzowitsch-larsen-attack",
+    "slug": "nimzowitsch-larsen-attack",
+    "name": "Nimzowitsch-Larsen Attack",
+    "category": "books",
+    "description": "Unlock the Nimzowitsch-Larsen Attack book by playing games in this opening.",
+    "howTo": "As White, open with 1.b3, fianchettoing the queenside bishop onto the long diagonal aimed at Black's kingside — a hypermodern approach that avoids early pawn commitments.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A01",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-pirc-defense",
+    "slug": "pirc-defense",
+    "name": "Pirc Defense",
+    "category": "books",
+    "description": "Unlock the Pirc Defense book by playing games in this opening.",
+    "howTo": "As Black, meet 1.e4 with 1...d6 and 2...Nf6, planning a kingside fianchetto and letting White overextend before striking back at the center — a hypermodern, flexible setup.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.B07",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-polish-opening",
+    "slug": "polish-opening",
+    "name": "Polish Opening",
+    "category": "books",
+    "description": "Unlock the Polish Opening book by playing games in this opening.",
+    "howTo": "As White, play 1.b4, offering early queenside space and a long-diagonal bishop — mostly a surprise weapon, so know the main independent lines Black can choose against it.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A00",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-queens-gambit",
+    "slug": "queens-gambit",
+    "name": "Queen's Gambit",
+    "category": "books",
+    "description": "Unlock the Queen's Gambit book by playing games in this opening.",
+    "howTo": "As White, play 1.d4 d5 2.c4, offering a flank pawn to lure Black's center pawn away and build a strong classical center — one of the most reliable and well-tested openings in chess.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.D06",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-queens-indian-defense",
+    "slug": "queens-indian-defense",
+    "name": "Queen's Indian Defense",
+    "category": "books",
+    "description": "Unlock the Queen's Indian Defense book by playing games in this opening.",
+    "howTo": "As Black, play 1.d4 Nf6 2.c4 e6 3.Nf3 b6, fianchettoing the queenside bishop to control the long diagonal and contest e4 — a solid, positional choice against 1.d4.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.E12",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-reti-opening",
+    "slug": "reti-opening",
+    "name": "Reti Opening",
+    "category": "books",
+    "description": "Unlock the Reti Opening book by playing games in this opening.",
+    "howTo": "As White, open with 1.Nf3, keeping your options flexible before committing your center pawns — useful for players who want to reach a range of different structures from one move order.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A04",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-scandinavian-defense",
+    "slug": "scandinavian-defense",
+    "name": "Scandinavian Defense",
+    "category": "books",
+    "description": "Unlock the Scandinavian Defense book by playing games in this opening.",
+    "howTo": "As Black, meet 1.e4 with 1...d5, challenging the center immediately — be ready to develop quickly after the queen recapture since you'll spend an early tempo retreating it.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.B01",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-scotch-game",
+    "slug": "scotch-game",
+    "name": "Scotch Game",
+    "category": "books",
+    "description": "Unlock the Scotch Game book by playing games in this opening.",
+    "howTo": "As White, play 1.e4 e5 2.Nf3 Nc6 3.d4, opening the center early to reach open, tactical positions rather than the slower buildup of the Italian or Ruy Lopez.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.C44",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-sicilian-defense",
+    "slug": "sicilian-defense",
+    "name": "Sicilian Defense",
+    "category": "books",
+    "description": "Unlock the Sicilian Defense book by playing games in this opening.",
+    "howTo": "As Black, meet 1.e4 with 1...c5, creating immediate asymmetry and fighting for the center from the side rather than mirroring White — the most popular defense to 1.e4 at every level.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.B20",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-sicilian-defense-alapin-variation",
+    "slug": "sicilian-defense-alapin-variation",
+    "name": "Sicilian Defense: Alapin Variation",
+    "category": "books",
+    "description": "Unlock the Sicilian Defense: Alapin Variation book by playing games in this opening.",
+    "howTo": "As White against the Sicilian, play 2.c3, preparing to meet ...d5 with a solid center rather than diving into the sharpest Open Sicilian theory — a practical, lower-theory try.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.B22",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-sicilian-defense-closed-variation",
+    "slug": "sicilian-defense-closed-variation",
+    "name": "Sicilian Defense: Closed Variation",
+    "category": "books",
+    "description": "Unlock the Sicilian Defense: Closed Variation book by playing games in this opening.",
+    "howTo": "As White against the Sicilian, play 2.Nc3 and set up a kingside fianchetto rather than opening the center with an early d4 — a strategic, less forcing approach than the Open Sicilian.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.B23",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-slav-defense",
+    "slug": "slav-defense",
+    "name": "Slav Defense",
+    "category": "books",
+    "description": "Unlock the Slav Defense book by playing games in this opening.",
+    "howTo": "As Black, meet 1.d4 d5 2.c4 with 2...c6, supporting the d5 pawn while keeping the light-squared bishop free — one of the most solid replies to the Queen's Gambit.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.D10",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-spanish-game-ruy-lopez",
+    "slug": "spanish-game-ruy-lopez",
+    "name": "Spanish Game (Ruy Lopez)",
+    "category": "books",
+    "description": "Unlock the Spanish Game (Ruy Lopez) book by playing games in this opening.",
+    "howTo": "As White, play 1.e4 e5 2.Nf3 Nc6 3.Bb5, pressuring the knight that defends e5 — one of the oldest and most deeply analyzed openings, rewarding real study time.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.C60",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "book-trompowsky-attack",
+    "slug": "trompowsky-attack",
+    "name": "Trompowsky Attack",
+    "category": "books",
+    "description": "Unlock the Trompowsky Attack book by playing games in this opening.",
+    "howTo": "As White, play 1.d4 Nf6 2.Bg5, immediately pinning or provoking a response from Black's knight before committing to a pawn structure — a low-theory way to sidestep mainstream Indian defenses.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "eco_played.A45",
+      "op": ">=",
+      "target": 1
+    }
+  }
+]

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getCatalog } from "@/lib/awards/catalog";
 
 const BASE = "https://chessmaster.cyou";
 
@@ -6,6 +7,28 @@ const BASE = "https://chessmaster.cyou";
 // dashboard tools live behind AuthGuard and are excluded via robots.ts.
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+
+  // Award detail URLs are generated from the catalog, not hand-listed, so the
+  // sitemap never drifts from what /awards/achievements and /awards/books
+  // actually render. Passports deliberately get no detail pages (249 thin
+  // pages would be doorway content), so only the section URL is listed.
+  const awardRoutes = [
+    "/awards",
+    "/awards/achievements",
+    "/awards/books",
+    "/awards/passports",
+    "/awards/badges",
+    "/awards/cheers",
+    "/awards/medals",
+    ...getCatalog("achievements").map((a) => `/awards/achievements/${a.slug}`),
+    ...getCatalog("books").map((a) => `/awards/books/${a.slug}`),
+  ].map((path) => ({
+    url: `${BASE}${path}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: path === "/awards" ? 0.9 : 0.6,
+  }));
+
   return [
     { url: `${BASE}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${BASE}/game-review`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
@@ -28,5 +51,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/register`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/login`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
+    ...awardRoutes,
   ];
 }

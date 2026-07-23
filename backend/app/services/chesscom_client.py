@@ -10,6 +10,42 @@ class ChessComClient:
     BASE = "https://api.chess.com/pub"
     HEADERS = {"User-Agent": "ChessMaster/1.0 (chess analysis app)"}
 
+    # ── Awards scanner methods ────────────────────────────────────────────
+    # Added for backend/app/services/awards/scanner.py. fetch_games() above
+    # already walks archives → games internally for the existing sync flow,
+    # but the awards scanner needs the archive list and each month's raw
+    # games separately (to filter by watermark and to keep the untouched
+    # Chess.com time_class/rules fields). Same session/header/raise pattern
+    # as fetch_games() and fetch_recent_games() above — no new dependencies.
+
+    async def get_archives(self, username: str) -> list[str]:
+        """Monthly archive URLs for a player, oldest first (as Chess.com returns them)."""
+        async with httpx.AsyncClient(headers=self.HEADERS, timeout=30) as client:
+            resp = await client.get(f"{self.BASE}/player/{username}/games/archives")
+            resp.raise_for_status()
+            return resp.json().get("archives", [])
+
+    async def get_archive_games(self, archive_url: str) -> list[dict]:
+        """Raw game dicts for one monthly archive (unparsed — pgn, time_class, rules, ...)."""
+        async with httpx.AsyncClient(headers=self.HEADERS, timeout=30) as client:
+            resp = await client.get(archive_url)
+            resp.raise_for_status()
+            return resp.json().get("games", [])
+
+    async def get_stats(self, username: str) -> dict:
+        """Raw `/pub/player/{u}/stats` body — ratings peaks, tactics, puzzle rush."""
+        async with httpx.AsyncClient(headers=self.HEADERS, timeout=30) as client:
+            resp = await client.get(f"{self.BASE}/player/{username}/stats")
+            resp.raise_for_status()
+            return resp.json()
+
+    async def get_player(self, username: str) -> dict:
+        """Raw `/pub/player/{u}` profile body — used by the scanner for the `country` URL."""
+        async with httpx.AsyncClient(headers=self.HEADERS, timeout=30) as client:
+            resp = await client.get(f"{self.BASE}/player/{username}")
+            resp.raise_for_status()
+            return resp.json()
+
     async def fetch_recent_games(self, username: str, max_games: int = 100) -> list[dict]:
         """Fetch the most recent games for a user (limited for scouting)."""
         async with httpx.AsyncClient(headers=self.HEADERS, timeout=30) as client:

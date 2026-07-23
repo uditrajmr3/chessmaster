@@ -1,0 +1,1322 @@
+[
+  {
+    "id": "ach-self-portrait",
+    "slug": "self-portrait",
+    "name": "Self-Portrait",
+    "category": "achievements",
+    "description": "Set a profile picture.",
+    "howTo": "Open your Chess.com profile settings and upload any photo or avatar image — it just has to be a real picture, not the default silhouette.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-say-hello",
+    "slug": "say-hello",
+    "name": "Say Hello",
+    "category": "achievements",
+    "description": "Send a private message to another member.",
+    "howTo": "Open any player's profile and use the message icon to send them a short note — a game request or a GG after a match both count.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-happy-anniversary",
+    "slug": "happy-anniversary",
+    "name": "Happy Anniversary",
+    "category": "achievements",
+    "description": "Reach one year since creating your account, and every year after.",
+    "howTo": "Nothing to do but keep your account active — this fires automatically on each anniversary of your join date, shown on your profile.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-chess-com-supporter",
+    "slug": "chess-com-supporter",
+    "name": "Chess.com Supporter",
+    "category": "achievements",
+    "description": "Purchase a Chess.com membership.",
+    "howTo": "Upgrade to any paid membership tier (Gold, Platinum, or Diamond) from the Go Premium page — any tier triggers this one.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-gift-wrap",
+    "slug": "gift-wrap",
+    "name": "Gift Wrap",
+    "category": "achievements",
+    "description": "Give someone else a Chess.com membership.",
+    "howTo": "From another player's profile or the Gift Membership page, buy them a membership directly — a nice way to introduce a friend to the site.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-man-vs-machine",
+    "slug": "man-vs-machine",
+    "name": "Man Vs Machine",
+    "category": "achievements",
+    "description": "Play a game against a bot in Live Chess.",
+    "howTo": "Open the New Game menu, choose Play a Bot, and pick any personality and difficulty — even a single move against the easiest bot counts.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-puzzle-newbie",
+    "slug": "puzzle-newbie",
+    "name": "Puzzle Newbie",
+    "category": "achievements",
+    "description": "Solve 1 puzzle.",
+    "howTo": "Head to Puzzles from the main menu and solve any daily or rated tactics puzzle to completion — one correct solve is all it takes.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-puzzle-beginner",
+    "slug": "puzzle-beginner",
+    "name": "Puzzle Beginner",
+    "category": "achievements",
+    "description": "Solve 10 puzzles.",
+    "howTo": "Work through the Puzzles trainer a few minutes a day; tactics improve fastest with short, frequent sessions rather than long cram sessions.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-puzzle-ace",
+    "slug": "puzzle-ace",
+    "name": "Puzzle Ace",
+    "category": "achievements",
+    "description": "Solve 100 puzzles.",
+    "howTo": "Make puzzles part of your warm-up routine before rated games — pattern recognition built here transfers directly into spotting tactics over the board.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-puzzle-veteran",
+    "slug": "puzzle-veteran",
+    "name": "Puzzle Veteran",
+    "category": "achievements",
+    "description": "Solve 1,000 puzzles.",
+    "howTo": "At this volume, review the puzzles you got wrong rather than just grinding forward — recurring themes (pins, forks, back-rank) are worth drilling specifically.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-puzzle-addict",
+    "slug": "puzzle-addict",
+    "name": "Puzzle Addict",
+    "category": "achievements",
+    "description": "Solve 10,000 puzzles.",
+    "howTo": "Sustained puzzle volume like this is best built with a daily streak habit — even 5 puzzles a day adds up to thousands over a year.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-puzzle-machine",
+    "slug": "puzzle-machine",
+    "name": "Puzzle Machine",
+    "category": "achievements",
+    "description": "Solve 100 puzzles in a single day.",
+    "howTo": "Set aside a dedicated block of time and work through puzzles back-to-back; skip puzzles you're stuck on rather than burning minutes on one, to keep the count moving.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-good-habit",
+    "slug": "good-habit",
+    "name": "Good Habit",
+    "category": "achievements",
+    "description": "Solve at least one puzzle on 7 days in a row.",
+    "howTo": "Set a daily reminder or bookmark the Puzzles page — a short streak like this is about consistency, not difficulty, so even one easy puzzle a day keeps it alive.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-hot-streak",
+    "slug": "hot-streak",
+    "name": "Hot Streak",
+    "category": "achievements",
+    "description": "Solve 10 puzzles correctly in a row without using a hint.",
+    "howTo": "Drop down to an easier puzzle rating temporarily if you're chasing this — a clean streak is easier to build at a level just below your normal rating.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-puzzle-battle",
+    "slug": "puzzle-battle",
+    "name": "Puzzle Battle",
+    "category": "achievements",
+    "description": "Play a Puzzle Battle against another member.",
+    "howTo": "From the Puzzles menu, start a Puzzle Battle and invite a friend or an open opponent — whoever solves puzzles correctly fastest wins the head-to-head race.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-speed-solver",
+    "slug": "speed-solver",
+    "name": "Speed Solver",
+    "category": "achievements",
+    "description": "Solve at least 10 puzzles in a 3-minute Puzzle Rush.",
+    "howTo": "In 3-Minute Puzzle Rush, favor speed over perfection on easy puzzles — a wrong answer costs one life, so keep moving unless you're genuinely unsure.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-rush-streak",
+    "slug": "rush-streak",
+    "name": "Rush Streak",
+    "category": "achievements",
+    "description": "Solve 5 puzzles in a row correctly during a Puzzle Rush run.",
+    "howTo": "Warm up with a few untimed puzzles first so your pattern recognition is sharp before you start the Rush clock — cold starts are where early streaks break.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-train-your-brain",
+    "slug": "train-your-brain",
+    "name": "Train Your Brain",
+    "category": "achievements",
+    "description": "Attempt 1 Drill.",
+    "howTo": "Drills are found in the Puzzles or Lessons area — start any drill set and make your first attempt at a position to unlock this.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-brains-of-steel",
+    "slug": "brains-of-steel",
+    "name": "Brains of Steel",
+    "category": "achievements",
+    "description": "Attempt 10 Drills.",
+    "howTo": "Work through a variety of drill categories (endgames, tactics, checkmates) rather than repeating one — variety builds more transferable pattern recognition.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-silicon-brain",
+    "slug": "silicon-brain",
+    "name": "Silicon Brain",
+    "category": "achievements",
+    "description": "Attempt every available Drill.",
+    "howTo": "This is a completionist achievement — check the Drills section for any categories you haven't tried yet and work through the full list.",
+    "provenance": "verified",
+    "hidden": false
+  },
+  {
+    "id": "ach-surprise",
+    "slug": "surprise",
+    "name": "Surprise",
+    "category": "achievements",
+    "description": "Play your first game of Crazyhouse.",
+    "howTo": "Crazyhouse lets you drop captured pieces back onto the board — from New Game, pick Variants > Crazyhouse and play one game to unlock this.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.crazyhouse",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-mad-scientist",
+    "slug": "mad-scientist",
+    "name": "Mad Scientist",
+    "category": "achievements",
+    "description": "Play 10 games of Crazyhouse.",
+    "howTo": "Crazyhouse rewards holding captured material for a well-timed drop near the enemy king rather than spending pieces the moment you get them.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.crazyhouse",
+      "op": ">=",
+      "target": 10
+    }
+  },
+  {
+    "id": "ach-easy-as-1-2-3",
+    "slug": "easy-as-1-2-3",
+    "name": "Easy as 1-2-3",
+    "category": "achievements",
+    "description": "Play your first game of Three-Check.",
+    "howTo": "In Three-Check, three checks against your opponent wins the game outright — from New Game pick Variants > Three-Check and play one game.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.threecheck",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-three-strikes",
+    "slug": "three-strikes",
+    "name": "Three Strikes",
+    "category": "achievements",
+    "description": "Play 10 games of Three-Check.",
+    "howTo": "Prioritize forcing checks even at a small material cost in Three-Check — a single check is often worth more than winning a pawn.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.threecheck",
+      "op": ">=",
+      "target": 10
+    }
+  },
+  {
+    "id": "ach-higher-ground",
+    "slug": "higher-ground",
+    "name": "Higher Ground",
+    "category": "achievements",
+    "description": "Play your first game of King of the Hill.",
+    "howTo": "King of the Hill is won by marching your own king to one of the four center squares — from New Game pick Variants > King of the Hill.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.kingofthehill",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-mountain-climber",
+    "slug": "mountain-climber",
+    "name": "Mountain Climber",
+    "category": "achievements",
+    "description": "Play 10 games of King of the Hill.",
+    "howTo": "Clear a safe path toward d4/d5/e4/e5 early and don't be afraid to walk your king up the board the moment it's safe to do so.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.kingofthehill",
+      "op": ">=",
+      "target": 10
+    }
+  },
+  {
+    "id": "ach-worker-bee",
+    "slug": "worker-bee",
+    "name": "Worker Bee",
+    "category": "achievements",
+    "description": "Play your first game of Bughouse.",
+    "howTo": "Bughouse is a team variant played on two boards where captured pieces pass to your partner — join or start a Bughouse game from New Game > Variants.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.bughouse",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-hive-mind",
+    "slug": "hive-mind",
+    "name": "Hive Mind",
+    "category": "achievements",
+    "description": "Play 10 games of Bughouse.",
+    "howTo": "Coordinate piece requests with your partner constantly — telling them what you need (or don't need) matters more than your own board tactics.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.bughouse",
+      "op": ">=",
+      "target": 10
+    }
+  },
+  {
+    "id": "ach-random-thoughts",
+    "slug": "random-thoughts",
+    "name": "Random Thoughts",
+    "category": "achievements",
+    "description": "Play your first game of Chess960 (Fischer Random).",
+    "howTo": "Chess960 randomizes the back-rank setup each game — from New Game pick Variants > Chess960 and play through one to unlock this.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.chess960",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-mix-master",
+    "slug": "mix-master",
+    "name": "Mix Master",
+    "category": "achievements",
+    "description": "Play 10 games of Chess960.",
+    "howTo": "Spend the opening moves establishing king safety and piece coordination before committing to a plan — the memorized theory you rely on elsewhere won't apply.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "variants.chess960",
+      "op": ">=",
+      "target": 10
+    }
+  },
+  {
+    "id": "ach-dangerous-intersection",
+    "slug": "dangerous-intersection",
+    "name": "Dangerous Intersection",
+    "category": "achievements",
+    "description": "Play your first game of 4-Player Chess.",
+    "howTo": "4-Player Chess is played on a cross-shaped board with four players — find it under Variants in the New Game menu and join a game.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-battle-royale",
+    "slug": "battle-royale",
+    "name": "Battle Royale",
+    "category": "achievements",
+    "description": "Play 10 games of 4-Player Chess.",
+    "howTo": "Alliances shift fast in 4-Player Chess — watch which of the other three players is winning and don't hesitate to team up against the leader.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-second-opinion",
+    "slug": "second-opinion",
+    "name": "Second Opinion",
+    "category": "achievements",
+    "description": "Analyze a completed game with the game review tool.",
+    "howTo": "Open any finished game and click Game Review or Analysis — reviewing your own losses for the critical mistake is the single highest-leverage study habit.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-hindsight-20-20",
+    "slug": "hindsight-20-20",
+    "name": "Hindsight 20/20",
+    "category": "achievements",
+    "description": "Analyze 10 completed games.",
+    "howTo": "Build analysis into your routine right after you finish playing, while the position and your thinking during the game are still fresh in memory.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-statistician",
+    "slug": "statistician",
+    "name": "Statistician",
+    "category": "achievements",
+    "description": "Visit and review your own Stats page.",
+    "howTo": "Your Stats page (under your profile) breaks down rating history, win rates by time class, and opening performance — worth a regular check-in.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-introspection",
+    "slug": "introspection",
+    "name": "Introspection",
+    "category": "achievements",
+    "description": "Use the My Games database to look further than 5 moves into a game.",
+    "howTo": "The My Games archive lets you search your own history by opening and result — dig past the opening moves to see how your middlegames typically go wrong.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-contender",
+    "slug": "contender",
+    "name": "Contender",
+    "category": "achievements",
+    "description": "Join 1 tournament.",
+    "howTo": "Browse the Tournaments tab for an open arena or swiss event in your time control and register — most run continuously so you can jump in immediately.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-competitor",
+    "slug": "competitor",
+    "name": "Competitor",
+    "category": "achievements",
+    "description": "Join 10 tournaments.",
+    "howTo": "Regular tournaments are one of the best ways to get long, focused practice at your time control against a stream of different opponents.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-challenger",
+    "slug": "challenger",
+    "name": "Challenger",
+    "category": "achievements",
+    "description": "Join 100 tournaments.",
+    "howTo": "At this volume, be selective about format — daily tournaments let you study each move without a clock, while live arenas build faster decision-making.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-organizer",
+    "slug": "organizer",
+    "name": "Organizer",
+    "category": "achievements",
+    "description": "Create and open a tournament.",
+    "howTo": "From the Tournaments page, click Create a Tournament and configure the format, time control, and entry rules, then open it for players to join.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-director",
+    "slug": "director",
+    "name": "Director",
+    "category": "achievements",
+    "description": "Create and open 10 tournaments.",
+    "howTo": "Running recurring tournaments for a club or group of friends is the easiest way to rack this one up organically.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-club-member",
+    "slug": "club-member",
+    "name": "Club Member",
+    "category": "achievements",
+    "description": "Join a Chess.com club.",
+    "howTo": "Search Clubs for a community around your favorite opening, country, or interest, and hit Join — clubs also run their own internal tournaments.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-pack-leader",
+    "slug": "pack-leader",
+    "name": "Pack Leader",
+    "category": "achievements",
+    "description": "Create a club that reaches 10 members.",
+    "howTo": "Create a club from the Clubs page, then invite friends or post about it in forums and your own games to attract members.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-team-player",
+    "slug": "team-player",
+    "name": "Team Player",
+    "category": "achievements",
+    "description": "Play in a team match.",
+    "howTo": "Join a club that runs Team Matches, then sign up for a board when the next match opens — team matches pit clubs against each other over multiple boards.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-team-pillar",
+    "slug": "team-pillar",
+    "name": "Team Pillar",
+    "category": "achievements",
+    "description": "Play in 10 team matches.",
+    "howTo": "Being reliably available when your club's team matches open is what builds this up — check your club's events tab regularly.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-ballot-box",
+    "slug": "ballot-box",
+    "name": "Ballot Box",
+    "category": "achievements",
+    "description": "Play a game of Vote Chess.",
+    "howTo": "Vote Chess lets an entire team decide each move by voting — join an open Vote Chess game from the Vote Chess section and cast a vote on any move.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-killer-pawn",
+    "slug": "killer-pawn",
+    "name": "Killer Pawn",
+    "category": "achievements",
+    "description": "Deliver checkmate with a pawn.",
+    "howTo": "Pawn mates usually happen when a pawn advances or captures onto a square next to a king that has no escape squares — look for these in cramped endgames.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "mates_by_piece.pawn",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-killer-knight",
+    "slug": "killer-knight",
+    "name": "Killer Knight",
+    "category": "achievements",
+    "description": "Deliver checkmate with a knight.",
+    "howTo": "Knight mates need the enemy king boxed in by its own pieces — smothered mates on f7/f2 after a queen sacrifice that forces a rook to block are the classic pattern.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "mates_by_piece.knight",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-killer-bishop",
+    "slug": "killer-bishop",
+    "name": "Killer Bishop",
+    "category": "achievements",
+    "description": "Deliver checkmate with a bishop.",
+    "howTo": "Bishop mates usually come on a long diagonal once the king is pinned to the back rank by your own or the opponent's pieces — clear the diagonal and look for it.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "mates_by_piece.bishop",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-killer-rook",
+    "slug": "killer-rook",
+    "name": "Killer Rook",
+    "category": "achievements",
+    "description": "Deliver checkmate with a rook.",
+    "howTo": "The back-rank mate is the most common rook mate — a rook lands on the back rank while the enemy king is boxed in by its own pawns with no escape square.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "mates_by_piece.rook",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-killer-queen",
+    "slug": "killer-queen",
+    "name": "Killer Queen",
+    "category": "achievements",
+    "description": "Deliver checkmate with a queen.",
+    "howTo": "The most common mate in chess — queen mates usually follow when the queen is supported by another piece next to the enemy king. Nearly every won game ends this way.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "mates_by_piece.queen",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-buddy-system",
+    "slug": "buddy-system",
+    "name": "Buddy System",
+    "category": "achievements",
+    "description": "Have 10 friends on Chess.com.",
+    "howTo": "Send friend requests from opponents' profiles after games you enjoyed — a quick GG message plus a friend request is a natural combination.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-social-butterfly",
+    "slug": "social-butterfly",
+    "name": "Social Butterfly",
+    "category": "achievements",
+    "description": "Have 100 friends on Chess.com.",
+    "howTo": "Club activity and tournaments are the fastest way to meet enough regular opponents to build a large friends list organically.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-bring-a-friend",
+    "slug": "bring-a-friend",
+    "name": "Bring a Friend",
+    "category": "achievements",
+    "description": "Invite 1 person to join Chess.com.",
+    "howTo": "Use the Invite Friends option in your account menu to send an invite link, or just share your referral link directly with someone who plays chess.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-people-person",
+    "slug": "people-person",
+    "name": "People Person",
+    "category": "achievements",
+    "description": "Invite 10 people to join Chess.com.",
+    "howTo": "Share your invite link in places chess players already gather — school clubs, local meetups, or group chats with friends who play casually.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-world-traveller",
+    "slug": "world-traveller",
+    "name": "World Traveller",
+    "category": "achievements",
+    "description": "Play opponents from 10 different countries.",
+    "howTo": "Play at odd hours or in open live pools rather than only against friends — the matchmaking queue naturally pairs you with a wider spread of countries.",
+    "provenance": "community",
+    "hidden": false,
+    "rule": {
+      "measurement": "countries_played",
+      "op": "set_size",
+      "target": 10
+    }
+  },
+  {
+    "id": "ach-pen-pal",
+    "slug": "pen-pal",
+    "name": "Pen Pal",
+    "category": "achievements",
+    "description": "Become friends with people from 10 different countries.",
+    "howTo": "After a good game against someone clearly based elsewhere (check their profile flag), send a friend request — over time this builds a genuinely international friends list.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-vip-referrer",
+    "slug": "vip-referrer",
+    "name": "VIP Referrer",
+    "category": "achievements",
+    "description": "Have someone you invited upgrade to a paid membership.",
+    "howTo": "This one depends on the person you invite finding enough value to upgrade themselves — introducing a serious improver to lessons and puzzles helps.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-front-page",
+    "slug": "front-page",
+    "name": "Front Page",
+    "category": "achievements",
+    "description": "Read a Chess.com article.",
+    "howTo": "Open the Articles/News section from the main menu and read any single article — game recaps, strategy pieces, and site news all count.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-reading-glasses",
+    "slug": "reading-glasses",
+    "name": "Reading Glasses",
+    "category": "achievements",
+    "description": "Read 10 Chess.com articles.",
+    "howTo": "Chess.com's news coverage of top-level tournaments is a good habit-builder — following an ongoing event naturally racks up several reads a week.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-library-card",
+    "slug": "library-card",
+    "name": "Library Card",
+    "category": "achievements",
+    "description": "Read 100 Chess.com articles.",
+    "howTo": "At this volume, subscribing to a specific beat (openings theory, endgame studies, or tournament coverage) keeps the reading useful rather than just a number to hit.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-1st-lesson",
+    "slug": "1st-lesson",
+    "name": "1st Lesson",
+    "category": "achievements",
+    "description": "Complete your first Chess.com lesson.",
+    "howTo": "Open the Lessons tab and pick any topic that matches your current level — finishing one full lesson unlocks this.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-new-complete",
+    "slug": "new-complete",
+    "name": "\"New\" Complete",
+    "category": "achievements",
+    "description": "Complete every lesson in the New Lessons category.",
+    "howTo": "Work through the New Lessons category from the Lessons tab in order — these are usually short, so a full sweep is a reasonable single sitting or two.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-beginner-complete",
+    "slug": "beginner-complete",
+    "name": "\"Beginner\" Complete",
+    "category": "achievements",
+    "description": "Complete every lesson in the Beginner category.",
+    "howTo": "The Beginner track covers piece movement, basic tactics, and checkmate patterns — a solid foundation worth finishing even if you already know some of it.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-intermediate-complete",
+    "slug": "intermediate-complete",
+    "name": "\"Intermediate\" Complete",
+    "category": "achievements",
+    "description": "Complete every lesson in the Intermediate category.",
+    "howTo": "Intermediate lessons focus on tactical motifs and positional ideas — pair them with puzzles on the same theme to cement what you learn.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-advanced-complete",
+    "slug": "advanced-complete",
+    "name": "\"Advanced\" Complete",
+    "category": "achievements",
+    "description": "Complete every lesson in the Advanced category.",
+    "howTo": "Advanced lessons dig into deeper strategic and endgame concepts — take these slowly and replay the example positions on a board rather than just watching.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-tv-guide",
+    "slug": "tv-guide",
+    "name": "TV Guide",
+    "category": "achievements",
+    "description": "Watch a broadcast on ChessTV.",
+    "howTo": "Open ChessTV from the main menu and tune into any live broadcast — a top-level tournament stream or a titled player's stream both count.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-couch-potato",
+    "slug": "couch-potato",
+    "name": "Couch Potato",
+    "category": "achievements",
+    "description": "Watch 8 hours of ChessTV.",
+    "howTo": "Leaving a major tournament broadcast running in the background while you study or play adds up toward this quickly during big events.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-tv-junkie",
+    "slug": "tv-junkie",
+    "name": "TV Junkie",
+    "category": "achievements",
+    "description": "Watch 24 hours of ChessTV.",
+    "howTo": "Marquee events like the Candidates or a World Championship match are the easiest way to accumulate large amounts of broadcast time.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-press-play",
+    "slug": "press-play",
+    "name": "Press Play",
+    "category": "achievements",
+    "description": "Watch your first video lesson.",
+    "howTo": "Video lessons sit alongside the interactive Lessons tab — open one and watch it through to unlock this.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-popcorn-lover",
+    "slug": "popcorn-lover",
+    "name": "Popcorn Lover",
+    "category": "achievements",
+    "description": "Watch 10 video lessons.",
+    "howTo": "Mix video lessons with interactive ones — watching a concept explained, then immediately drilling it in an interactive lesson, reinforces it better than either alone.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-film-buff",
+    "slug": "film-buff",
+    "name": "Film Buff",
+    "category": "achievements",
+    "description": "Watch 100 video lessons.",
+    "howTo": "At this point, focus your video watching on your actual weaknesses (check your Stats page for where you lose the most rating) rather than random browsing.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-movie-star",
+    "slug": "movie-star",
+    "name": "Movie Star",
+    "category": "achievements",
+    "description": "Watch 1,000 video lessons.",
+    "howTo": "This is a heavy completionist achievement — treat it as a long-term side goal alongside your regular play rather than something to binge in one sitting.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-1st-word",
+    "slug": "1st-word",
+    "name": "1st Word",
+    "category": "achievements",
+    "description": "Earn your first Chess.com activity point.",
+    "howTo": "Activity points come from almost any interaction on the site — posting, commenting, or completing a lesson — so this usually unlocks itself quickly.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-first",
+    "slug": "first",
+    "name": "First!",
+    "category": "achievements",
+    "description": "Post the first comment on a Daily Puzzle.",
+    "howTo": "Daily Puzzle comments reset each day — check the Daily Puzzle early after it refreshes and post a comment before anyone else does.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-participant",
+    "slug": "participant",
+    "name": "Participant",
+    "category": "achievements",
+    "description": "Earn 100 activity points.",
+    "howTo": "Regular engagement — playing, posting, and completing lessons — builds activity points passively as a side effect of normal site use.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-megaphone",
+    "slug": "megaphone",
+    "name": "Megaphone",
+    "category": "achievements",
+    "description": "Earn 1,000 activity points.",
+    "howTo": "Being active in forums and clubs, not just playing games, is usually what pushes activity point totals up fastest.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-chatterbox",
+    "slug": "chatterbox",
+    "name": "Chatterbox",
+    "category": "achievements",
+    "description": "Earn 10,000 activity points.",
+    "howTo": "This is a long-run accumulation — consistent, varied site activity over months is the realistic path here rather than any single burst of activity.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-conversation-starter",
+    "slug": "conversation-starter",
+    "name": "Conversation Starter",
+    "category": "achievements",
+    "description": "Start a new forum thread.",
+    "howTo": "Head to the Forums section, pick a relevant category, and click New Topic — ask a real question or share an interesting game to get replies.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-soapbox",
+    "slug": "soapbox",
+    "name": "Soapbox",
+    "category": "achievements",
+    "description": "Publish a blog post.",
+    "howTo": "Use the Blog feature from your profile to write a post — a game analysis, an opening you've been studying, or a tournament recap are all good starting topics.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-printing-press",
+    "slug": "printing-press",
+    "name": "Printing Press",
+    "category": "achievements",
+    "description": "Publish 10 blog posts.",
+    "howTo": "A regular series — like a weekly game-of-the-week writeup — is an easier way to reach 10 posts than trying to write one long one.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-giver",
+    "slug": "giver",
+    "name": "Giver",
+    "category": "achievements",
+    "description": "Give a trophy to another member.",
+    "howTo": "Trophies are given from a player's profile page — after a good game or a helpful forum post, visit their profile and award one.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-awarder",
+    "slug": "awarder",
+    "name": "Awarder",
+    "category": "achievements",
+    "description": "Give 10 trophies to other members.",
+    "howTo": "Make a habit of trophying opponents after especially good or hard-fought games — it's a small gesture that also builds this achievement.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-generous-spirit",
+    "slug": "generous-spirit",
+    "name": "Generous Spirit",
+    "category": "achievements",
+    "description": "Give 100 trophies to other members.",
+    "howTo": "Active club members are a good source of opponents worth trophying regularly, since you'll play many of them repeatedly.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-trophy-hunter",
+    "slug": "trophy-hunter",
+    "name": "Trophy Hunter",
+    "category": "achievements",
+    "description": "Receive 10 trophies from other members.",
+    "howTo": "Playing sportingly and being active in clubs and tournaments naturally earns trophies from opponents who appreciated the game.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-award-magnet",
+    "slug": "award-magnet",
+    "name": "Award Magnet",
+    "category": "achievements",
+    "description": "Receive 100 trophies from other members.",
+    "howTo": "High-volume tournament and club play is the realistic path here — the more opponents you interact with, the more chances to be trophied.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-prize-winner",
+    "slug": "prize-winner",
+    "name": "Prize Winner",
+    "category": "achievements",
+    "description": "Receive 10 trophies in total.",
+    "howTo": "This tracks cumulative trophies received — regular, sportsmanlike play across games, clubs, and tournaments builds it up over time.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-wood-league",
+    "slug": "wood-league",
+    "name": "Wood League",
+    "category": "achievements",
+    "description": "Reach the Wood League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Wood tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-stone-league",
+    "slug": "stone-league",
+    "name": "Stone League",
+    "category": "achievements",
+    "description": "Reach the Stone League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Stone tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-bronze-league",
+    "slug": "bronze-league",
+    "name": "Bronze League",
+    "category": "achievements",
+    "description": "Reach the Bronze League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Bronze tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-silver-league",
+    "slug": "silver-league",
+    "name": "Silver League",
+    "category": "achievements",
+    "description": "Reach the Silver League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Silver tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-crystal-league",
+    "slug": "crystal-league",
+    "name": "Crystal League",
+    "category": "achievements",
+    "description": "Reach the Crystal League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Crystal tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-elite-league",
+    "slug": "elite-league",
+    "name": "Elite League",
+    "category": "achievements",
+    "description": "Reach the Elite League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Elite tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-champion-league",
+    "slug": "champion-league",
+    "name": "Champion League",
+    "category": "achievements",
+    "description": "Reach the Champion League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Champion tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-legend-league",
+    "slug": "legend-league",
+    "name": "Legend League",
+    "category": "achievements",
+    "description": "Reach the Legend League tier in Chess.com's weekly Player Leagues.",
+    "howTo": "Player Leagues rank you by weekly rating-points earned against similarly-ranked opponents — play consistently through the week and win more than you lose to climb into the Legend tier.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-go-mobile-android",
+    "slug": "go-mobile-android",
+    "name": "Go Mobile (Android)",
+    "category": "achievements",
+    "description": "Play a game using the Chess.com Android app.",
+    "howTo": "Install the Chess.com app from the Google Play Store, sign in with your existing account, and play a single game to unlock this.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-go-mobile-ios",
+    "slug": "go-mobile-ios",
+    "name": "Go Mobile (iOS)",
+    "category": "achievements",
+    "description": "Play a game using the Chess.com iOS app.",
+    "howTo": "Install the Chess.com app from the App Store, sign in with your existing account, and play a single game to unlock this.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-tweet",
+    "slug": "tweet",
+    "name": "Tweet!",
+    "category": "achievements",
+    "description": "Share a game on Twitter/X.",
+    "howTo": "After finishing a game, use the Share option on the game page and post it to Twitter/X — a fun way to show off a nice win or a wild finish.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-like",
+    "slug": "like",
+    "name": "Like!",
+    "category": "achievements",
+    "description": "Share a game on Facebook.",
+    "howTo": "After finishing a game, use the Share option on the game page and post it to Facebook.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-friend-me",
+    "slug": "friend-me",
+    "name": "Friend Me",
+    "category": "achievements",
+    "description": "Connect your Facebook account to Chess.com.",
+    "howTo": "In Account Settings, link your Facebook account — this can also make it easier for real-life friends to find you on the site.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-devoted",
+    "slug": "devoted",
+    "name": "Devoted",
+    "category": "achievements",
+    "description": "Log in for 7 days in a row.",
+    "howTo": "A daily puzzle or a single quick game is enough to keep a login streak alive without needing a long session every day.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-fanatic",
+    "slug": "fanatic",
+    "name": "Fanatic",
+    "category": "achievements",
+    "description": "Log in for 30 days in a row.",
+    "howTo": "Anchor your login to an existing daily habit — checking the Daily Puzzle each morning is a reliable way to sustain a month-long streak.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-survey-says",
+    "slug": "survey-says",
+    "name": "Survey Says",
+    "category": "achievements",
+    "description": "Vote in a Chess.com survey.",
+    "howTo": "Site surveys occasionally appear as banners or in the News section — respond to one the next time it's posted to unlock this.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-3d-glasses",
+    "slug": "3d-glasses",
+    "name": "3D Glasses",
+    "category": "achievements",
+    "description": "Switch your board pieces to 3D mode.",
+    "howTo": "In Board & Pieces settings, toggle the piece style to 3D — a purely cosmetic change that unlocks this achievement immediately.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-finger-paint",
+    "slug": "finger-paint",
+    "name": "Finger Paint",
+    "category": "achievements",
+    "description": "Change your board or piece theme.",
+    "howTo": "In Board & Pieces settings, pick any board color scheme or piece set different from the default to trigger this.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-eye-doctor",
+    "slug": "eye-doctor",
+    "name": "Eye Doctor",
+    "category": "achievements",
+    "description": "Play a game with a vision-accessibility setting enabled.",
+    "howTo": "In Accessibility or Board settings, enable a vision-assist option such as colorblind-friendly highlighting or large pieces, then play a game.",
+    "provenance": "community",
+    "hidden": false
+  },
+  {
+    "id": "ach-quick-knockout",
+    "slug": "quick-knockout",
+    "name": "Quick Knockout",
+    "category": "achievements",
+    "description": "Win a game in a small number of moves.",
+    "howTo": "Fast wins come from punishing opening mistakes directly — memorize a few sharp traps in your main openings and watch for opponents who miss basic threats early.",
+    "provenance": "inferred",
+    "hidden": false,
+    "rule": {
+      "measurement": "quick_knockouts",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-juggler",
+    "slug": "juggler",
+    "name": "Juggler",
+    "category": "achievements",
+    "description": "Have 20 Daily games in progress at once.",
+    "howTo": "Daily chess gives each side days per move, so you can run many games in parallel. Start new Daily games or accept incoming Daily challenges from the New Game menu until 20 are running simultaneously, and use the Daily dashboard's filters to keep track so none time out on you.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-chess-marathon",
+    "slug": "chess-marathon",
+    "name": "Chess Marathon",
+    "category": "achievements",
+    "description": "Play a game that goes past 100 moves.",
+    "howTo": "Long games happen naturally in balanced, drawish structures: closed pawn chains, opposite-colored-bishop endgames, or rook endgames where neither side can force a breakthrough. Play patiently instead of forcing complications, and a slower time control (rapid or daily) gives you the room to reach move 100 without losing on time.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "marathon_games",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-nick-of-time",
+    "slug": "nick-of-time",
+    "name": "Nick of Time",
+    "category": "achievements",
+    "description": "Win a game with less than a second left on your clock.",
+    "howTo": "This needs a low time control (bullet is easiest) and a genuine time scramble: keep playing a lost-on-the-board-but-still-live-on-time position instead of resigning, and premove forcing replies (checks, forced recaptures) to shave clock time in the final seconds.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "min_clock_win_ms",
+      "op": "<",
+      "target": 1000
+    }
+  },
+  {
+    "id": "ach-killer-king",
+    "slug": "killer-king",
+    "name": "Killer King",
+    "category": "achievements",
+    "description": "Deliver a discovered checkmate by moving your king.",
+    "howTo": "This needs a king move that isn't itself the checking move: your king steps aside, often out of a pin or off a blocking square, and unmasks an attack from a rook, bishop, or queen standing behind it. Look for it in open-file or open-diagonal endgames where your king already sits on the attacking piece's line.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "mates_by_king_discovery",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-castle-victory",
+    "slug": "castle-victory",
+    "name": "Castle Victory",
+    "category": "achievements",
+    "description": "Deliver checkmate on the move you castle.",
+    "howTo": "Castling checkmate needs the castling rook (or the king itself) to deliver the final blow the instant you castle. These come up in cramped positions where the opponent's king is already boxed in and your rook lands on the back rank, or the king steps onto a mating square, as part of the castling move itself.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "mate_by_castling",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-full-house",
+    "slug": "full-house",
+    "name": "Full House",
+    "category": "achievements",
+    "description": "Win a game without losing a single piece.",
+    "howTo": "Play solid, low-risk chess and avoid trades or tactical complications where you could drop material. A clean positional squeeze, or a mating attack that never required a sacrifice, is the most reliable path to a flawless win.",
+    "provenance": "community",
+    "hidden": true,
+    "rule": {
+      "measurement": "flawless_wins",
+      "op": ">=",
+      "target": 1
+    }
+  },
+  {
+    "id": "ach-full-day",
+    "slug": "full-day",
+    "name": "Full Day",
+    "category": "achievements",
+    "description": "Spend a cumulative 24 hours solving puzzles (not continuous).",
+    "howTo": "This tracks total time in the Puzzles trainer across sessions, not one sitting. Make puzzles part of your daily routine and the hours accumulate over weeks; there's no need to grind it in a single stretch.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-searching-for-bobby-fischer",
+    "slug": "searching-for-bobby-fischer",
+    "name": "Searching for Bobby Fischer",
+    "category": "achievements",
+    "description": "View a Bobby Fischer game in the Master Games database.",
+    "howTo": "Open the Explorer or Master Games database from the Learn or Analysis menu, search for Bobby Fischer as a player, and open any one of his games. The 1972 World Championship match against Spassky is a good place to start.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-precious-snowflake",
+    "slug": "precious-snowflake",
+    "name": "Precious Snowflake",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Powder the Snowman\" bot (rated 800).",
+    "howTo": "This is a holiday-seasonal bot Chess.com rotates in and out of the Play a Bot menu. Check the bot roster during the winter holiday period and challenge Powder the Snowman directly once it's available; at an 800 rating, solid fundamentals are enough to win.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-nutcracker",
+    "slug": "nutcracker",
+    "name": "Nutcracker",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Eve the Elf\" bot (rated 1000).",
+    "howTo": "This holiday-seasonal bot only appears in the Play a Bot menu during winter events. Check back when Chess.com's holiday bot lineup is live and challenge Eve the Elf directly; treat it like a game against a 1000-rated opponent.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-full-stocking",
+    "slug": "full-stocking",
+    "name": "Full Stocking",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Santa\" bot (rated 1200).",
+    "howTo": "Santa is one of Chess.com's holiday-seasonal bots, available in the Play a Bot menu only during winter events. Santa plays at a solid club level, so approach the game like a real rapid game against a roughly 1200-rated opponent.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-jingle-bell",
+    "slug": "jingle-bell",
+    "name": "Jingle Bell",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Dash the Reindeer\" bot (rated 1600).",
+    "howTo": "Dash is a stronger holiday-seasonal bot in the Play a Bot menu, rated around 1600. You'll need solid tactical awareness and endgame technique, since bots at this level punish loose piece placement quickly.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-holly-berry",
+    "slug": "holly-berry",
+    "name": "Holly Berry",
+    "category": "achievements",
+    "description": "Defeat the seasonal \"Holly\" bot, Santa's wife (rated 2000).",
+    "howTo": "Holly is the toughest of the winter holiday bots, rated around 2000. Play a careful, theory-backed opening and avoid early tactical fireworks, since a bot at this rating punishes inaccuracies immediately.",
+    "provenance": "community",
+    "hidden": true
+  },
+  {
+    "id": "ach-good-read",
+    "slug": "good-read",
+    "name": "Good Read",
+    "category": "achievements",
+    "description": "Get 100 views on one of your own Chess.com blog posts.",
+    "howTo": "Publish a blog post with content people actually want to read, such as a well-annotated game, an opening guide, or a tournament recap, and share it in relevant forums or clubs to help it reach 100 views.",
+    "provenance": "community",
+    "hidden": true
+  }
+]

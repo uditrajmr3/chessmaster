@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .routers import analysis, digest, email_verification, endgame, export, games, opening_book, openings, patterns, payments, peer_comparison, pgn_import, position, puzzles, rating_predictor, report, scouting, stats, sync, tilt, time_management
+from .routers import analysis, awards, digest, email_verification, endgame, export, games, opening_book, openings, patterns, payments, peer_comparison, pgn_import, position, puzzles, rating_predictor, report, scouting, stats, sync, tilt, time_management
 from .auth.users import fastapi_users, auth_backend
 from .auth.schemas import UserRead, UserCreate, UserUpdate
 
@@ -60,6 +60,7 @@ app.include_router(export.router, prefix="/api")
 app.include_router(opening_book.router, prefix="/api")
 app.include_router(position.router, prefix="/api")
 app.include_router(payments.router, prefix="/api")
+app.include_router(awards.router, prefix="/api")
 
 # Auth routers
 app.include_router(

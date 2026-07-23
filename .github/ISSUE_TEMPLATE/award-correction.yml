@@ -1,0 +1,68 @@
+name: Award correction
+description: Report a wrong or missing Chess.com award in the /awards catalog.
+title: "Correction: "
+labels: ["awards", "correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The `/awards` catalog is built from public sources and marked `verified`,
+        `community`, or `inferred` depending on how solid that source is —
+        `inferred` entries are our best reading, not a guarantee. If something is
+        wrong, missing, or doesn't actually exist on Chess.com, tell us here.
+
+  - type: input
+    id: award-id
+    attributes:
+      label: Award ID or name
+      description: >-
+        The `id`/`slug` from the catalog JSON if you know it, or the award's
+        name and category (achievements / books / passports / badges / cheers
+        / medals) as shown on the page.
+      placeholder: e.g. killer-knight (Achievements)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: problem-type
+    attributes:
+      label: What's wrong?
+      options:
+        - The name is wrong
+        - The criteria (how to earn it) are wrong
+        - This award doesn't actually exist
+        - This award exists but is missing from the catalog
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: correct-info
+    attributes:
+      label: Correct information
+      description: What should the name, criteria, or entry actually say?
+      placeholder: >-
+        e.g. The correct name is "..." / the real criteria are "..." / this
+        award should be added with these details...
+    validations:
+      required: true
+
+  - type: input
+    id: source-link
+    attributes:
+      label: Source link
+      description: >-
+        A link backing this up — an official support.chess.com article, a
+        Chess.com blog post, or a screenshot/forum thread. Unsourced
+        corrections are much harder for us to verify and merge.
+      placeholder: https://support.chess.com/en/articles/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Anything else?
+      description: Optional — extra context that might help us verify this.
+    validations:
+      required: false

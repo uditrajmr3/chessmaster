@@ -1,20 +1,31 @@
 import { cookies } from "next/headers";
+import { hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
+import { routing } from "./routing";
 
-// No i18n routing: the locale lives in a cookie (set by <LanguageSwitcher>),
-// so every URL stays the same and the whole app — public pages and the
-// authenticated dashboard alike — renders in the chosen language. Default is
-// English; unknown/absent cookie falls back to it.
-export const SUPPORTED_LOCALES = ["en", "hi", "gu"] as const;
-export type Locale = (typeof SUPPORTED_LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = "en";
+// Hybrid locale resolution:
+//  - Public routes live under app/(public)/[locale] — the segment supplies
+//    `requestLocale` (via setRequestLocale), so no cookie read happens and
+//    the route can statically generate.
+//  - Everything else (authenticated app + auth pages) has no segment, so
+//    `requestLocale` resolves undefined and we fall back to the `locale`
+//    cookie (set by <LanguageSwitcher>). The cookie read is what keeps those
+//    routes dynamic — by design.
+export const SUPPORTED_LOCALES = routing.locales;
+export type { Locale } from "./routing";
+export const DEFAULT_LOCALE = routing.defaultLocale;
 
-export default getRequestConfig(async () => {
-  const cookieLocale = (await cookies()).get("locale")?.value;
-  const locale = (SUPPORTED_LOCALES as readonly string[]).includes(cookieLocale ?? "")
-    ? (cookieLocale as Locale)
-    : DEFAULT_LOCALE;
-
+export default getRequestConfig(async ({ requestLocale }) => {
+  const requested = await requestLocale;
+  let locale: string;
+  if (hasLocale(routing.locales, requested)) {
+    locale = requested;
+  } else {
+    const cookieLocale = (await cookies()).get("locale")?.value;
+    locale = hasLocale(routing.locales, cookieLocale)
+      ? cookieLocale
+      : routing.defaultLocale;
+  }
   return {
     locale,
     messages: (await import(`../messages/${locale}.json`)).default,

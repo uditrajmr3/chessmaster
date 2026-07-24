@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Term from "@/components/Term";
 
@@ -110,9 +111,9 @@ export default async function ImproveEndgame({
         <p className="text-gray-400">
           {t.rich("seeAlsoBody", {
             link: (chunks) => (
-              <Link href="/learn/improve-middlegame" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
+              <LocaleLink href="/learn/improve-middlegame" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
                 {chunks}
-              </Link>
+              </LocaleLink>
             ),
           })}
         </p>

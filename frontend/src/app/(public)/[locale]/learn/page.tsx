@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
@@ -28,11 +29,11 @@ function GuideCard({
   readLabel: string;
 }) {
   return (
-    <Link href={href} className="surface-card block p-6 card-hover">
+    <LocaleLink href={href} className="surface-card block p-6 card-hover">
       <h3 className="font-display text-lg font-semibold text-white">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-gray-400">{body}</p>
       <span className="mt-3 inline-block text-sm text-accent-300">{readLabel}</span>
-    </Link>
+    </LocaleLink>
   );
 }
 

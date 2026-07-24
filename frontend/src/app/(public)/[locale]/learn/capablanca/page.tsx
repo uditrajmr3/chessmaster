@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   THREE_QUESTIONS,
@@ -113,11 +114,11 @@ export default async function CapablancaPage({
           { href: "/learn/capablanca/endgame", n: "Chapter 3", t: t("ch3Title"), d: t("chFiveRules") },
           { href: "/learn/capablanca/game", n: "Chapter 4", t: t("ch4Title"), d: t("ch4Desc") },
         ].map((c) => (
-          <Link key={c.href} href={c.href} className="surface-card block p-5 card-hover">
+          <LocaleLink key={c.href} href={c.href} className="surface-card block p-5 card-hover">
             <span className="font-mono text-xs text-accent-300">{c.n}</span>
             <h3 className="font-display mt-1 text-lg font-semibold text-white">{c.t}</h3>
             <p className="mt-1 text-sm text-gray-400">{c.d}</p>
-          </Link>
+          </LocaleLink>
         ))}
       </div>
 

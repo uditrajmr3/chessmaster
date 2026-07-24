@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
 
 const URL = "https://chessmaster.cyou/game-review";
@@ -153,9 +154,9 @@ export default async function GameReviewPage({
           <strong className="text-white">Repeating patterns</strong> — because
           ChessInt reviews your whole history, it also shows the mistakes you
           make again and again, not just in one game.{" "}
-          <Link href="/chess-analysis" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
+          <LocaleLink href="/chess-analysis" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
             See full chess analysis →
-          </Link>
+          </LocaleLink>
         </li>
       </ul>
 

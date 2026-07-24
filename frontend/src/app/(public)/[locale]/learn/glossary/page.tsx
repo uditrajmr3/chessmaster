@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { GLOSSARY_TERMS, GLOSSARY_LONG } from "@/lib/glossary";
 

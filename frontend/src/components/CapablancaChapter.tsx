@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import ReplayBoard from "@/components/ReplayBoard";
 import { EXAMPLES } from "@/lib/capablancaExamples";
 import type { Rule } from "@/lib/capablanca";

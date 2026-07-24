@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import BoardDiagram from "@/components/BoardDiagram";
 import Term from "@/components/Term";
@@ -188,18 +189,18 @@ export default async function HowToPlayChess({
         <li>
           {t.rich("nextItem1", {
             link: (chunks) => (
-              <Link href="/learn/chess-notation" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
+              <LocaleLink href="/learn/chess-notation" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
                 {chunks}
-              </Link>
+              </LocaleLink>
             ),
           })}
         </li>
         <li>
           {t.rich("nextItem2", {
             link: (chunks) => (
-              <Link href="/learn/glossary" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
+              <LocaleLink href="/learn/glossary" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
                 {chunks}
-              </Link>
+              </LocaleLink>
             ),
           })}
         </li>

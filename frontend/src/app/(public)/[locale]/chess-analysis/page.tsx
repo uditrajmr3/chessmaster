@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
 
 const URL = "https://chessmaster.cyou/chess-analysis";
@@ -132,9 +133,9 @@ export default async function ChessAnalysisPage({
 
       <p className="mt-8 leading-relaxed text-gray-400">
         Want a move-by-move breakdown of a single game instead?{" "}
-        <Link href="/game-review" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
+        <LocaleLink href="/game-review" className="text-accent-300 underline underline-offset-4 hover:text-accent-200">
           See the free game review →
-        </Link>
+        </LocaleLink>
       </p>
 
       <h2 className="font-display mt-14 text-2xl font-semibold text-white">

@@ -89,7 +89,7 @@ jest.mock("@/lib/auth", () => ({
 
 // ── Import pages after mocks ──────────────────────────────────────────────────
 
-import SettingsPage from "@/app/settings/page";
+import SettingsPage from "@/app/(app)/settings/page";
 import Sidebar from "@/components/Sidebar";
 
 // =============================================================================

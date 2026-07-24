@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Mail } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
+import { stripLocale } from "@/i18n/routing";
 import Sidebar from "@/components/Sidebar";
 import StatusBar from "@/components/StatusBar";
 import Loader from "@/components/Loader";
@@ -36,7 +37,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const t = useTranslations("auth");
   const router = useRouter();
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  // "/hi/about" must match CONTENT_ROUTES' "/about"; "/hi" is home.
+  const pathname = stripLocale(rawPathname);
 
   const isAuthRoute = matches(AUTH_ROUTES, pathname);
   const isContentRoute = matches(CONTENT_ROUTES, pathname);

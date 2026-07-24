@@ -10,7 +10,7 @@ export default createMiddleware(routing);
 export const config = {
   matcher: [
     "/",
-    "/(hi|gu)/:path*",
+    "/(en|hi|gu)/:path*",
     "/about/:path*",
     "/game-review/:path*",
     "/chess-analysis/:path*",

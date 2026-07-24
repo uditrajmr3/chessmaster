@@ -64,8 +64,8 @@ jest.mock("@/lib/api", () => ({
 
 // ── Import pages after mocks are set up ──────────────────────────────────────
 
-import LoginPage from "@/app/login/page";
-import RegisterPage from "@/app/register/page";
+import LoginPage from "@/app/(app)/login/page";
+import RegisterPage from "@/app/(app)/register/page";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LoginPage tests

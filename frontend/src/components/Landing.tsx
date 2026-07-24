@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
@@ -64,26 +65,26 @@ export default function Landing() {
             >
               {tc("getStartedFree")}
             </Link>
-            <Link
+            <LocaleLink
               href="/about"
               className="rounded-lg border border-ink-500 px-6 py-3 text-sm font-semibold text-white hover:bg-ink-700"
             >
               {t("howItWorks")}
-            </Link>
+            </LocaleLink>
           </div>
           <p className="mt-6 text-sm text-gray-500">
             {t("explore")}{" "}
-            <Link href="/game-review" className="text-accent-300 underline-offset-4 hover:underline">
+            <LocaleLink href="/game-review" className="text-accent-300 underline-offset-4 hover:underline">
               {t("exploreGameReview")}
-            </Link>{" "}
+            </LocaleLink>{" "}
             ·{" "}
-            <Link href="/chess-analysis" className="text-accent-300 underline-offset-4 hover:underline">
+            <LocaleLink href="/chess-analysis" className="text-accent-300 underline-offset-4 hover:underline">
               {t("exploreAnalysis")}
-            </Link>{" "}
+            </LocaleLink>{" "}
             ·{" "}
-            <Link href="/learn" className="text-accent-300 underline-offset-4 hover:underline">
+            <LocaleLink href="/learn" className="text-accent-300 underline-offset-4 hover:underline">
               {t("exploreLearn")}
-            </Link>
+            </LocaleLink>
           </p>
         </header>
 

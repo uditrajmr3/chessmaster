@@ -63,6 +63,7 @@ jest.mock("next-intl", () => {
 
   return {
     __esModule: true,
+    hasLocale: (locales: string[], locale: unknown) => locales.includes(locale as string),
     useTranslations: (ns?: string) => makeT(ns),
     useLocale: () => "en",
     NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => children,
@@ -74,4 +75,20 @@ jest.mock("next-intl/server", () => ({
   getTranslations: async (ns?: string) =>
     (globalThis as unknown as { __makeT: (ns?: string) => unknown }).__makeT(ns),
   getLocale: async () => "en",
+}));
+
+jest.mock("next-intl/routing", () => ({
+  __esModule: true,
+  defineRouting: (config: unknown) => config,
+}));
+
+jest.mock("next-intl/navigation", () => ({
+  __esModule: true,
+  createNavigation: (routing: unknown) => ({
+    Link: () => null,
+    redirect: () => {},
+    usePathname: () => "/",
+    useRouter: () => ({}),
+    getPathname: () => "/",
+  }),
 }));

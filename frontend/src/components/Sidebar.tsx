@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { Link as LocaleLink } from "@/i18n/navigation";
+import { isPublicPath } from "@/i18n/routing";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, useEffect, useRef, type ElementType } from "react";
@@ -179,8 +181,12 @@ function AccordionSection({
             const isActive =
               pathname === item.href ||
               (item.href !== "/" && pathname.startsWith(item.href));
+            // Most nav items are app-only ("/games", "/settings", …) and must
+            // keep next/link. A couple ("/", "/learn") also exist as public
+            // pages and need the locale-aware Link so the prefix survives.
+            const ItemLink = isPublicPath(item.href) ? LocaleLink : Link;
             return (
-              <Link
+              <ItemLink
                 key={item.href}
                 href={item.href}
                 onClick={onNavigate}
@@ -199,7 +205,7 @@ function AccordionSection({
                   }`}
                 />
                 <span>{t(item.labelKey)}</span>
-              </Link>
+              </ItemLink>
             );
           })}
         </div>

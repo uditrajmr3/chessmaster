@@ -17,7 +17,7 @@ export const routing = defineRouting({
 export type Locale = (typeof routing.locales)[number];
 
 // The signed-out-reachable (indexable) route prefixes. Must stay in sync with
-// AuthGuard's AUTH-free sets and middleware.ts's matcher.
+// AuthGuard's AUTH-free sets and proxy.ts's matcher.
 export const PUBLIC_PATHS = [
   "/",
   "/about",

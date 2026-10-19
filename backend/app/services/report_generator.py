@@ -101,6 +101,13 @@ class ReportGenerator:
             messages=[{"role": "user", "content": user_prompt}],
         )
 
+        # Haiku 5.5 has no server-side fallback: a refusal must fail cleanly,
+        # before any Report row is saved (so no quota is consumed).
+        if response.stop_reason == "refusal":
+            raise RuntimeError(
+                "The AI coach declined to generate this report. Please try again."
+            )
+
         report_text = "".join(
             b.text for b in response.content if isinstance(getattr(b, "text", None), str)
         )

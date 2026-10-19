@@ -169,6 +169,21 @@ class TestReportGeneratorScoping:
             with pytest.raises(RuntimeError, match="No games found"):
                 asyncio.run(generator.generate())
 
+    def test_generator_raises_on_refusal_and_saves_nothing(self, db):
+        """stop_reason == 'refusal' -> RuntimeError, no Report row added."""
+        _seed_game_for_user(db, TEST_USER_ID, "_refusal")
+
+        generator = ReportGenerator(db, user_id=TEST_USER_ID)
+        anthropic_mock = _make_anthropic_mock()
+        anthropic_mock.messages.create.return_value.stop_reason = "refusal"
+        before = db.query(Report).count()
+        with patch("app.services.report_generator.anthropic.AsyncAnthropic", return_value=anthropic_mock), \
+             patch("app.services.report_generator.settings") as mock_settings:
+            mock_settings.anthropic_api_key = "test-key"
+            with pytest.raises(RuntimeError, match="declined"):
+                asyncio.run(generator.generate())
+        assert db.query(Report).count() == before
+
     def test_generated_report_queryable_by_user_id(self, db):
         """After generation the Report row is retrievable via user_id filter."""
         _seed_game_for_user(db, TEST_USER_ID, "_q")

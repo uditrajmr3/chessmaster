@@ -5,9 +5,10 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://chessmaster:chessmaster@localhost:5432/chessmaster"
     anthropic_api_key: str = ""
-    # AI Coach model. Haiku 4.5 is ~5x cheaper in/out than Sonnet 4 and plenty
-    # strong for summarizing structured pattern stats into a coaching report.
-    report_model: str = "claude-haiku-4-5"
+    # AI Coach model. A/B on 3 prod users (2026-10-19): Haiku 5.5 is ~10x cheaper
+    # than Haiku 4.5 ($0.10/$0.50 vs $1/$5 per MTok), ~2.5x faster, and stayed
+    # grounded in the supplied stats where Haiku 4.5 invented opening win rates.
+    report_model: str = "claude-haiku-5-5"
     # Free-tier cap on AI Coach reports per user per rolling 30 days (the report
     # uses the owner's Anthropic key). 0 = unlimited.
     report_monthly_quota: int = 5

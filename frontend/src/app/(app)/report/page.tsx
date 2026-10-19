@@ -17,6 +17,8 @@ function reportToPlainText(report: ReportData): string {
     .map((line) =>
       line
         .replace(/^#{1,3}\s+/, "")
+        .replace(/^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/, "")
+        .replace(/^(\s*)[-*]\s+/, "$1- ")
         .replace(/\*\*(.*?)\*\*/g, "$1")
         .replace(/\*(.*?)\*/g, "$1")
         .replace(/`([^`]+)`/g, "$1")
@@ -258,9 +260,10 @@ function renderInline(text: string) {
 }
 
 interface Block {
-  type: "h1" | "h2" | "h3" | "bold-line" | "bullet" | "numbered" | "code" | "blank" | "paragraph";
+  type: "h1" | "h2" | "h3" | "hr" | "subbullet" | "bold-line" | "bullet" | "numbered" | "code" | "blank" | "paragraph";
   content: string;
   index: number;
+  num?: number;
 }
 
 function parseBlocks(text: string): Block[] {
@@ -270,8 +273,12 @@ function parseBlocks(text: string): Block[] {
     if (line.startsWith("## ")) return { type: "h2", content: line.slice(3), index: i };
     if (line.startsWith("### ")) return { type: "h3", content: line.slice(4), index: i };
     if (line.startsWith("**") && line.endsWith("**")) return { type: "bold-line", content: line.slice(2, -2), index: i };
-    if (line.startsWith("- ")) return { type: "bullet", content: line.slice(2), index: i };
-    if (/^\d+\.\s/.test(line)) return { type: "numbered", content: line.replace(/^\d+\.\s/, ""), index: i };
+    if (/^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)) return { type: "hr", content: "", index: i };
+    if (line.startsWith("- ") || line.startsWith("* ")) return { type: "bullet", content: line.slice(2), index: i };
+    const sub = line.match(/^\s+[-*]\s+(.*)$/);
+    if (sub) return { type: "subbullet", content: sub[1], index: i };
+    const numMatch = line.match(/^(\d+)\.\s+(.*)$/);
+    if (numMatch) return { type: "numbered", content: numMatch[2], index: i, num: parseInt(numMatch[1], 10) };
     if (line.startsWith("FEN:") || line.startsWith("`")) return { type: "code", content: line, index: i };
     if (line.trim() === "") return { type: "blank", content: "", index: i };
     return { type: "paragraph", content: line, index: i };
@@ -286,18 +293,27 @@ function MarkdownRenderer({ text }: { text: string }) {
   while (i < blocks.length) {
     const block = blocks[i];
 
-    // Group consecutive bullet items into a <ul>
-    if (block.type === "bullet") {
+    if (block.type === "hr") {
+      elements.push(<hr key={`hr-${block.index}`} className="my-6 border-0 border-t border-white/10" />);
+      i++;
+      continue;
+    }
+
+    // Group consecutive bullet items (and nested sub-bullets) into a <ul>
+    if (block.type === "bullet" || block.type === "subbullet") {
       const items: Block[] = [];
-      while (i < blocks.length && blocks[i].type === "bullet") {
+      while (i < blocks.length && (blocks[i].type === "bullet" || blocks[i].type === "subbullet")) {
         items.push(blocks[i]);
         i++;
       }
       elements.push(
         <ul key={`ul-${block.index}`} className="space-y-1.5 my-3 ml-1">
           {items.map((item) => (
-            <li key={item.index} className="text-white/80 leading-relaxed flex gap-2">
-              <span className="text-accent-400 mt-1.5 shrink-0">&#8226;</span>
+            <li
+              key={item.index}
+              className={`text-white/80 leading-relaxed flex gap-2 ${item.type === "subbullet" ? "ml-6" : ""}`}
+            >
+              <span className="text-accent-400 mt-1.5 shrink-0">{item.type === "subbullet" ? "\u25E6" : "\u2022"}</span>
               <span>{renderInline(item.content)}</span>
             </li>
           ))}
@@ -318,7 +334,7 @@ function MarkdownRenderer({ text }: { text: string }) {
           {items.map((item, idx) => (
             <li key={item.index} className="text-white/80 leading-relaxed flex gap-3">
               <span className="text-accent-300 font-semibold font-mono text-sm mt-0.5 shrink-0 w-5 text-right">
-                {idx + 1}.
+                {item.num ?? idx + 1}.
               </span>
               <span>{renderInline(item.content)}</span>
             </li>

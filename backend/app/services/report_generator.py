@@ -28,7 +28,29 @@ Structure your response as:
    - Concrete training exercise to fix it
 3. **Opening Repertoire Advice** — which openings to keep, drop, or add
 4. **Strengths to Build On** — what they do well
-5. **30-Day Training Plan** — week-by-week focus areas"""
+5. **30-Day Training Plan** — week-by-week focus areas (exactly 4 weeks, concise)
+
+Length: keep the whole report under ~2500 words.
+
+Grounding rules (strict):
+- Do NOT describe piece placement, pins, or lines that are not stated in the data. You are
+  given FENs only as references; do not "read" them to invent what is attacked or pinned.
+- Explain an example position ONLY via the provided fields: move played, best move, eval
+  swing, side to move, move number, and detected motifs.
+- Never invent opening variation names, book titles, or chapters. If unsure, name the
+  opening only.
+- Tactic counts are heuristic detector counts. Describe them as "detected in positions where
+  you erred", not as exact facts.
+- Do not call pawn-endgame mistakes "back-rank" mistakes."""
+
+
+def _fmt_eval(cp) -> str:
+    """Format a player-POV centipawn eval as '+1.5' pawns, or 'mate' for mate scores."""
+    if cp is None:
+        return "n/a"
+    if abs(cp) >= 9000:
+        return "mate for you" if cp > 0 else "mate against you"
+    return f"{cp / 100:+.1f}"
 
 
 class ReportGenerator:
@@ -74,12 +96,16 @@ class ReportGenerator:
         client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
         response = await client.messages.create(
             model=settings.report_model,
-            max_tokens=4096,
+            max_tokens=8192,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": user_prompt}],
         )
 
-        report_text = response.content[0].text
+        report_text = "".join(
+            b.text for b in response.content if isinstance(getattr(b, "text", None), str)
+        )
+        if response.stop_reason == "max_tokens":
+            report_text = report_text.rstrip() + "\n\n_Report truncated — regenerate for the full plan._"
 
         # Stamp the Report row with the authenticated user's id.
         report = Report(
@@ -115,11 +141,14 @@ class ReportGenerator:
         examples = patterns.get("example_positions", [])
         example_lines = []
         for e in examples[:8]:
+            side = e.get("side_to_move") or "?"
             example_lines.append(
                 f"  FEN: {e['fen']}\n"
-                f"  Played: {e['player_move']}, Best: {e['best_move']}, "
-                f"  CPL: {e['centipawn_loss']:.0f}, Phase: {e['game_phase']}, "
-                f"  Tactics missed: {', '.join(e['tactical_motifs']) or 'none'}"
+                f"  Player ({side}) to move, move {e.get('fullmove', '?')}. "
+                f"Played: {e['player_move']}, Best: {e['best_move']}, "
+                f"Eval before: {_fmt_eval(e.get('eval_before'))}, after: {_fmt_eval(e.get('eval_after'))} "
+                f"(player POV), CPL: {e['centipawn_loss']:.0f}, Phase: {e['game_phase']}, "
+                f"Motifs detected: {', '.join(e['tactical_motifs']) or 'none'}"
             )
 
         phase = patterns.get("phase_accuracy", {})
@@ -149,7 +178,7 @@ class ReportGenerator:
 - Middlegame: {phase_blunder.get('middlegame', 0)}%
 - Endgame: {phase_blunder.get('endgame', 0)}%
 
-## Tactical Blind Spots (missed motifs when player blundered)
+## Tactical Blind Spots (heuristic motif counts detected in positions where the player blundered or erred)
 {chr(10).join(tactic_lines) if tactic_lines else '  No tactical data yet'}
 
 ## Time Trouble Analysis

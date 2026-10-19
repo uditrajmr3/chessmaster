@@ -65,3 +65,56 @@ class TestDetectTacticalMotifs:
         move = chess.Move.from_uci("d4e5")
         motifs = detect_tactical_motifs(board, move)
         assert motifs == []
+
+
+def _motifs(fen: str, uci: str) -> list[str]:
+    board = chess.Board(fen)
+    move = chess.Move.from_uci(uci)
+    assert move in board.legal_moves
+    return detect_tactical_motifs(board, move)
+
+
+class TestPrecision:
+    # --- pin ---
+    def test_pin_new_pin_counts(self):
+        # Bc1-g5 newly pins Ne7 to Kd8
+        assert "pin" in _motifs("3k4/4n3/8/8/8/8/8/2B1K3 w - - 0 1", "c1g5")
+
+    def test_pin_preexisting_not_counted(self):
+        # Bg5 already pins Ne7 to Kd8; a quiet pawn move creates nothing new
+        assert "pin" not in _motifs("3k4/4n3/8/6B1/8/8/4P3/4K3 w - - 0 1", "e2e3")
+
+    def test_pin_on_pawn_not_counted(self):
+        # Bg5 "pins" pawn e7 to Kd8 - not counted
+        assert "pin" not in _motifs("3k4/4p3/8/8/8/8/8/2B1K3 w - - 0 1", "c1g5")
+
+    # --- back rank ---
+    def test_back_rank_mate_counts(self):
+        assert "back_rank" in _motifs("6k1/5ppp/8/8/8/8/8/R3K3 w - - 0 1", "a1a8")
+
+    def test_back_rank_bishop_check_not_counted(self):
+        # Bb5+ early-game check with king on back rank (used to fire)
+        fen = "rnbqkbnr/ppp2ppp/8/3pp3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3"
+        assert "back_rank" not in _motifs(fen, "f1b5")
+
+    def test_back_rank_rook_check_with_flight_not_counted(self):
+        # Ra8+ but king has g7/h7/f7 flight squares
+        assert "back_rank" not in _motifs("6k1/8/8/8/8/8/8/R3K3 w - - 0 1", "a1a8")
+
+    # --- discovered attack ---
+    def test_discovered_attack_counts(self):
+        # Ne4-c5 uncovers Re1 on Qe8
+        assert "discovered_attack" in _motifs("4q1k1/8/8/8/4N3/8/8/4R1K1 w - - 0 1", "e4c5")
+
+    def test_discovered_attack_preexisting_not_counted(self):
+        # Re1 already attacks Qe8; unrelated pawn move
+        assert "discovered_attack" not in _motifs("4q1k1/8/8/8/8/8/P7/4R1K1 w - - 0 1", "a2a3")
+
+    # --- fork ---
+    def test_queen_fork_with_king_counts(self):
+        # Qd4 forks Kh8 and undefended Rd5
+        assert "fork" in _motifs("7k/8/8/3r4/8/8/8/Q6K w - - 0 1", "a1d4")
+
+    def test_queen_fork_of_defended_pieces_not_counted(self):
+        # Qd4 hits Nd6 (defended by e7) and Bb4 (defended by a5)
+        assert "fork" not in _motifs("6k1/4p3/3n4/p7/1b6/8/8/Q6K w - - 0 1", "a1d4")

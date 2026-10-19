@@ -13,6 +13,8 @@ CPL_CAP = 1000
 # Worst-blunder examples exclude mate-score swings entirely so the AI report
 # shows real, learnable tactics rather than "CPL: 20000".
 MAX_EXAMPLE_CPL = 2000
+# Prefer examples where the position was still roughly balanced (centipawns).
+EXAMPLE_EVAL_WINDOW = 300
 
 # Row-wise clamp of centipawn_loss, portable across Postgres and the SQLite
 # test DB (func.least is Postgres-only).
@@ -158,6 +160,7 @@ class PatternEngine:
         q = self.db.query(MoveAnalysis.tactical_motifs).filter(
             MoveAnalysis.is_player_move == 1,
             MoveAnalysis.tactical_motifs.isnot(None),
+            MoveAnalysis.classification.in_(("blunder", "mistake")),
         )
         rows = self._apply_move_filter(q).all()
         counts: dict[str, int] = defaultdict(int)
@@ -289,18 +292,49 @@ class PatternEngine:
             # Exclude mate-score swings — real tactics, not "CPL 20000" examples
             MoveAnalysis.centipawn_loss <= MAX_EXAMPLE_CPL,
         )
-        blunders = (
-            self._apply_move_filter(q)
-            .order_by(MoveAnalysis.centipawn_loss.desc())
+        # Prefer still-playable positions (eval within ±3 pawns) with detected motifs.
+        playable = q.filter(
+            MoveAnalysis.eval_before.isnot(None),
+            MoveAnalysis.eval_before >= -EXAMPLE_EVAL_WINDOW,
+            MoveAnalysis.eval_before <= EXAMPLE_EVAL_WINDOW,
+        )
+        ordered = (
+            self._apply_move_filter(playable)
+            .order_by(
+                case((MoveAnalysis.tactical_motifs.isnot(None), 1), else_=0).desc(),
+                MoveAnalysis.centipawn_loss.desc(),
+            )
             .limit(limit)
             .all()
         )
+        blunders = ordered
+        if len(blunders) < min(limit, 3):
+            # Fallback: too few playable examples, use worst blunders overall.
+            seen = {b.id for b in blunders}
+            extra = (
+                self._apply_move_filter(q)
+                .order_by(MoveAnalysis.centipawn_loss.desc())
+                .limit(limit)
+                .all()
+            )
+            blunders = blunders + [b for b in extra if b.id not in seen]
+            blunders = blunders[:limit]
 
         examples = []
         for b in blunders:
             game = self.db.query(Game).filter(Game.id == b.game_id, Game.user_id == self._user_id).first()
             motifs = json.loads(b.tactical_motifs) if b.tactical_motifs else []
+            parts = (b.fen_before or "").split()
+            side = {"w": "White", "b": "Black"}.get(parts[1] if len(parts) > 1 else "", None)
+            try:
+                fullmove = int(parts[5])
+            except (IndexError, ValueError):
+                fullmove = b.move_number // 2 + 1
             examples.append({
+                "side_to_move": side,
+                "fullmove": fullmove,
+                "eval_before": b.eval_before,
+                "eval_after": b.eval_after,
                 "game_id": b.game_id,
                 "fen": b.fen_before,
                 "player_move": b.move_san,

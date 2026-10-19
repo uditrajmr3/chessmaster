@@ -88,6 +88,42 @@ class TestPatternEngine:
         assert tactics["fork"] == 2
         assert tactics["pin"] == 1
 
+    def test_missed_tactics_only_blunders_and_mistakes(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        make_move_analysis(db, game_id="g1", move_number=0, tactical_motifs=["fork"], classification="blunder", centipawn_loss=300)
+        make_move_analysis(db, game_id="g1", move_number=2, tactical_motifs=["fork"], classification="mistake", centipawn_loss=120)
+        make_move_analysis(db, game_id="g1", move_number=4, tactical_motifs=["fork"], classification="inaccuracy", centipawn_loss=60)
+
+        engine = PatternEngine(db, user_id=TEST_USER_ID)
+        assert engine._missed_tactics()["fork"] == 2
+
+    def test_worst_blunders_prefers_playable_with_motifs(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        hopeless = make_blunder(db, game_id="g1", move_number=0, centipawn_loss=1500)
+        hopeless.eval_before = 1200.0
+        plain = make_blunder(db, game_id="g1", move_number=2, centipawn_loss=200)
+        motif = make_blunder(db, game_id="g1", move_number=4, centipawn_loss=150, tactical_motifs=["fork"])
+        db.commit()
+        for m in (hopeless, plain, motif):
+            db.refresh(m)
+
+        engine = PatternEngine(db, user_id=TEST_USER_ID)
+        examples = engine._worst_blunders(limit=3)
+        assert examples[0]["tactical_motifs"] == ["fork"]
+        assert examples[-1]["centipawn_loss"] == 1500 or len(examples) == 2
+        first = examples[0]
+        assert first["side_to_move"] == "Black"
+        assert first["fullmove"] == 1
+        assert first["eval_before"] == 150.0 and first["eval_after"] == -50.0
+
+    def test_worst_blunders_fallback_when_no_playable(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        m = make_blunder(db, game_id="g1", move_number=0, centipawn_loss=1500)
+        m.eval_before = 1200.0
+        db.commit()
+        engine = PatternEngine(db, user_id=TEST_USER_ID)
+        assert len(engine._worst_blunders()) == 1
+
     def test_time_trouble_blunder_rate(self, db):
         """Blunder rate should differ between normal time and time trouble."""
         make_game(db, id="g1", platform_id="g1")

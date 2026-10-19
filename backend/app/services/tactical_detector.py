@@ -141,7 +141,7 @@ def detect_tactical_motifs(
                                     motifs.append("skewer")
                                 break
 
-    return list(set(motifs))
+    return sorted(set(motifs))
 
 
 def _ray_direction(from_sq: int, to_sq: int) -> tuple[int, int] | None:

@@ -40,6 +40,10 @@ services:
         sync: false
       - key: RESEND_API_KEY        # resend.com
         sync: false
+      - key: TELEGRAM_BOT_TOKEN    # optional owner notifications
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
       - key: ANTHROPIC_API_KEY     # console.anthropic.com
         sync: false
       - key: EMAIL_FROM            # e.g. "ChessMaster <noreply@yourdomain.com>"

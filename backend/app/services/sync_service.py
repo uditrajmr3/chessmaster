@@ -7,6 +7,7 @@ from ..database import SessionLocal
 from ..models import Game, SyncState
 from .chesscom_client import ChessComClient
 from .lichess_client import LichessClient
+from .notify import notify_error
 
 
 class SyncService:
@@ -35,7 +36,11 @@ class SyncService:
                     status["games_fetched"] = total
                     status["message"] = f"Chess.com: {inserted} new games"
                 except Exception as e:
-                    status["message"] = f"Chess.com error: {e}. Trying Lichess..."
+                    status["message"] = "Fetching Lichess games..."
+                    notify_error(
+                        f"sync-chesscom:{type(e).__name__}",
+                        f"Chess.com sync failed: user={user_id} username={chesscom_username} {repr(e)[:500]}",
+                    )
 
             # Sync Lichess (only if username is linked)
             if lichess_username:
@@ -46,7 +51,10 @@ class SyncService:
                     total += inserted
                     status["games_fetched"] = total
                 except Exception as e:
-                    status["message"] = f"Lichess error: {e}"
+                    notify_error(
+                        f"sync-lichess:{type(e).__name__}",
+                        f"Lichess sync failed: user={user_id} username={lichess_username} {repr(e)[:500]}",
+                    )
 
             # Update sync state keyed by (user_id, platform)
             platforms = []

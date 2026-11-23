@@ -12,6 +12,7 @@ from ..auth.models import User
 from ..config import settings
 from ..database import get_db
 from ..models import Payment
+from ..services.notify import notify, notify_error
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,13 @@ def _grant_premium(db: Session, payment: Payment, razorpay_payment_id: str) -> N
         {"is_premium": True, "premium_expires_at": new_expiry}
     )
     db.commit()
+
+    try:
+        email = db.query(User.email).filter(User.id == payment.user_id).scalar()
+        amount = (payment.amount_paise or settings.premium_price_paise) / 100
+        notify(f"💰 Premium purchased: {email} ₹{amount:g} (payment {razorpay_payment_id})")
+    except Exception:  # noqa: BLE001 - notification must never break the grant
+        logger.warning("Premium purchase notification failed")
 
 
 @router.get("/config")
@@ -133,6 +141,11 @@ def verify_premium_payment(
         except razorpay.errors.SignatureVerificationError:
             payment.status = "failed"
             db.commit()
+            notify_error(
+                "pay-sig",
+                f"Payment signature verification failed: user={user.id} "
+                f"order={body.razorpay_order_id}",
+            )
             raise HTTPException(400, "Payment signature verification failed.")
 
         _grant_premium(db, payment, body.razorpay_payment_id)
@@ -165,10 +178,19 @@ async def razorpay_webhook(request: Request, db: Session = Depends(get_db)):
             raw_body.decode(), signature, settings.razorpay_webhook_secret
         )
     except razorpay.errors.SignatureVerificationError:
+        notify_error("pay-webhook-sig", "Razorpay webhook signature verification failed")
         raise HTTPException(400, "Invalid webhook signature.")
 
     payload = json.loads(raw_body)
     event = payload.get("event")
+    if event == "payment.failed":
+        ent = payload.get("payload", {}).get("payment", {}).get("entity", {})
+        notify_error(
+            f"pay-failed:{ent.get('order_id')}",
+            f"Razorpay payment.failed: order={ent.get('order_id')} "
+            f"payment={ent.get('id')} reason={str(ent.get('error_description'))[:200]}",
+        )
+        return {"status": "ignored"}
     if event != "payment.captured":
         # Same Razorpay account may be shared across other sites/webhooks —
         # acknowledge anything we don't handle rather than erroring.

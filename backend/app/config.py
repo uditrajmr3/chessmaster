@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     # analysis of a large history can run well over an hour.
     access_token_lifetime: int = 604800
     resend_api_key: str = ""
+    # Owner notifications (errors / signups / payments) via a Telegram bot.
+    # Both empty = notifications disabled.
+    telegram_bot_token: str = ""
+    telegram_chat_id: str = ""
     email_from: str = "ChessInt <noreply@example.com>"
     # Resend published-template id. When set, transactional emails render via the
     # Resend template instead of inline HTML. Empty = use the inline HTML fallback.

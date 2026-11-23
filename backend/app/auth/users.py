@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..config import settings
 from ..database import get_async_db
 from .models import User
+from ..services.notify import notify
 from ..services.email_service import send_reset_email, send_verification_code_email
 from ..services.verification_code import generate_code, hash_code
 
@@ -42,6 +43,12 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             },
         )
         send_verification_code_email(user.email, code, request)
+        linked = []
+        if getattr(user, "lichess_username", None):
+            linked.append(f"lichess={user.lichess_username}")
+        if getattr(user, "chesscom_username", None):
+            linked.append(f"chess.com={user.chesscom_username}")
+        notify(f"🆕 New signup: {user.email}" + (f" ({', '.join(linked)})" if linked else ""))
 
     async def on_after_forgot_password(self, user, token, request=None):
         send_reset_email(user.email, token)

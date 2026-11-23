@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from ..auth.deps import current_verified_user
 from ..auth.models import User
 from ..schemas import SyncStatus
+from ..services.notify import notify_error
 from ..services.sync_service import SyncService
 
 router = APIRouter(tags=["sync"])
@@ -29,7 +30,11 @@ async def _run_sync(user_id: str, lichess_username: str | None, chesscom_usernam
         )
         _sync_status[user_id] = {"status": "done", "games_fetched": count, "message": "Sync complete"}
     except Exception as e:
-        _sync_status[user_id] = {"status": "error", "games_fetched": 0, "message": str(e)}
+        _sync_status[user_id] = {"status": "error", "games_fetched": 0, "message": "Sync failed. Please try again later."}
+        notify_error(
+            f"sync:{type(e).__name__}",
+            f"Sync failed: user={user_id} lichess={lichess_username} chesscom={chesscom_username} {repr(e)[:500]}",
+        )
 
 
 @router.post("/sync")

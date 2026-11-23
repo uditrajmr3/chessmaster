@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 import httpx
@@ -5,6 +6,7 @@ import httpx
 
 class LichessClient:
     BASE = "https://lichess.org/api"
+    HEADERS = {"User-Agent": "ChessInt/1.0 (+https://chessmaster.cyou)"}
 
     async def fetch_recent_games(self, username: str, max_games: int = 100) -> list[dict]:
         """Fetch the most recent games for a user (limited for scouting)."""
@@ -15,7 +17,7 @@ class LichessClient:
             "max": str(max_games),
             "sort": "dateDesc",
         }
-        headers = {"Accept": "application/x-ndjson"}
+        headers = {**self.HEADERS, "Accept": "application/x-ndjson"}
 
         all_games = []
         async with httpx.AsyncClient(timeout=60) as client:
@@ -25,7 +27,6 @@ class LichessClient:
                     line = line.strip()
                     if not line:
                         continue
-                    import json
                     g = json.loads(line)
                     parsed = self._parse_game(g, username)
                     if parsed:
@@ -42,7 +43,7 @@ class LichessClient:
             "evals": "true",
             "pgnInJson": "true",
         }
-        headers = {"Accept": "application/x-ndjson"}
+        headers = {**self.HEADERS, "Accept": "application/x-ndjson"}
 
         all_games = []
         async with httpx.AsyncClient(timeout=60) as client:
@@ -52,7 +53,6 @@ class LichessClient:
                     line = line.strip()
                     if not line:
                         continue
-                    import json
                     g = json.loads(line)
                     parsed = self._parse_game(g, username)
                     if parsed:

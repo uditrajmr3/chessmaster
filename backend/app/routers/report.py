@@ -11,6 +11,7 @@ from ..config import settings
 from ..database import SessionLocal, get_db
 from ..models import Report
 from ..schemas import ReportOut
+from ..services.notify import notify_error
 from ..services.report_generator import ReportGenerator
 
 router = APIRouter(tags=["report"])
@@ -43,7 +44,11 @@ async def _run_report_generation(user_id: str):
         _report_status[user_id]["status"] = "done"
     except Exception as e:
         _report_status[user_id]["status"] = "error"
-        _report_status[user_id]["error"] = str(e)
+        _report_status[user_id]["error"] = "Report generation failed. Please try again later."
+        notify_error(
+            f"report:{type(e).__name__}",
+            f"AI report generation failed: user={user_id} {repr(e)[:500]}",
+        )
     finally:
         db.close()
 

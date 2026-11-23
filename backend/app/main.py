@@ -1,11 +1,15 @@
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+import traceback
+
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .routers import analysis, awards, digest, email_verification, endgame, export, games, opening_book, openings, patterns, payments, peer_comparison, pgn_import, position, puzzles, rating_predictor, report, scouting, stats, sync, tilt, time_management
+from .services.notify import notify_error
 from .auth.users import fastapi_users, auth_backend
 from .auth.schemas import UserRead, UserCreate, UserUpdate
 
@@ -31,6 +35,23 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="ChessMaster", version="0.1.0", lifespan=lifespan)
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    """Catch-all for unhandled errors: tell the owner on Telegram, show the
+    user nothing but a generic 500. HTTPException is handled by FastAPI's own
+    handler and never reaches this."""
+    try:
+        tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))[-1200:]
+        notify_error(
+            f"500:{request.url.path}:{type(exc).__name__}",
+            f"{request.method} {request.url.path} {repr(exc)[:500]}\n{tb}",
+        )
+    except Exception:  # noqa: BLE001
+        pass
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    return JSONResponse({"detail": "Internal Server Error"}, status_code=500)
+
 
 app.add_middleware(
     CORSMiddleware,

@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from ..auth.deps import current_verified_user
 from ..auth.models import User
 from ..config import settings
+from ..services.notify import notify_error
 from ..services.position_vision import PositionReadError, read_position_from_image
 
 router = APIRouter(tags=["position"])
@@ -50,6 +51,10 @@ async def analyze_position(
     except PositionReadError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
-        raise HTTPException(502, f"Position analysis failed: {e}")
+        notify_error(
+            f"position:{type(e).__name__}",
+            f"Position analysis failed: user={user.id} {repr(e)[:500]}",
+        )
+        raise HTTPException(502, "Position analysis failed. Please try again later.")
 
     return result

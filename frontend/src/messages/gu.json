@@ -40,7 +40,8 @@
     "analyzingProgress": "વિશ્લેષણ થઈ રહ્યું છે… {done}/{total}",
     "linkAccountCta": "એકાઉન્ટ લિંક કરો",
     "linkAccountSuffix": " (સિંક માટે સેટિંગ્સમાં)",
-    "linkAccountFirst": "પહેલા સેટિંગ્સમાં Lichess અથવા Chess.com યુઝરનેમ લિંક કરો"
+    "linkAccountFirst": "પહેલા સેટિંગ્સમાં Lichess અથવા Chess.com યુઝરનેમ લિંક કરો",
+    "positionAnalyzer": "પોઝિશન એનાલાઇઝર"
   },
   "landing": {
     "eyebrow": "Chess Intelligence · 2026 થી",
@@ -138,7 +139,16 @@
     "confirmNewPassword": "નવા પાસવર્ડની પુષ્ટિ કરો",
     "resetLinkExpired": "રીસેટ લિંક સમાપ્ત અથવા અમાન્ય છે. કૃપા કરીને નવી વિનંતી કરો.",
     "resetting": "રીસેટ થઈ રહ્યું છે…",
-    "resetPassword": "પાસવર્ડ રીસેટ કરો"
+    "resetPassword": "પાસવર્ડ રીસેટ કરો",
+    "enterCodeTitle": "વેરિફિકેશન કોડ દાખલ કરો",
+    "enterCodeSubtitle": "અમે {email} પર 6 અંકનો કોડ મોકલ્યો છે",
+    "verifyCode": "ચકાસો",
+    "verifyingCode": "ચકાસી રહ્યા છીએ…",
+    "resendCode": "કોડ ફરી મોકલો",
+    "resendCodeIn": "{seconds} સેકન્ડમાં કોડ ફરી મોકલો",
+    "codeSent": "નવો કોડ મોકલવામાં આવ્યો છે.",
+    "wrongEmail": "ખોટો ઇમેઇલ?",
+    "startOver": "ફરી શરૂ કરો"
   },
   "dashboard": {
     "title": "ડૅશબોર્ડ",
@@ -174,7 +184,14 @@
     "saved": "સેટિંગ્સ સફળતાપૂર્વક સાચવાઈ.",
     "saving": "સાચવાઈ રહ્યું છે…",
     "save": "સેટિંગ્સ સાચવો",
-    "saveFailed": "સેટિંગ્સ સાચવવામાં નિષ્ફળ"
+    "saveFailed": "સેટિંગ્સ સાચવવામાં નિષ્ફળ",
+    "apiKeyTitle": "તમારી Anthropic API કી (વૈકલ્પિક)",
+    "apiKeyHint": "પોઝિશન એનાલાઇઝર અને ભવિષ્યની AI સુવિધાઓ મફતમાં વાપરવા તમારી પોતાની Anthropic API કી ઉમેરો — ખર્ચ અમારા પર નહીં, તમારી કી પર લાગશે. અમે તેને એન્ક્રિપ્ટ કરીને રાખીએ છીએ અને ફરી ક્યારેય બતાવતા નથી.",
+    "apiKeyActive": "તમે તમારી પોતાની API કી વાપરી રહ્યા છો",
+    "apiKeyRemove": "દૂર કરો",
+    "apiKeyPlaceholder": "sk-ant-...",
+    "apiKeySave": "કી સેવ કરો",
+    "apiKeySavedMsg": "API કી સેવ થઈ."
   },
   "glossary": {
     "accuracy": {
@@ -803,5 +820,11 @@
       "shaky": "નબળું",
       "costly": "ભારે પડેલું"
     }
-  }
+  },
+  "verdict": {},
+  "pieces": {},
+  "motif": {},
+  "nextStep": {},
+  "lowData": {},
+  "mistakeCard": {}
 }

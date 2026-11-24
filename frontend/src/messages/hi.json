@@ -40,7 +40,8 @@
     "analyzingProgress": "विश्लेषण हो रहा है… {done}/{total}",
     "linkAccountCta": "खाता लिंक करें",
     "linkAccountSuffix": " (सिंक के लिए सेटिंग्स में)",
-    "linkAccountFirst": "पहले सेटिंग्स में Lichess या Chess.com यूज़रनेम लिंक करें"
+    "linkAccountFirst": "पहले सेटिंग्स में Lichess या Chess.com यूज़रनेम लिंक करें",
+    "positionAnalyzer": "पोज़िशन एनालाइज़र"
   },
   "landing": {
     "eyebrow": "Chess Intelligence · 2026 से",
@@ -138,7 +139,16 @@
     "confirmNewPassword": "नए पासवर्ड की पुष्टि करें",
     "resetLinkExpired": "रीसेट लिंक समाप्त या अमान्य है। कृपया एक नया अनुरोध करें।",
     "resetting": "रीसेट हो रहा है…",
-    "resetPassword": "पासवर्ड रीसेट करें"
+    "resetPassword": "पासवर्ड रीसेट करें",
+    "enterCodeTitle": "सत्यापन कोड दर्ज करें",
+    "enterCodeSubtitle": "हमने {email} पर 6 अंकों का कोड भेजा है",
+    "verifyCode": "सत्यापित करें",
+    "verifyingCode": "सत्यापित हो रहा है…",
+    "resendCode": "कोड दोबारा भेजें",
+    "resendCodeIn": "{seconds} सेकंड में कोड दोबारा भेजें",
+    "codeSent": "नया कोड भेज दिया गया है।",
+    "wrongEmail": "गलत ईमेल?",
+    "startOver": "फिर से शुरू करें"
   },
   "dashboard": {
     "title": "डैशबोर्ड",
@@ -174,7 +184,14 @@
     "saved": "सेटिंग्स सफलतापूर्वक सहेजी गईं।",
     "saving": "सहेजा जा रहा है…",
     "save": "सेटिंग्स सहेजें",
-    "saveFailed": "सेटिंग्स सहेजने में विफल"
+    "saveFailed": "सेटिंग्स सहेजने में विफल",
+    "apiKeyTitle": "आपकी Anthropic API कुंजी (वैकल्पिक)",
+    "apiKeyHint": "पोज़िशन एनालाइज़र और आगे आने वाले AI फ़ीचर मुफ़्त में इस्तेमाल करने के लिए अपनी Anthropic API कुंजी जोड़ें — खर्च हमारी नहीं, आपकी अपनी कुंजी पर लगेगा। हम इसे एन्क्रिप्ट करके रखते हैं और दोबारा कभी नहीं दिखाते।",
+    "apiKeyActive": "आप अपनी API कुंजी इस्तेमाल कर रहे हैं",
+    "apiKeyRemove": "हटाएँ",
+    "apiKeyPlaceholder": "sk-ant-...",
+    "apiKeySave": "कुंजी सेव करें",
+    "apiKeySavedMsg": "API कुंजी सेव हो गई।"
   },
   "glossary": {
     "accuracy": {
@@ -803,5 +820,11 @@
       "shaky": "कमज़ोर",
       "costly": "महँगा"
     }
-  }
+  },
+  "verdict": {},
+  "pieces": {},
+  "motif": {},
+  "nextStep": {},
+  "lowData": {},
+  "mistakeCard": {}
 }

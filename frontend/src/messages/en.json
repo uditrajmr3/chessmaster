@@ -820,5 +820,11 @@
       "shaky": "Shaky",
       "costly": "Costly"
     }
-  }
+  },
+  "verdict": {},
+  "pieces": {},
+  "motif": {},
+  "nextStep": {},
+  "lowData": {},
+  "mistakeCard": {}
 }

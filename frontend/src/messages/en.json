@@ -931,6 +931,8 @@
   },
   "lowData": {},
   "mistakeCard": {
+    "showNumbers": "Show numbers",
+    "hideNumbers": "Hide numbers",
     "legend": {
       "played": "You played",
       "better": "Better",

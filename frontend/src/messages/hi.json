@@ -931,6 +931,8 @@
   },
   "lowData": {},
   "mistakeCard": {
+    "showNumbers": "आँकड़े दिखाएँ",
+    "hideNumbers": "आँकड़े छिपाएँ",
     "legend": {
       "played": "आपने खेला",
       "better": "बेहतर",

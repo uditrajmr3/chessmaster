@@ -45,8 +45,9 @@ def get_overview(
 
     for g in sorted(games, key=lambda x: x.played_at):
         platforms[g.platform] = platforms.get(g.platform, 0) + 1
-        if g.platform_accuracy:
-            accuracies.append(g.platform_accuracy)
+        acc = g.accuracy if g.accuracy is not None else g.platform_accuracy
+        if acc:
+            accuracies.append(acc)
         rating_history.append({
             "date": g.played_at.isoformat(),
             "rating": g.player_rating,
@@ -81,6 +82,7 @@ def get_overview(
         draws=draws,
         platforms=platforms,
         avg_accuracy=avg_acc,
+        accuracy_games=len(accuracies),
         rating_history=rating_history,
         rating_estimates=rating_estimates,
     )

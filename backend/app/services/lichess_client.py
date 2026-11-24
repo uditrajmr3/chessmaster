@@ -41,6 +41,7 @@ class LichessClient:
             "clocks": "true",
             "opening": "true",
             "evals": "true",
+            "accuracy": "true",
             "pgnInJson": "true",
         }
         headers = {**self.HEADERS, "Accept": "application/x-ndjson"}
@@ -98,10 +99,9 @@ class LichessClient:
         created = g.get("createdAt", 0)
         played_at = datetime.utcfromtimestamp(created / 1000) if created else datetime.utcnow()
 
-        accuracy = g.get("players", {})
-        player_acc = None
-        if "analysis" in player_info:
-            player_acc = player_info.get("accuracy")
+        # Lichess exposes accuracy at players.<color>.analysis.accuracy
+        # (only when requested with accuracy=true and the game is analysed).
+        player_acc = (player_info.get("analysis") or {}).get("accuracy")
 
         speed = g.get("speed", "")
 

@@ -18,6 +18,8 @@ export interface GameSummary {
   num_moves: number;
   played_at: string;
   platform_accuracy: number | null;
+  accuracy: number | null;
+  accuracy_source: "chessint" | "platform" | null;
   is_analyzed: boolean;
 }
 
@@ -51,6 +53,8 @@ export interface GameDetail {
   opening_eco: string | null;
   opening_name: string | null;
   played_at: string;
+  accuracy: number | null;
+  accuracy_source: "chessint" | "platform" | null;
   moves: MoveAnalysis[];
 }
 
@@ -81,6 +85,7 @@ export interface OverviewStats {
   draws: number;
   platforms: Record<string, number>;
   avg_accuracy: number | null;
+  accuracy_games: number;
   rating_history: Array<{
     date: string;
     rating: number;

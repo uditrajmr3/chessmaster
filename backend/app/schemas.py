@@ -25,6 +25,8 @@ class GameSummary(BaseModel):
     num_moves: int
     played_at: datetime
     platform_accuracy: float | None
+    accuracy: float | None = None
+    accuracy_source: Literal["chessint", "platform"] | None = None
     is_analyzed: bool = False
 
     class Config:
@@ -64,6 +66,8 @@ class GameDetail(BaseModel):
     opening_eco: str | None
     opening_name: str | None
     played_at: datetime
+    accuracy: float | None = None
+    accuracy_source: Literal["chessint", "platform"] | None = None
     moves: list[MoveAnalysisOut] = []
 
     class Config:
@@ -91,6 +95,7 @@ class OverviewStats(BaseModel):
     draws: int
     platforms: dict[str, int]
     avg_accuracy: float | None
+    accuracy_games: int = 0
     rating_history: list[dict]
     rating_estimates: list[RatingEstimate] = []
 

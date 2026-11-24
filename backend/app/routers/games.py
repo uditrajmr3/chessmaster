@@ -12,6 +12,15 @@ from ..schemas import GameDetail, GameSummary, MoveAnalysisOut
 router = APIRouter(tags=["games"])
 
 
+def _acc(g) -> tuple[float | None, str | None]:
+    """Prefer our own accuracy; fall back to the platform's."""
+    if g.accuracy is not None:
+        return g.accuracy, "chessint"
+    if g.platform_accuracy is not None:
+        return g.platform_accuracy, "platform"
+    return None, None
+
+
 @router.get("/games", response_model=list[GameSummary])
 def list_games(
     platform: str | None = None,
@@ -63,6 +72,8 @@ def list_games(
                 num_moves=g.num_moves,
                 played_at=g.played_at,
                 platform_accuracy=g.platform_accuracy,
+                accuracy=_acc(g)[0],
+                accuracy_source=_acc(g)[1],
                 is_analyzed=g.id in analyzed_ids,
             )
         )
@@ -123,5 +134,7 @@ def get_game(
         opening_eco=g.opening_eco,
         opening_name=g.opening_name,
         played_at=g.played_at,
+        accuracy=_acc(g)[0],
+        accuracy_source=_acc(g)[1],
         moves=moves,
     )

@@ -100,3 +100,38 @@ class TestLichessParsing:
         result = self.client._parse_game(game, "csense2653")
         assert result is not None
         assert result["player_color"] == "white"
+
+
+class TestLichessAccuracy:
+    def setup_method(self):
+        self.client = LichessClient()
+
+    def _game(self, white_analysis=None, black_analysis=None):
+        white = {"user": {"name": "csense2653", "id": "csense2653"}, "rating": 1500}
+        black = {"user": {"name": "opponent", "id": "opponent"}, "rating": 1480}
+        if white_analysis is not None:
+            white["analysis"] = white_analysis
+        if black_analysis is not None:
+            black["analysis"] = black_analysis
+        return {
+            "id": "abc12345", "variant": "standard", "speed": "rapid",
+            "status": "resign", "winner": "white",
+            "players": {"white": white, "black": black},
+            "moves": "e2e4 e7e5", "createdAt": 1700000000000,
+            "clock": {"initial": 600, "increment": 0},
+        }
+
+    def test_accuracy_read_from_players_analysis(self):
+        g = self._game({"acpl": 41, "accuracy": 84}, {"acpl": 65, "accuracy": 79})
+        assert self.client._parse_game(g, "csense2653")["platform_accuracy"] == 84
+
+    def test_accuracy_uses_own_color(self):
+        g = self._game({"accuracy": 84}, {"accuracy": 79})
+        assert self.client._parse_game(g, "opponent")["platform_accuracy"] == 79
+
+    def test_accuracy_none_when_unanalysed(self):
+        assert self.client._parse_game(self._game(), "csense2653")["platform_accuracy"] is None
+
+    def test_accuracy_none_when_analysis_lacks_accuracy(self):
+        g = self._game({"acpl": 41})
+        assert self.client._parse_game(g, "csense2653")["platform_accuracy"] is None

@@ -838,6 +838,13 @@
     "howToEarnHeading": "તેમ છતાં તેમને કેવી રીતે મેળવવા"
   },
   "plain": {
+    "basedOn": "{count, plural, one {# રમત} other {# રમતો}} પર આધારિત",
+    "tone": {
+      "good": "સારા સમાચાર",
+      "warn": "ધ્યાન આપો",
+      "bad": "સુધારાની જરૂર",
+      "neutral": "નોંધ"
+    },
     "accuracy": {
       "label": "ચોકસાઈ",
       "basedOn": "{count, plural, one {# રમત} other {# રમતો}} પર આધારિત",

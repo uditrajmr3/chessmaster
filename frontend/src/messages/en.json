@@ -838,6 +838,13 @@
     "howToEarnHeading": "How to earn them anyway"
   },
   "plain": {
+    "basedOn": "based on {count, plural, one {# game} other {# games}}",
+    "tone": {
+      "good": "Good news",
+      "warn": "Heads up",
+      "bad": "Needs work",
+      "neutral": "Note"
+    },
     "accuracy": {
       "label": "Accuracy",
       "basedOn": "based on {count, plural, one {# game} other {# games}}",

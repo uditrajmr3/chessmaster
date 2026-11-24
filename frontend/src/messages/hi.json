@@ -838,6 +838,13 @@
     "howToEarnHeading": "फिर भी इन्हें कैसे अर्जित करें"
   },
   "plain": {
+    "basedOn": "{count, plural, one {# खेल} other {# खेलों}} के आधार पर",
+    "tone": {
+      "good": "अच्छी खबर",
+      "warn": "ध्यान दें",
+      "bad": "सुधार चाहिए",
+      "neutral": "ध्यान रखें"
+    },
     "accuracy": {
       "label": "सटीकता",
       "basedOn": "{count, plural, one {# खेल} other {# खेलों}} के आधार पर",

@@ -199,76 +199,108 @@
       "short": "How close your moves were to the best moves, scored 0–100%. Higher is better — 90%+ is excellent, under 70% means several moves went wrong.",
       "long": "Accuracy rolls every move of a game into one friendly number. It is built from how much each move changed your chance of winning, not from raw engine points, so it is easy to compare between games."
     },
-    "cpl": {
-      "term": "CPL (Centipawn Loss)",
-      "short": "How much a move 'cost' you, measured in 1/100ths of a pawn. 0 is perfect; under ~20 is fine; big numbers mean a big mistake.",
-      "long": "Centipawn Loss is the gap between the move you played and the best available move. Because a pawn is worth 100 centipawns, a CPL of 50 means you gave up about half a pawn of advantage."
-    },
     "acpl": {
       "term": "ACPL (Average CPL)",
       "short": "Your Centipawn Loss averaged over a whole game (or many games) — a single number for how cleanly you played. Lower is better.",
       "long": "ACPL is the most common way to compare how well two players, or two of your own games, were played. Strong club players often average under 30."
     },
+    "backRank": {
+      "term": "Back-rank mate",
+      "short": "A checkmate on the edge row, where the king is trapped behind its own pawns and a rook or queen gives check."
+    },
+    "best": {
+      "term": "Best move",
+      "short": "You played the engine's top choice for that position."
+    },
+    "blunder": {
+      "term": "Blunder",
+      "short": "A serious mistake that badly hurts your position — usually hanging a piece or missing a major threat. ChessInt marks these so you can learn from them."
+    },
+    "book": {
+      "term": "Book move",
+      "short": "A known opening move from established theory — solid, but it's memorised theory rather than your own calculation."
+    },
+    "brilliant": {
+      "term": "Brilliant move",
+      "short": "A great, often surprising move — usually a smart sacrifice the engine confirms is best. The hardest classification to earn."
+    },
     "centipawn": {
       "term": "Centipawn",
       "short": "A unit for measuring advantage: 100 centipawns = the value of one pawn. The engine scores every position this way."
+    },
+    "conversion": {
+      "term": "Conversion rate",
+      "short": "Of the games where you had a winning position, how many you actually went on to win. Higher means you finish off what you start."
+    },
+    "cpl": {
+      "term": "CPL (Centipawn Loss)",
+      "short": "How much a move 'cost' you, measured in 1/100ths of a pawn. 0 is perfect; under ~20 is fine; big numbers mean a big mistake.",
+      "long": "Centipawn Loss is the gap between the move you played and the best available move. Because a pawn is worth 100 centipawns, a CPL of 50 means you gave up about half a pawn of advantage."
+    },
+    "discoveredAttack": {
+      "term": "Discovered attack",
+      "short": "Moving one piece out of the way reveals an attack from the piece behind it, often creating two threats at once."
+    },
+    "eco": {
+      "term": "ECO code",
+      "short": "A short code (like B12 or C45) that classifies chess openings. We show the opening name; the code is just a label for reference."
+    },
+    "endgame": {
+      "term": "Endgame",
+      "short": "The final stage, with few pieces left. Technique matters most here: king activity, passed pawns, and known winning methods."
     },
     "evaluation": {
       "term": "Evaluation (eval)",
       "short": "The engine's score for a position. Positive = you're better, negative = your opponent is. +1.0 ≈ a pawn ahead, +3.0 ≈ a piece ahead.",
       "long": "The evaluation is the engine's overall judgement of who stands better and by how much, considering material, king safety, activity, and more."
     },
-    "winpct": {
-      "term": "Win %",
-      "short": "Your estimated chance of winning from a position, based on the engine's evaluation. Easier to read than centipawns."
-    },
-    "blunder": {
-      "term": "Blunder",
-      "short": "A serious mistake that badly hurts your position — usually hanging a piece or missing a major threat. ChessInt marks these so you can learn from them."
-    },
-    "mistake": {
-      "term": "Mistake",
-      "short": "A clear error that worsens your position — less severe than a blunder, but it still hands your opponent an edge."
+    "fork": {
+      "term": "Fork",
+      "short": "One piece attacks two or more enemy pieces at once, so your opponent can only save one."
     },
     "inaccuracy": {
       "term": "Inaccuracy",
       "short": "A small slip: not losing, but not the best move. A series of these quietly adds up."
     },
-    "brilliant": {
-      "term": "Brilliant move",
-      "short": "A great, often surprising move — usually a smart sacrifice the engine confirms is best. The hardest classification to earn."
-    },
-    "best": {
-      "term": "Best move",
-      "short": "You played the engine's top choice for that position."
-    },
-    "book": {
-      "term": "Book move",
-      "short": "A known opening move from established theory — solid, but it's memorised theory rather than your own calculation."
+    "middlegame": {
+      "term": "Middlegame",
+      "short": "The main battle after the pieces are developed — plans, attacks, and tactics. Where most games are won or lost."
     },
     "miss": {
       "term": "Miss",
       "short": "You had a strong tactic or winning chance available and didn't play it."
     },
+    "mistake": {
+      "term": "Mistake",
+      "short": "A clear error that worsens your position — less severe than a blunder, but it still hands your opponent an edge."
+    },
     "opening": {
       "term": "Opening",
       "short": "The first stage of the game (roughly the first 10–15 moves), where you develop your pieces and fight for the centre."
     },
-    "middlegame": {
-      "term": "Middlegame",
-      "short": "The main battle after the pieces are developed — plans, attacks, and tactics. Where most games are won or lost."
+    "pin": {
+      "term": "Pin",
+      "short": "A piece cannot move (or should not) because a more valuable piece sits behind it on the same line."
     },
-    "endgame": {
-      "term": "Endgame",
-      "short": "The final stage, with few pieces left. Technique matters most here: king activity, passed pawns, and known winning methods."
+    "skewer": {
+      "term": "Skewer",
+      "short": "Like a pin in reverse: a valuable piece is attacked and must move, exposing a less valuable piece behind it."
+    },
+    "stockfish": {
+      "term": "Stockfish",
+      "short": "The free, world-class chess engine ChessInt runs in your browser to analyse your games."
     },
     "tilt": {
       "term": "Tilt",
       "short": "Playing worse because of emotion — frustration after a loss leading to rushed, weaker moves. ChessInt can spot it in your results."
     },
-    "stockfish": {
-      "term": "Stockfish",
-      "short": "The free, world-class chess engine ChessInt runs in your browser to analyse your games."
+    "timeTrouble": {
+      "term": "Time trouble",
+      "short": "Playing with very little time left on your clock. Moves get rushed and mistakes pile up."
+    },
+    "winpct": {
+      "term": "Win %",
+      "short": "Your estimated chance of winning from a position, based on the engine's evaluation. Easier to read than centipawns."
     }
   },
   "learn": {
@@ -819,7 +851,30 @@
       "ok": "OK",
       "shaky": "Shaky",
       "costly": "Costly"
-    }
+    },
+    "cost": {
+      "small": "A small slip",
+      "pawn": "about a pawn",
+      "piece": "about a piece",
+      "rook": "about a rook or more",
+      "game": "This turned the game"
+    },
+    "label": {
+      "moveCost": "What this move cost",
+      "slipSize": "Typical slip size",
+      "bigMistakes": "Big mistakes",
+      "conversion": "Winning positions you actually won",
+      "lowClock": "Low on clock",
+      "ahead": "You are ahead by {amount}",
+      "behind": "You are behind by {amount}",
+      "even": "The position is even"
+    },
+    "phase": {
+      "opening": "Opening",
+      "middlegame": "Middle of the game",
+      "endgame": "Endgame"
+    },
+    "perGames": "1 in every {n} games"
   },
   "verdict": {},
   "pieces": {},

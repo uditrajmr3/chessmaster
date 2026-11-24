@@ -53,6 +53,37 @@ class MoveAnalysisOut(BaseModel):
         from_attributes = True
 
 
+class MistakeOut(BaseModel):
+    """Canonical payload for a single surfaced move (UX overhaul spec §4)."""
+
+    move_analysis_id: int
+    game_id: str
+    move_number: int
+    player_color: str
+    fen_before: str
+    move_uci: str
+    move_san: str
+    best_move_uci: str | None
+    best_move_san: str | None
+    # Derived (not stored): best move of the next ply = opponent's refutation.
+    refutation_uci: str | None
+    eval_before: float | None
+    eval_after: float | None
+    centipawn_loss: float
+    classification: str
+    game_phase: str
+    tactical_motifs: list[str]
+    # Approximate: previous own-move clock minus this clock, clamped >= 0
+    # (increment is unknown). None when either clock is missing.
+    time_spent: float | None = None
+    time_remaining: float | None = None
+    opponent: str | None
+    played_at: datetime | None
+
+    class Config:
+        from_attributes = True
+
+
 class GameDetail(BaseModel):
     id: str
     platform: str

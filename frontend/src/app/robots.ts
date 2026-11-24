@@ -20,6 +20,7 @@ export default function robots(): MetadataRoute.Robots {
         "/awards",
       ],
       disallow: [
+        "/dev",
         "/games",
         "/openings",
         "/weaknesses",

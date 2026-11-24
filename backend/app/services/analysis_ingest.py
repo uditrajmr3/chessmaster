@@ -19,6 +19,7 @@ from ..models import AnalysisJob, Game, MoveAnalysis
 from ..schemas import AnalyzeResultsIn
 from ..utils.fen_utils import get_game_phase
 from ..utils.pgn_parser import extract_clocks
+from .accuracy import game_accuracy
 from .move_classifier import classify_move
 from .tactical_detector import detect_tactical_motifs
 
@@ -53,6 +54,7 @@ def store_results(db, user_id, payload: AnalyzeResultsIn) -> None:
     db.flush()
 
     # ── 4. Classify and persist each move ──
+    acc_moves: list[dict] = []
     for move_eval in payload.moves:
         is_player_turn = bool(move_eval.is_player_move)
         eval_before = move_eval.eval_before
@@ -64,6 +66,14 @@ def store_results(db, user_id, payload: AnalyzeResultsIn) -> None:
         if game.player_color == "black":
             eval_before = -eval_before if eval_before is not None else None
             eval_after = -eval_after if eval_after is not None else None
+
+        acc_moves.append(
+            {
+                "eval_before": eval_before,
+                "eval_after": eval_after,
+                "is_player_move": is_player_turn,
+            }
+        )
 
         # Centipawn loss only meaningful for player moves
         cpl = 0.0
@@ -142,6 +152,9 @@ def store_results(db, user_id, payload: AnalyzeResultsIn) -> None:
             tactical_motifs=json.dumps(motifs) if motifs else None,
         )
         db.add(analysis)
+
+    # ── 4b. Game accuracy (player-POV evals, player's own moves) ──
+    game.accuracy = game_accuracy(acc_moves)
 
     # ── 5. Upsert AnalysisJob ──
     # Scope by both game_id and user_id; if a stale row exists with a different

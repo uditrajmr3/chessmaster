@@ -8,6 +8,7 @@ import { Chessboard } from "react-chessboard";
 import { Area, AreaChart, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
+import { moveAccuracy } from "@/lib/accuracy";
 import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
 import Term from "@/components/Term";
 import {
@@ -93,22 +94,6 @@ function evalToStr(cp: number | null): string {
   if (cp <= -9000) return "−M";
   const v = cp / 100;
   return (v > 0 ? "+" : "") + v.toFixed(2);
-}
-
-// Evals are stored player-POV (positive = good for the logged-in player; the
-// ingest negates white-POV evals for black players), so win% uses them directly.
-function winPct(cp: number): number {
-  return 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
-}
-
-// Per-move accuracy from the drop in the MOVER's winning chances (Lichess model).
-function moveAccuracy(evalBefore: number, evalAfter: number, isPlayerMove: boolean): number {
-  const before = winPct(evalBefore); // player win% before the move
-  const after = winPct(evalAfter);
-  // Player's own move: penalize a drop in the player's win%. Opponent's move:
-  // penalize a rise in the player's win% (the opponent worsened their position).
-  const drop = isPlayerMove ? Math.max(0, before - after) : Math.max(0, after - before);
-  return Math.max(0, Math.min(100, 103.1668 * Math.exp(-0.04354 * drop) - 3.1669));
 }
 
 function phaseGrade(cpl: number | null): { label: string; color: string } {

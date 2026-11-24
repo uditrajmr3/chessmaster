@@ -42,6 +42,7 @@ class Game(Base):
     num_moves = Column(Integer, nullable=False)
     played_at = Column(DateTime, nullable=False)
     platform_accuracy = Column(Float)
+    accuracy = Column(Float, nullable=True)  # ChessInt-computed, player-POV mean (services/accuracy.py)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (

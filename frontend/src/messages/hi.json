@@ -936,6 +936,11 @@
     "practise": "इस तरह की पहेलियाँ हल करें",
     "practiseMotif": "{motif} की पहेलियाँ हल करें",
     "practisePhase": "पहेलियाँ हल करें: {phase}",
+    "phase": {
+      "opening": "शुरुआत",
+      "middlegame": "खेल का बीच वाला हिस्सा",
+      "endgame": "अंत का खेल"
+    },
     "reviewGame": "यह खेल दोबारा देखें",
     "learn": "जानें यह कैसे काम करता है",
     "syncMore": "और खेल सिंक करें",
@@ -974,6 +979,9 @@
     "best": "सबसे अच्छी चाल",
     "playedIn": "{seconds} सेकंड में खेली",
     "backToView": "वापस",
+    "typeMove": "अपनी चाल लिखिए (जैसे Nf3 या g1f3)",
+    "typeMovePlaceholder": "Nf3 या g1f3",
+    "illegalMove": "यहाँ यह चाल मान्य नहीं है।",
     "hint": "इशारा",
     "answerIs": "सबसे अच्छी चाल {san} थी।",
     "lossLabel": "सेंटीपॉन का नुकसान",

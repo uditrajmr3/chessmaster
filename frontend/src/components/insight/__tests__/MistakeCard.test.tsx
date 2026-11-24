@@ -50,7 +50,7 @@ describe("MistakeCard view mode", () => {
     expect(container.querySelector('[data-arrow="bad"]')).toBeInTheDocument();
     expect(container.querySelector('[data-arrow="good"]')).toBeInTheDocument();
     expect(screen.getAllByText("This cost you about a piece.").length).toBeGreaterThan(0);
-    expect(screen.getByText("About a piece")).toBeInTheDocument();
+    expect(screen.getByText("About a knight or bishop")).toBeInTheDocument();
     expect(screen.getByText(/vs Magnus · 2026-11-01 · move 7/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /See it in the game/ })).toHaveAttribute("href", "/games/g1?move=7");
     expect(screen.getByRole("img")).toHaveAccessibleName("This cost you about a piece.");
@@ -99,6 +99,30 @@ describe("MistakeCard try mode", () => {
     expect(screen.getByTestId("try-feedback")).toHaveTextContent("Correct!");
     fireEvent.click(screen.getByRole("button", { name: "Next" }));
     expect(onNext).toHaveBeenCalledTimes(1);
+  });
+
+  it("typed SAN move: correct calls onSolved(true)", async () => {
+    const onSolved = jest.fn();
+    render(<MistakeCard mistake={base} onSolved={onSolved} />);
+    await enter();
+    const input = screen.getByLabelText(/Type your move/);
+    fireEvent.change(input, { target: { value: "d4" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onSolved).toHaveBeenCalledWith(true);
+    expect(screen.getByTestId("try-feedback")).toHaveTextContent("Correct!");
+  });
+
+  it("typed illegal text shows an inline message and does not advance hints", async () => {
+    const onSolved = jest.fn();
+    render(<MistakeCard mistake={base} onSolved={onSolved} />);
+    await enter();
+    const input = screen.getByLabelText(/Type your move/);
+    fireEvent.change(input, { target: { value: "Qh5" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(screen.getByRole("alert")).toHaveTextContent("That is not a legal move here.");
+    expect(onSolved).not.toHaveBeenCalled();
+    expect(screen.getByTestId("teaching-board")).toHaveAttribute("data-rings", "");
+    expect(screen.getByTestId("try-feedback")).toHaveTextContent("Your turn.");
   });
 
   it("tap-to-move works", async () => {

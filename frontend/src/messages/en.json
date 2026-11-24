@@ -862,13 +862,13 @@
     "cost": {
       "small": "Small slip",
       "pawn": "About a pawn",
-      "piece": "About a piece",
+      "piece": "About a knight or bishop",
       "rook": "About a rook or more",
       "game": "Turned the game"
     },
     "amount": {
       "pawn": "about a pawn",
-      "piece": "about a piece",
+      "piece": "about a knight or bishop",
       "rook": "about a rook or more"
     },
     "label": {
@@ -936,6 +936,11 @@
     "practise": "Practise puzzles like these",
     "practiseMotif": "Practise {motif} puzzles",
     "practisePhase": "Practise {phase} puzzles",
+    "phase": {
+      "opening": "opening",
+      "middlegame": "middlegame",
+      "endgame": "endgame"
+    },
     "reviewGame": "Replay this game",
     "learn": "Learn how it works",
     "syncMore": "Sync more games",
@@ -974,6 +979,9 @@
     "best": "Best move",
     "playedIn": "Played in {seconds}s",
     "backToView": "Back",
+    "typeMove": "Type your move (e.g. Nf3 or g1f3)",
+    "typeMovePlaceholder": "Nf3 or g1f3",
+    "illegalMove": "That is not a legal move here.",
     "hint": "Hint",
     "answerIs": "The best move was {san}.",
     "lossLabel": "Centipawn loss",

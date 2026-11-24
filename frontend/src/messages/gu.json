@@ -936,6 +936,11 @@
     "practise": "આવા કોયડા ઉકેલો",
     "practiseMotif": "{motif}ના કોયડા ઉકેલો",
     "practisePhase": "કોયડા ઉકેલો: {phase}",
+    "phase": {
+      "opening": "શરૂઆત",
+      "middlegame": "રમતનો મધ્ય ભાગ",
+      "endgame": "અંતિમ તબક્કો"
+    },
     "reviewGame": "આ રમત ફરી જુઓ",
     "learn": "જાણો આ કેવી રીતે કામ કરે છે",
     "syncMore": "વધુ રમતો સિંક કરો",
@@ -974,6 +979,9 @@
     "best": "શ્રેષ્ઠ ચાલ",
     "playedIn": "{seconds} સેકન્ડમાં રમ્યા",
     "backToView": "પાછા",
+    "typeMove": "તમારી ચાલ લખો (જેમ કે Nf3 અથવા g1f3)",
+    "typeMovePlaceholder": "Nf3 અથવા g1f3",
+    "illegalMove": "અહીં આ ચાલ માન્ય નથી.",
     "hint": "સંકેત",
     "answerIs": "શ્રેષ્ઠ ચાલ {san} હતી.",
     "lossLabel": "સેન્ટીપૉનનું નુકસાન",

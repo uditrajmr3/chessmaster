@@ -4,7 +4,7 @@
 // and an optional "Try it" mode. The interactive board is lazy-loaded and only
 // mounted once the user enters try mode. Spec: ux-overhaul section 2.3.
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { Chess } from "chess.js";
 import { useTranslations } from "next-intl";
@@ -116,6 +116,7 @@ export default function MistakeCard({
   const tc = useTranslations("plain");
   const tm = useTranslations("motif");
   const vText = useVerdictText();
+  const inputId = useId();
 
   const v = useMemo(() => safeVerdict(mistake), [mistake]);
   const fenOk = useMemo(() => validFen(mistake.fen_before), [mistake.fen_before]);
@@ -138,6 +139,8 @@ export default function MistakeCard({
   const [level, setLevel] = useState(0); // hint ladder: 0 none, 1 ring piece, 2 dot target, 3 answer offered
   const [wrong, setWrong] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const [typed, setTyped] = useState("");
+  const [illegal, setIllegal] = useState(false);
 
   const primary = v ? vText(v.primaryKey, v.primaryParams) : "";
   const secondary = v?.secondaryKey ? vText(v.secondaryKey, v.secondaryParams) : "";
@@ -206,13 +209,14 @@ export default function MistakeCard({
   }
 
   /** Returns true when the move is the engine's best move. */
-  function attempt(from: string, to: string): boolean {
+  function attempt(from: string, to: string, promotion?: string): boolean {
     if (phase !== "playing" || !bestOk) return false;
     let mv;
     let after = "";
     try {
       const g = new Chess(mistake.fen_before);
-      const promo = g.get(from as never)?.type === "p" && /[18]$/.test(to) ? "q" : undefined;
+      const promo =
+        promotion ?? (g.get(from as never)?.type === "p" && /[18]$/.test(to) ? "q" : undefined);
       mv = g.move({ from, to, promotion: promo });
       after = g.fen();
     } catch {
@@ -227,6 +231,31 @@ export default function MistakeCard({
     setSelected(null);
     setLevel((l) => Math.min(3, l + 1));
     return false;
+  }
+
+  /** Typed entry: SAN (Nf3) or UCI (g1f3), checked against fen_before. */
+  function submitTyped() {
+    const text = typed.trim();
+    if (!text || phase !== "playing") return;
+    let from = "";
+    let to = "";
+    let promotion: string | undefined;
+    try {
+      const g = new Chess(mistake.fen_before);
+      const uci = /^([a-h][1-8])([a-h][1-8])([qrbn])?$/i.exec(text);
+      const mv = uci
+        ? g.move({ from: uci[1].toLowerCase(), to: uci[2].toLowerCase(), promotion: uci[3]?.toLowerCase() })
+        : g.move(text);
+      from = mv.from;
+      to = mv.to;
+      promotion = mv.promotion;
+    } catch {
+      setIllegal(true);
+      return;
+    }
+    setIllegal(false);
+    setTyped("");
+    attempt(from, to, promotion);
   }
 
   function onSquareClick(square: string) {
@@ -246,6 +275,8 @@ export default function MistakeCard({
     setLevel(0);
     setWrong(false);
     setSelected(null);
+    setTyped("");
+    setIllegal(false);
     setMode("try");
   }
 
@@ -341,6 +372,41 @@ export default function MistakeCard({
             >
               {feedback}
             </p>
+            {phase === "playing" && (
+              <div className="flex flex-col gap-1">
+                <label htmlFor={`${inputId}-typed`} className="text-xs text-white/60">
+                  {t("typeMove")}
+                </label>
+                <input
+                  id={`${inputId}-typed`}
+                  type="text"
+                  value={typed}
+                  onChange={(e) => {
+                    setTyped(e.target.value);
+                    setIllegal(false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      submitTyped();
+                    }
+                  }}
+                  placeholder={t("typeMovePlaceholder")}
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  aria-invalid={illegal}
+                  aria-describedby={illegal ? `${inputId}-illegal` : undefined}
+                  className="min-h-11 w-full max-w-[260px] rounded-lg border border-white/20 bg-white/5 px-3 text-base text-white placeholder:text-white/35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-300"
+                />
+                {illegal && (
+                  <p id={`${inputId}-illegal`} role="alert" className="text-sm text-red-400">
+                    {t("illegalMove")}
+                  </p>
+                )}
+              </div>
+            )}
             <div className="flex flex-wrap items-center gap-2 pt-1">
               {phase === "playing" && level < 3 && (
                 <button type="button" className={BTN_GHOST} onClick={() => setLevel((l) => Math.min(3, l + 1))}>

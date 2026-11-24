@@ -171,6 +171,9 @@ export function verdict(m: MistakeInput): Verdict {
 
     if (turnOk && played) {
       // 4. Opponent can take a piece after the played move.
+      // NOTE: verdict.hangsPiece is an ICU select on the raw piece id (pawn, knight, ...)
+      // so each language can agree grammar (gender/possessive). Callers must pass this id
+      // untranslated, not a pieces.<id> name. verdict.missedCapture takes the translated name.
       if (m.refutation_uci) {
         try {
           const g = new Chess(m.fen_before);

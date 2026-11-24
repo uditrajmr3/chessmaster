@@ -16,6 +16,11 @@ function flatten(obj: Json, prefix = "", out: Record<string, string> = {}) {
 // Collect ICU argument names: `{name}` and `{name, plural|select|...}`, including
 // arguments nested inside plural/select branches. `#` is not an argument.
 function icuArgs(msg: string): string[] {
+  // Select branch bodies are literal text (e.g. `pawn {pawn}`), not arguments: drop them.
+  msg = msg.replace(
+    /(\{\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*select\s*,)(?:\s*\w+\s*\{[^{}]*\})+\s*\}/g,
+    "$1}",
+  );
   const names = new Set<string>();
   const re = /\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*(?=[,}])/g;
   let m: RegExpExecArray | null;

@@ -206,7 +206,7 @@
     },
     "backRank": {
       "term": "Back-rank mate",
-      "short": "A checkmate on the edge row, where the king is trapped behind its own pawns and a rook or queen gives check."
+      "short": "A checkmate on the back row (first or last rank), where the king is trapped behind its own pawns and a rook or queen gives check."
     },
     "best": {
       "term": "Best move",
@@ -860,11 +860,16 @@
       "costly": "Costly"
     },
     "cost": {
-      "small": "A small slip",
+      "small": "Small slip",
+      "pawn": "About a pawn",
+      "piece": "About a piece",
+      "rook": "About a rook or more",
+      "game": "Turned the game"
+    },
+    "amount": {
       "pawn": "about a pawn",
       "piece": "about a piece",
-      "rook": "about a rook or more",
-      "game": "This turned the game"
+      "rook": "about a rook or more"
     },
     "label": {
       "moveCost": "What this move cost",
@@ -884,10 +889,10 @@
     "perGames": "1 in every {n} games"
   },
   "verdict": {
-    "allowsMate": "This let your opponent checkmate you.",
+    "allowsMate": "This lets your opponent force checkmate.",
     "missedMate": "You missed checkmate.",
     "missedMotif": "You missed a {motif}.",
-    "hangsPiece": "After this, your opponent can take your {piece}.",
+    "hangsPiece": "After this, your opponent can take your {piece, select, pawn {pawn} knight {knight} bishop {bishop} rook {rook} queen {queen} other {piece}}.",
     "missedCapture": "You could have taken the {piece} on {square}.",
     "smallSlip": "A small slip.",
     "costPawn": "This cost you about a pawn.",

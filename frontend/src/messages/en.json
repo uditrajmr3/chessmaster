@@ -876,9 +876,50 @@
     },
     "perGames": "1 in every {n} games"
   },
-  "verdict": {},
-  "pieces": {},
-  "motif": {},
+  "verdict": {
+    "allowsMate": "This let your opponent checkmate you.",
+    "missedMate": "You missed checkmate.",
+    "missedMotif": "You missed a {motif}.",
+    "hangsPiece": "After this, your opponent can take your {piece}.",
+    "missedCapture": "You could have taken the {piece} on {square}.",
+    "smallSlip": "A small slip.",
+    "costPawn": "This cost you about a pawn.",
+    "costPiece": "This cost you about a piece.",
+    "costRook": "This cost you about a rook or more.",
+    "turnedGame": "This turned the game.",
+    "good": "A good move.",
+    "fine": "Fine."
+  },
+  "pieces": {
+    "pawn": "pawn",
+    "knight": "knight",
+    "bishop": "bishop",
+    "rook": "rook",
+    "queen": "queen",
+    "king": "king"
+  },
+  "motif": {
+    "fork": {
+      "name": "fork",
+      "explain": "One piece attacks two or more of your opponent's pieces at once, so they can only save one."
+    },
+    "pin": {
+      "name": "pin",
+      "explain": "A piece can't move because a more valuable piece behind it would be captured."
+    },
+    "skewer": {
+      "name": "skewer",
+      "explain": "A strong piece is attacked and must move, which exposes a piece behind it."
+    },
+    "backRank": {
+      "name": "back-rank mate",
+      "explain": "The king is stuck behind its own pawns on the last row, and a rook or queen gives checkmate there."
+    },
+    "discoveredAttack": {
+      "name": "discovered attack",
+      "explain": "Moving one piece uncovers an attack from another piece behind it."
+    }
+  },
   "nextStep": {},
   "lowData": {},
   "mistakeCard": {}

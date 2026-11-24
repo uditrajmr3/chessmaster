@@ -7,6 +7,7 @@ import { Swords, Check, Minus } from "lucide-react";
 import { api } from "@/lib/api";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { GameSummary } from "@/lib/types";
+import AccuracyBadge from "@/components/insight/AccuracyBadge";
 import { PageHeader, EmptyState, ResultBadge } from "@/components/ui/page-kit";
 
 const selectClass =
@@ -128,9 +129,11 @@ export default function GamesPage() {
                       {game.player_rating}
                     </td>
                     <td className="p-4 text-center text-gray-400">
-                      {game.platform_accuracy
-                        ? `${game.platform_accuracy.toFixed(1)}%`
-                        : "—"}
+                      <AccuracyBadge
+                        value={game.accuracy}
+                        source={game.accuracy_source}
+                        platformName={game.platform === "lichess" ? "Lichess" : game.platform === "chesscom" ? "Chess.com" : undefined}
+                      />
                     </td>
                     <td className="p-4 text-center">
                       <span className="text-xs text-gray-500 capitalize px-2 py-0.5 bg-gray-800/50 rounded">

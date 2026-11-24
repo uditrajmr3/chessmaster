@@ -36,3 +36,17 @@ export function gameAccuracy(moves: AccuracyMove[]): number | null {
   }
   return n ? sum / n : null;
 }
+
+export type AccuracyGrade = "excellent" | "good" | "ok" | "shaky" | "costly";
+
+// Accuracy-% grade bands (separate from the CPL grades). Single source of truth
+// for the badge, digest and peer comparison. Rounds to 1 decimal first so the
+// grade always agrees with the displayed number (89.96 shows as 90.0 -> excellent).
+export function accuracyGrade(value: number): AccuracyGrade {
+  const v = Math.round(value * 10) / 10;
+  if (v >= 90) return "excellent";
+  if (v >= 80) return "good";
+  if (v >= 70) return "ok";
+  if (v >= 60) return "shaky";
+  return "costly";
+}

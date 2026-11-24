@@ -8,7 +8,8 @@ import { Chessboard } from "react-chessboard";
 import { Area, AreaChart, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
-import { moveAccuracy } from "@/lib/accuracy";
+import { gameAccuracy } from "@/lib/accuracy";
+import AccuracyBadge from "@/components/insight/AccuracyBadge";
 import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
 import Term from "@/components/Term";
 import {
@@ -106,7 +107,7 @@ function phaseGrade(cpl: number | null): { label: string; color: string } {
 
 interface SideSummary {
   n: number;
-  accuracy: number;
+  accuracy: number | null;
   counts: Record<string, number>;
   phaseCpl: Record<string, number | null>;
 }
@@ -114,8 +115,6 @@ interface SideSummary {
 function summarize(moves: MoveAnalysis[]): SideSummary {
   const counts: Record<string, number> = {};
   const phases: Record<string, { sum: number; n: number }> = {};
-  let accSum = 0;
-  let accN = 0;
   for (const m of moves) {
     counts[effectiveClass(m)] = (counts[effectiveClass(m)] || 0) + 1;
     const cpl = Math.min(Math.max(m.centipawn_loss, 0), CPL_CAP);
@@ -123,10 +122,6 @@ function summarize(moves: MoveAnalysis[]): SideSummary {
     phases[p] = phases[p] || { sum: 0, n: 0 };
     phases[p].sum += cpl;
     phases[p].n += 1;
-    if (m.eval_before !== null && m.eval_after !== null) {
-      accSum += moveAccuracy(m.eval_before, m.eval_after, m.is_player_move);
-      accN += 1;
-    }
   }
   const phaseCpl: Record<string, number | null> = {};
   for (const p of ["opening", "middlegame", "endgame"]) {
@@ -134,7 +129,15 @@ function summarize(moves: MoveAnalysis[]): SideSummary {
   }
   return {
     n: moves.length,
-    accuracy: accN ? accSum / accN : 0,
+    accuracy: gameAccuracy(
+      // Evals are player-POV; negate for the opponent's moves so the shared
+      // helper scores them from the mover's side (same result as the old loop).
+      moves.map((m) => ({
+        eval_before: m.is_player_move || m.eval_before === null ? m.eval_before : -m.eval_before,
+        eval_after: m.is_player_move || m.eval_after === null ? m.eval_after : -m.eval_after,
+        is_player_move: true,
+      })),
+    ),
     counts,
     phaseCpl,
   };
@@ -430,12 +433,13 @@ function ReviewSummary({ you, opp, opponent }: { you: SideSummary; opp: SideSumm
   );
 }
 
-function AccuracyCard({ label, accuracy, highlight }: { label: string; accuracy: number; highlight?: boolean }) {
+function AccuracyCard({ label, accuracy, highlight }: { label: string; accuracy: number | null; highlight?: boolean }) {
   return (
     <div className={`rounded-xl px-4 py-3 ${highlight ? "bg-accent-500/12 border border-accent-500/25" : "bg-white/[0.03] border border-white/5"}`}>
       <p className="text-xs text-white/50 truncate">{label}</p>
-      <p className="text-2xl font-bold font-mono mt-1 text-white">{accuracy.toFixed(1)}<span className="text-sm text-white/50">%</span></p>
-      <p className="text-[0.7rem] text-white/40 mt-0.5"><Term id="accuracy">accuracy</Term></p>
+      <div className="mt-1">
+        <AccuracyBadge value={accuracy} source={accuracy === null ? null : "chessint"} size="lg" />
+      </div>
     </div>
   );
 }

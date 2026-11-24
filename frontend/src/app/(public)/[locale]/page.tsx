@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth";
 import { useDataRefresh } from "@/lib/useDataRefresh";
 import type { OverviewStats } from "@/lib/types";
 import RatingChart from "@/components/RatingChart";
+import AccuracyBadge from "@/components/insight/AccuracyBadge";
 import Landing from "@/components/Landing";
 
 export default function Home() {
@@ -67,10 +68,15 @@ function Dashboard() {
           label={t("wld")}
           value={`${stats.wins} / ${stats.losses} / ${stats.draws}`}
         />
-        <StatCard
-          label={t("avgAccuracy")}
-          value={stats.avg_accuracy ? `${stats.avg_accuracy.toFixed(1)}%` : t("na")}
-        />
+        <div className="surface-card p-5">
+          <p className="text-sm text-gray-400 mb-2">{t("avgAccuracy")}</p>
+          <AccuracyBadge
+            value={stats.avg_accuracy}
+            source={stats.avg_accuracy === null ? null : "chessint"}
+            basedOn={stats.accuracy_games}
+            size="lg"
+          />
+        </div>
       </div>
 
       {/* Zone 5 — Primary Content: Rating Chart (blueprint: one primary viz) */}

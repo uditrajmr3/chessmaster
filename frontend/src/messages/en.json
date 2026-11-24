@@ -804,5 +804,21 @@
     "cheersWhyHeading": "Why we can't track cheers",
     "medalsWhyHeading": "Why we can't track medals",
     "howToEarnHeading": "How to earn them anyway"
+  },
+  "plain": {
+    "accuracy": {
+      "label": "Accuracy",
+      "basedOn": "based on {count, plural, one {# game} other {# games}}",
+      "notAnalyzed": "Not analyzed yet",
+      "fromPlatform": "from {platform}",
+      "byChessInt": "Calculated by ChessInt from engine analysis"
+    },
+    "grade": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "ok": "OK",
+      "shaky": "Shaky",
+      "costly": "Costly"
+    }
   }
 }

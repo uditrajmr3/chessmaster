@@ -27,6 +27,14 @@ jest.mock("next-intl", () => {
       let s = lookup(ns, key);
       if (s == null) return key;
       if (values) {
+        // Minimal ICU plural: {n, plural, one {..} other {..}} ('#' = the count).
+        s = s.replace(
+          /\{(\w+), plural, one \{([^}]*)\} other \{([^}]*)\}\}/g,
+          (_m, name: string, one: string, other: string) => {
+            const n = Number(values[name]);
+            return (n === 1 ? one : other).split("#").join(String(n));
+          },
+        );
         for (const k of Object.keys(values)) s = s.split(`{${k}}`).join(String(values[k]));
       }
       return s;

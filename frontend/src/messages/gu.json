@@ -787,5 +787,21 @@
     "cheersWhyHeading": "અમે ચિયર્સ કેમ ટ્રેક નથી કરી શકતા",
     "medalsWhyHeading": "અમે પદક કેમ ટ્રેક નથી કરી શકતા",
     "howToEarnHeading": "તેમ છતાં તેમને કેવી રીતે મેળવવા"
+  },
+  "plain": {
+    "accuracy": {
+      "label": "ચોકસાઈ",
+      "basedOn": "{count, plural, one {# રમત} other {# રમતો}} પર આધારિત",
+      "notAnalyzed": "હજુ વિશ્લેષણ થયું નથી",
+      "fromPlatform": "{platform} તરફથી",
+      "byChessInt": "એન્જિન વિશ્લેષણ પરથી ChessInt દ્વારા ગણવામાં આવ્યું"
+    },
+    "grade": {
+      "excellent": "ઉત્તમ",
+      "good": "સારું",
+      "ok": "ઠીક",
+      "shaky": "નબળું",
+      "costly": "ભારે પડેલું"
+    }
   }
 }

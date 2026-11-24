@@ -787,5 +787,21 @@
     "cheersWhyHeading": "हम चियर्स ट्रैक क्यों नहीं कर सकते",
     "medalsWhyHeading": "हम पदक ट्रैक क्यों नहीं कर सकते",
     "howToEarnHeading": "फिर भी इन्हें कैसे अर्जित करें"
+  },
+  "plain": {
+    "accuracy": {
+      "label": "सटीकता",
+      "basedOn": "{count, plural, one {# खेल} other {# खेलों}} के आधार पर",
+      "notAnalyzed": "अभी विश्लेषण नहीं हुआ",
+      "fromPlatform": "{platform} से",
+      "byChessInt": "इंजन विश्लेषण से ChessInt द्वारा गणना की गई"
+    },
+    "grade": {
+      "excellent": "उत्कृष्ट",
+      "good": "अच्छा",
+      "ok": "ठीक-ठाक",
+      "shaky": "कमज़ोर",
+      "costly": "महँगा"
+    }
   }
 }

@@ -920,7 +920,15 @@
       "explain": "Moving one piece uncovers an attack from another piece behind it."
     }
   },
-  "nextStep": {},
+  "nextStep": {
+    "practise": "Practise puzzles like these",
+    "practiseMotif": "Practise {motif} puzzles",
+    "practisePhase": "Practise {phase} puzzles",
+    "reviewGame": "Replay this game",
+    "learn": "Learn how it works",
+    "syncMore": "Sync more games",
+    "analyzeMore": "Analyze more games"
+  },
   "lowData": {},
   "mistakeCard": {
     "legend": {

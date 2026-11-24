@@ -920,7 +920,15 @@
       "explain": "एक मोहरा हटते ही उसके पीछे का दूसरा मोहरा हमला करने लगता है।"
     }
   },
-  "nextStep": {},
+  "nextStep": {
+    "practise": "इस तरह की पहेलियाँ हल करें",
+    "practiseMotif": "{motif} की पहेलियाँ हल करें",
+    "practisePhase": "{phase} की पहेलियाँ हल करें",
+    "reviewGame": "यह खेल दोबारा देखें",
+    "learn": "जानें यह कैसे काम करता है",
+    "syncMore": "और खेल सिंक करें",
+    "analyzeMore": "और खेलों का विश्लेषण करें"
+  },
   "lowData": {},
   "mistakeCard": {
     "legend": {

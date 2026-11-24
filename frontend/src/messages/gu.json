@@ -920,7 +920,15 @@
       "explain": "એક મહોરું હટતાં જ તેની પાછળનું બીજું મહોરું હુમલો કરવા લાગે છે."
     }
   },
-  "nextStep": {},
+  "nextStep": {
+    "practise": "આવા કોયડા ઉકેલો",
+    "practiseMotif": "{motif} ના કોયડા ઉકેલો",
+    "practisePhase": "{phase} ના કોયડા ઉકેલો",
+    "reviewGame": "આ રમત ફરી જુઓ",
+    "learn": "જાણો આ કેવી રીતે કામ કરે છે",
+    "syncMore": "વધુ રમતો સિંક કરો",
+    "analyzeMore": "વધુ રમતોનું વિશ્લેષણ કરો"
+  },
   "lowData": {},
   "mistakeCard": {
     "legend": {

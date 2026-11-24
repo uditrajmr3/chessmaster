@@ -957,6 +957,28 @@
   "mistakeCard": {
     "showNumbers": "Show numbers",
     "hideNumbers": "Hide numbers",
+    "tryIt": "Try it",
+    "seeInGame": "See it in the game",
+    "yourTurn": "Your turn. Find a better move than the one you played.",
+    "correct": "Correct!",
+    "notQuite": "Not quite. Try again.",
+    "hintPiece": "Hint: move the ringed piece.",
+    "hintSquare": "Hint: it goes to the dotted square.",
+    "showAnswer": "Show answer",
+    "next": "Next",
+    "meta": {
+      "opponent": "vs {opponent}",
+      "move": "move {n}"
+    },
+    "played": "Played",
+    "best": "Best move",
+    "playedIn": "Played in {seconds}s",
+    "backToView": "Back",
+    "hint": "Hint",
+    "answerIs": "The best move was {san}.",
+    "lossLabel": "Centipawn loss",
+    "evalLabel": "Eval",
+    "evalMate": "mate",
     "legend": {
       "played": "You played",
       "better": "Better",

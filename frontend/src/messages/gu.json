@@ -957,6 +957,28 @@
   "mistakeCard": {
     "showNumbers": "આંકડા બતાવો",
     "hideNumbers": "આંકડા છુપાવો",
+    "tryIt": "અજમાવો",
+    "seeInGame": "રમતમાં જુઓ",
+    "yourTurn": "તમારો વારો. તમે રમેલી ચાલ કરતાં સારી ચાલ શોધો.",
+    "correct": "સાચું!",
+    "notQuite": "બરાબર નથી. ફરી પ્રયત્ન કરો.",
+    "hintPiece": "સંકેત: ગોળાવાળું મહોરું ચલાવો.",
+    "hintSquare": "સંકેત: તે ટપકાંવાળા ખાનામાં જાય છે.",
+    "showAnswer": "જવાબ બતાવો",
+    "next": "આગળ",
+    "meta": {
+      "opponent": "{opponent} સામે",
+      "move": "ચાલ {n}"
+    },
+    "played": "તમારી ચાલ",
+    "best": "શ્રેષ્ઠ ચાલ",
+    "playedIn": "{seconds} સેકન્ડમાં રમ્યા",
+    "backToView": "પાછા",
+    "hint": "સંકેત",
+    "answerIs": "શ્રેષ્ઠ ચાલ હતી {san}.",
+    "lossLabel": "સેન્ટીપૉન નુકસાન",
+    "evalLabel": "મૂલ્યાંકન",
+    "evalMate": "માત",
     "legend": {
       "played": "તમે રમ્યા",
       "better": "વધુ સારું",

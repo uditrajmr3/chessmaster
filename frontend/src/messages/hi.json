@@ -957,6 +957,28 @@
   "mistakeCard": {
     "showNumbers": "आँकड़े दिखाएँ",
     "hideNumbers": "आँकड़े छिपाएँ",
+    "tryIt": "आज़माइए",
+    "seeInGame": "खेल में देखें",
+    "yourTurn": "आपकी बारी। अपनी चली हुई चाल से बेहतर चाल ढूँढिए।",
+    "correct": "सही!",
+    "notQuite": "बिलकुल सही नहीं। फिर कोशिश कीजिए।",
+    "hintPiece": "इशारा: घेरे वाला मोहरा चलाइए।",
+    "hintSquare": "इशारा: वह बिंदु वाले खाने में जाता है।",
+    "showAnswer": "जवाब दिखाएँ",
+    "next": "आगे",
+    "meta": {
+      "opponent": "{opponent} के खिलाफ़",
+      "move": "चाल {n}"
+    },
+    "played": "आपकी चाल",
+    "best": "सबसे अच्छी चाल",
+    "playedIn": "{seconds} सेकंड में खेली",
+    "backToView": "वापस",
+    "hint": "इशारा",
+    "answerIs": "सबसे अच्छी चाल थी {san}।",
+    "lossLabel": "सेंटीपॉन नुकसान",
+    "evalLabel": "आकलन",
+    "evalMate": "मात",
     "legend": {
       "played": "आपने खेला",
       "better": "बेहतर",

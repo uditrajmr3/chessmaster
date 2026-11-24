@@ -5,6 +5,7 @@ are unset. Error details go ONLY to the owner's chat, never to users.
 """
 import asyncio
 import logging
+import sys
 import threading
 import time
 
@@ -16,16 +17,28 @@ logger = logging.getLogger(__name__)
 
 _MAX_LEN = 3500
 _DEDUPE_WINDOW_S = 600
+# Tests must never page the owner. Flip only in test_notify.py when exercising the send path.
+_ALLOW_UNDER_PYTEST = False
 
 _tasks: set = set()
 _last_sent: dict[str, float] = {}
 
 
+def _enabled() -> bool:
+    if "pytest" in sys.modules and not _ALLOW_UNDER_PYTEST:
+        return False
+    if not settings.telegram_alerts_enabled:
+        return False
+    if not settings.telegram_bot_token or not settings.telegram_chat_id:
+        return False
+    return True
+
+
 async def send(text: str) -> None:
+    if not _enabled():
+        return
     token = settings.telegram_bot_token
     chat_id = settings.telegram_chat_id
-    if not token or not chat_id:
-        return
     try:
         async with httpx.AsyncClient(timeout=5) as client:
             resp = await client.post(
@@ -52,7 +65,7 @@ def _run_in_thread(text: str) -> None:
 
 
 def notify(text: str) -> None:
-    if not settings.telegram_bot_token or not settings.telegram_chat_id:
+    if not _enabled():
         return
     try:
         try:

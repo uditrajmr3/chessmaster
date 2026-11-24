@@ -1,5 +1,13 @@
 """Shared test fixtures: in-memory SQLite DB, FastAPI test client, sample data factories."""
 
+import os
+
+# Disable Telegram owner alerts for the whole test run. These MUST be set before
+# any `app` import: pydantic-settings reads env vars over backend/.env, and the
+# empty string overrides whatever the developer's .env holds.
+os.environ["TELEGRAM_BOT_TOKEN"] = ""
+os.environ["TELEGRAM_CHAT_ID"] = ""
+
 import asyncio
 import json
 from datetime import datetime
@@ -17,9 +25,23 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import sessionmaker
 
 from app.auth.models import User
+from app.config import settings
 from app.database import Base, get_async_db, get_db
 from app.main import app
 from app.models import AnalysisJob, Game, MoveAnalysis, PuzzleProgress, Report, SyncState
+
+
+@pytest.fixture(autouse=True, scope="session")
+def _disable_telegram_notifications():
+    """Belt-and-braces: null the Telegram settings so notify() is a no-op in tests.
+
+    Env vars above already blank them; this covers any settings instance that
+    was loaded before conftest ran (e.g. a plugin importing app.config early).
+    Tests that need a token monkeypatch it and monkeypatch restores None afterward.
+    """
+    settings.telegram_bot_token = None
+    settings.telegram_chat_id = None
+    yield
 
 # ── In-memory SQLite engine (single shared connection via StaticPool) ────────
 

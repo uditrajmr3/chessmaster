@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     # Both empty = notifications disabled.
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
+    # Must be true ONLY on the prod server. Off by default so dev/test runs never alert.
+    telegram_alerts_enabled: bool = False
     email_from: str = "ChessInt <noreply@example.com>"
     # Resend published-template id. When set, transactional emails render via the
     # Resend template instead of inline HTML. Empty = use the inline HTML fallback.

@@ -44,6 +44,8 @@ services:
         sync: false
       - key: TELEGRAM_CHAT_ID
         sync: false
+      - key: TELEGRAM_ALERTS_ENABLED   # REQUIRED true on prod, leave unset everywhere else
+        value: "true"
       - key: ANTHROPIC_API_KEY     # console.anthropic.com
         sync: false
       - key: EMAIL_FROM            # e.g. "ChessMaster <noreply@yourdomain.com>"

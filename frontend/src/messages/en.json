@@ -936,7 +936,19 @@
     "syncMore": "Sync more games",
     "analyzeMore": "Analyze more games"
   },
-  "lowData": {},
+  "lowData": {
+    "none": "Nothing to show yet",
+    "needHint": "We need {need} to spot patterns.",
+    "partial": "You have {have}. We need {need} to spot patterns.",
+    "progress": "Progress",
+    "unlocks": "Unlocks: {what}",
+    "units": {
+      "games": "{count, plural, one {# game} other {# games}}",
+      "analyzedGames": "{count, plural, one {# analyzed game} other {# analyzed games}}",
+      "gamesWithClock": "{count, plural, one {# game with clock times} other {# games with clock times}}",
+      "endgames": "{count, plural, one {# endgame} other {# endgames}}"
+    }
+  },
   "mistakeCard": {
     "showNumbers": "Show numbers",
     "hideNumbers": "Hide numbers",

@@ -936,7 +936,19 @@
     "syncMore": "और खेल सिंक करें",
     "analyzeMore": "और खेलों का विश्लेषण करें"
   },
-  "lowData": {},
+  "lowData": {
+    "none": "अभी दिखाने के लिए कुछ नहीं है",
+    "needHint": "पैटर्न पहचानने के लिए हमें {need} चाहिए।",
+    "partial": "आपके पास {have} हैं। पैटर्न पहचानने के लिए हमें {need} चाहिए।",
+    "progress": "प्रगति",
+    "unlocks": "इससे खुलेगा: {what}",
+    "units": {
+      "games": "{count, plural, one {# खेल} other {# खेल}}",
+      "analyzedGames": "{count, plural, one {# विश्लेषित खेल} other {# विश्लेषित खेल}}",
+      "gamesWithClock": "{count, plural, one {घड़ी के समय वाला # खेल} other {घड़ी के समय वाले # खेल}}",
+      "endgames": "{count, plural, one {# अंतिम चरण का खेल} other {# अंतिम चरण के खेल}}"
+    }
+  },
   "mistakeCard": {
     "showNumbers": "आँकड़े दिखाएँ",
     "hideNumbers": "आँकड़े छिपाएँ",

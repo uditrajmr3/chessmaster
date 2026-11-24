@@ -936,7 +936,19 @@
     "syncMore": "વધુ રમતો સિંક કરો",
     "analyzeMore": "વધુ રમતોનું વિશ્લેષણ કરો"
   },
-  "lowData": {},
+  "lowData": {
+    "none": "હજી બતાવવા માટે કંઈ નથી",
+    "needHint": "પેટર્ન ઓળખવા માટે અમને {need} જોઈએ.",
+    "partial": "તમારી પાસે {have} છે. પેટર્ન ઓળખવા માટે અમને {need} જોઈએ.",
+    "progress": "પ્રગતિ",
+    "unlocks": "આનાથી ખુલશે: {what}",
+    "units": {
+      "games": "{count, plural, one {# રમત} other {# રમતો}}",
+      "analyzedGames": "{count, plural, one {# વિશ્લેષણ કરેલી રમત} other {# વિશ્લેષણ કરેલી રમતો}}",
+      "gamesWithClock": "{count, plural, one {ઘડિયાળના સમય સાથેની # રમત} other {ઘડિયાળના સમય સાથેની # રમતો}}",
+      "endgames": "{count, plural, one {# એન્ડગેમ} other {# એન્ડગેમ}}"
+    }
+  },
   "mistakeCard": {
     "showNumbers": "આંકડા બતાવો",
     "hideNumbers": "આંકડા છુપાવો",

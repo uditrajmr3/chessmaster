@@ -3,6 +3,7 @@
 import { useState, type ElementType } from "react";
 import { Chessboard } from "react-chessboard";
 import { FlipHorizontal2, RotateCw, Hash, RefreshCw } from "lucide-react";
+import { darkSquareStyle, lightSquareStyle } from "@/lib/boardTheme";
 
 export type TBArrow = { startSquare: string; endSquare: string; color?: string };
 
@@ -104,8 +105,8 @@ export default function TeachingBoard({
                 borderRadius: "10px",
                 boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
               },
-              darkSquareStyle: { backgroundColor: "#779952" },
-              lightSquareStyle: { backgroundColor: "#edeed1" },
+              darkSquareStyle,
+              lightSquareStyle,
             }}
           />
         </div>

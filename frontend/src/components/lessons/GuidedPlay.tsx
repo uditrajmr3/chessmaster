@@ -8,6 +8,7 @@ import { Engine } from "@/lib/engine";
 import { OPENINGS, getOpening } from "@/lib/openings";
 import { BOT_LEVELS, botMove } from "@/lib/bot";
 import { coachReport, findThreats, ruleForMove } from "@/lib/coach";
+import { darkSquareStyle, lightSquareStyle } from "@/lib/boardTheme";
 
 type Side = "white" | "black";
 type Hint = { san: string; ruleId: string; ruleTitle: string; why: string; from: string; to: string };
@@ -259,8 +260,8 @@ export default function GuidedPlay() {
               showAnimations: true,
               animationDurationInMs: 200,
               boardStyle: { borderRadius: "10px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" },
-              darkSquareStyle: { backgroundColor: "#779952" },
-              lightSquareStyle: { backgroundColor: "#edeed1" },
+              darkSquareStyle,
+              lightSquareStyle,
             }}
           />
         </div>

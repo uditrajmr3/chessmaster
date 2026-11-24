@@ -6,6 +6,7 @@ import { Chess } from "chess.js";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import type { Example } from "@/lib/capablancaExamples";
+import { darkSquareStyle, lightSquareStyle } from "@/lib/boardTheme";
 
 const DOT = "radial-gradient(circle, rgba(20,30,40,0.5) 22%, transparent 24%)";
 
@@ -52,8 +53,8 @@ export default function ReplayBoard({ example, id }: { example: Example; id: str
             showAnimations: true,
             animationDurationInMs: 200,
             boardStyle: { borderRadius: "10px", boxShadow: "0 8px 24px rgba(0,0,0,0.5)" },
-            darkSquareStyle: { backgroundColor: "#779952" },
-            lightSquareStyle: { backgroundColor: "#edeed1" },
+            darkSquareStyle,
+            lightSquareStyle,
           }}
         />
       </div>

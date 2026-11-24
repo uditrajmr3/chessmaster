@@ -4,6 +4,8 @@
 // and `from` highlights an origin square. Built for clarity over realism so a
 // total beginner can read it.
 
+import { BOARD_THEME } from "@/lib/boardTheme";
+
 const GLYPH: Record<string, string> = {
   K: "♔", Q: "♕", R: "♖", B: "♗", N: "♘", P: "♙",
   k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟",
@@ -54,13 +56,16 @@ export default function BoardDiagram({
               <div
                 key={square}
                 className={`relative flex aspect-square items-center justify-center text-[clamp(1.1rem,5vw,1.9rem)] leading-none ${
-                  light ? "bg-[#e9e2d3]" : "bg-[#7d9468]"
-                } ${isFrom ? "ring-2 ring-inset ring-accent-400" : ""}`}
+                  isFrom ? "ring-2 ring-inset ring-accent-400" : ""
+                }`}
+                style={{ backgroundColor: light ? BOARD_THEME.light : BOARD_THEME.dark }}
               >
                 {piece && (
                   <span
-                    className={white ? "text-white" : "text-[#1d2630]"}
-                    style={{ textShadow: white ? "0 1px 1px rgba(0,0,0,0.35)" : "none" }}
+                    style={{
+                      color: white ? BOARD_THEME.whitePiece : BOARD_THEME.blackPiece,
+                      textShadow: white ? "0 1px 1px rgba(0,0,0,0.35)" : "none",
+                    }}
                   >
                     {GLYPH[piece]}
                   </span>

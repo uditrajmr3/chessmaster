@@ -7,6 +7,7 @@ import { Puzzle as PuzzleIcon } from "lucide-react";
 import { api } from "@/lib/api";
 import type { Puzzle, PuzzleResult, PuzzleStats } from "@/lib/types";
 import { PageHeader, EmptyState, Stat } from "@/components/ui/page-kit";
+import { darkSquareStyle, lightSquareStyle } from "@/lib/boardTheme";
 
 type Arrow = { startSquare: string; endSquare: string; color: string };
 
@@ -320,8 +321,8 @@ export default function PuzzlesPage() {
                       borderRadius: "12px",
                       boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
                     },
-                    darkSquareStyle: { backgroundColor: "#779952" },
-                    lightSquareStyle: { backgroundColor: "#edeed1" },
+                    darkSquareStyle,
+                    lightSquareStyle,
                     dropSquareStyle: { boxShadow: "inset 0 0 1px 6px rgba(255,255,0,0.4)" },
                   }}
                 />

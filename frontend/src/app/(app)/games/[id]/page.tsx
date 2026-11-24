@@ -20,6 +20,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import { darkSquareStyle, lightSquareStyle } from "@/lib/boardTheme";
 
 // chess.com-style move classifications. "best" is derived (move == engine best).
 const CLASS_META: Record<
@@ -296,8 +297,8 @@ export default function GameReviewPage() {
                   showAnimations: true,
                   animationDurationInMs: 150,
                   boardStyle: { borderRadius: "12px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" },
-                  darkSquareStyle: { backgroundColor: "#6f8a6b" },
-                  lightSquareStyle: { backgroundColor: "#e9ecd6" },
+                  darkSquareStyle,
+                  lightSquareStyle,
                 }}
               />
             </div>

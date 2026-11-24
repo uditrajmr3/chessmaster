@@ -922,5 +922,11 @@
   },
   "nextStep": {},
   "lowData": {},
-  "mistakeCard": {}
+  "mistakeCard": {
+    "legend": {
+      "played": "You played",
+      "better": "Better",
+      "threat": "Their threat"
+    }
+  }
 }

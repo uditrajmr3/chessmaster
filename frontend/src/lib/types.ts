@@ -179,6 +179,12 @@ export interface Puzzle {
   played_at: string | null;
   attempts: number;
   successes: number;
+  player_move_uci: string | null;
+  refutation_uci: string | null;
+  eval_before: number | null;
+  eval_after: number | null;
+  move_number: number | null;
+  player_color: string | null;
 }
 
 export interface PuzzleResult {

@@ -45,6 +45,28 @@ class TestPuzzleService:
         # Should return worst blunder first (highest CPL)
         assert puzzle["centipawn_loss"] == 500
 
+    def test_next_puzzle_replay_fields(self, db):
+        make_game(db)
+        make_blunder(db, move_number=4, move_uci="e2e4")
+        make_blunder(db, move_number=5, best_move_uci="g8f6")
+
+        puzzle = PuzzleService(db, user_id=TEST_USER_ID).get_next_puzzle()
+
+        assert puzzle["move_number"] == 4
+        assert puzzle["player_move_uci"] == "e2e4"
+        assert puzzle["refutation_uci"] == "g8f6"
+        assert puzzle["eval_before"] == 150.0
+        assert puzzle["eval_after"] == -50.0
+        assert puzzle["player_color"] in ("white", "black")
+
+    def test_next_puzzle_refutation_none_when_no_next_ply(self, db):
+        make_game(db)
+        make_blunder(db, move_number=4)
+
+        puzzle = PuzzleService(db, user_id=TEST_USER_ID).get_next_puzzle()
+
+        assert puzzle["refutation_uci"] is None
+
     def test_get_next_puzzle_returns_none_when_empty(self, db):
         service = PuzzleService(db, user_id=TEST_USER_ID)
         puzzle = service.get_next_puzzle()

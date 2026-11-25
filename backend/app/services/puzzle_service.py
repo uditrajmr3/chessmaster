@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ..models import Game, MoveAnalysis, PuzzleProgress
+from .mistake_payload import refutation_for
 
 # A real puzzle is a recoverable tactical blunder, not a mate-score swing. The
 # analysis encodes checkmate as ±10000 cp, so any move into/out of a mate line
@@ -310,4 +311,10 @@ class PuzzleService:
             "played_at": game.played_at.isoformat() if game.played_at else None,
             "attempts": progress.attempts,
             "successes": progress.successes,
+            "player_move_uci": ma.move_uci,
+            "refutation_uci": refutation_for(self.db, ma),
+            "eval_before": ma.eval_before,
+            "eval_after": ma.eval_after,
+            "move_number": ma.move_number,
+            "player_color": game.player_color,
         }

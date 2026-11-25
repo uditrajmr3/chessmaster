@@ -195,6 +195,12 @@ class PuzzleOut(BaseModel):
     played_at: datetime | None
     attempts: int
     successes: int
+    player_move_uci: str | None = None
+    refutation_uci: str | None = None
+    eval_before: float | None = None
+    eval_after: float | None = None
+    move_number: int | None = None
+    player_color: str | None = None
 
 
 class PuzzleSubmit(BaseModel):

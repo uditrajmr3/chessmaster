@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square } from "chess.js";
 import { Puzzle as PuzzleIcon } from "lucide-react";
@@ -14,12 +15,32 @@ type Arrow = { startSquare: string; endSquare: string; color: string };
 type PuzzleState = "loading" | "solving" | "correct" | "wrong" | "empty";
 
 export default function PuzzlesPage() {
+  return (
+    <Suspense fallback={null}>
+      <PuzzlesPageInner />
+    </Suspense>
+  );
+}
+
+function PuzzlesPageInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [result, setResult] = useState<PuzzleResult | null>(null);
   const [stats, setStats] = useState<PuzzleStats | null>(null);
   const [state, setState] = useState<PuzzleState>("loading");
-  const [phaseFilter, setPhaseFilter] = useState<string>("");
-  const [motifFilter, setMotifFilter] = useState<string>("");
+  const [phaseFilter, setPhaseFilter] = useState<string>(searchParams.get("phase") ?? "");
+  const [motifFilter, setMotifFilter] = useState<string>(searchParams.get("motif") ?? "");
+
+  function updateFilter(key: "phase" | "motif", value: string) {
+    if (key === "phase") setPhaseFilter(value);
+    else setMotifFilter(value);
+    const next = new URLSearchParams(searchParams.toString());
+    if (value) next.set(key, value);
+    else next.delete(key);
+    const qs = next.toString();
+    router.replace(qs ? `?${qs}` : "?", { scroll: false });
+  }
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [legalMoves, setLegalMoves] = useState<string[]>([]);
   // The board shows the user's move once made (the puzzle FEN is the start).
@@ -219,7 +240,7 @@ export default function PuzzlesPage() {
           <div className="flex flex-wrap gap-2.5">
             <select
               value={phaseFilter}
-              onChange={(e) => setPhaseFilter(e.target.value)}
+              onChange={(e) => updateFilter("phase", e.target.value)}
               className={selectClass}
               aria-label="Filter by game phase"
             >
@@ -230,7 +251,7 @@ export default function PuzzlesPage() {
             </select>
             <select
               value={motifFilter}
-              onChange={(e) => setMotifFilter(e.target.value)}
+              onChange={(e) => updateFilter("motif", e.target.value)}
               className={selectClass}
               aria-label="Filter by tactical motif"
             >

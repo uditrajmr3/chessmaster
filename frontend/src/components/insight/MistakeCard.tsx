@@ -83,7 +83,7 @@ export function MistakeCardSkeleton({ compact = false }: { compact?: boolean }) 
       aria-hidden="true"
       className="flex animate-pulse flex-col gap-4 rounded-xl border border-white/10 bg-white/5 p-4 sm:flex-row"
     >
-      <div className={`aspect-square w-full rounded-lg bg-white/10 ${compact ? "max-w-[200px]" : "max-w-[320px]"}`} />
+      <div className={`aspect-square w-full rounded-lg bg-white/10 ${compact ? "max-w-[280px]" : "max-w-[320px]"}`} />
       <div className="flex flex-1 flex-col gap-3">
         <div className="h-6 w-3/4 rounded bg-white/10" />
         <div className="h-4 w-1/2 rounded bg-white/10" />
@@ -326,14 +326,14 @@ export default function MistakeCard({
           squareStyles={squareStyles}
           arrows={answerArrows}
           controls={[]}
-          maxWidth={compact ? 260 : 380}
+          maxWidth={compact ? 280 : 380}
         />
       </div>
     );
 
   return (
     <div className={`${shell} flex flex-col gap-4 ${compact ? "" : "sm:flex-row"}`} data-testid="mistake-card">
-      <div className={`w-full shrink-0 ${compact ? "max-w-[260px]" : "sm:max-w-[380px]"}`}>{board}</div>
+      <div className={`w-full shrink-0 ${compact ? "sm:max-w-[280px]" : "sm:max-w-[380px]"}`}>{board}</div>
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         {mode === "view" ? (
           <>

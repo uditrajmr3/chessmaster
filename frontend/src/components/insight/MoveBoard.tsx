@@ -28,7 +28,8 @@ type Props = {
 };
 
 const FILES = "abcdefgh";
-const SIZE_PX = { sm: 200, md: 320 } as const;
+// Full container width on phones; capped at these on >= sm screens.
+const SIZE_CLASS = { sm: "sm:max-w-[280px]", md: "sm:max-w-[320px]" } as const;
 const LEGEND_KEY: Partial<Record<Tone, "played" | "better" | "threat">> = {
   bad: "played",
   good: "better",
@@ -112,15 +113,14 @@ function MoveBoardImpl({
   }, [arrows]);
 
   const showLegend = (legend ?? arrows.length > 0) && tones.length > 0;
-  const px = SIZE_PX[size];
 
   return (
-    <div className="inline-block max-w-full" style={{ width: px }}>
+    <div className={`mx-auto w-full ${SIZE_CLASS[size]}`}>
       <div
         role="img"
         aria-label={ariaLabel}
-        className="relative grid aspect-square w-full max-w-full grid-cols-8 overflow-hidden rounded-lg"
-        style={{ width: px, maxWidth: "100%", aspectRatio: "1" }}
+        className="relative grid aspect-square w-full grid-cols-8 overflow-hidden rounded-lg"
+        style={{ aspectRatio: "1" }}
       >
         {squares.map(({ sq, piece, light }) => {
           const tone = tint.get(sq);

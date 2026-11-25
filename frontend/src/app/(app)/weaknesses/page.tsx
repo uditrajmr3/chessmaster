@@ -91,7 +91,7 @@ function motifBoard(m: MistakeOut, ariaLabel: string) {
   if (m.best_move_uci && UCI_RE.test(m.best_move_uci))
     arrows.push({ from: m.best_move_uci.slice(0, 2), to: m.best_move_uci.slice(2, 4), tone: "good" });
   return (
-    <div className="max-w-[240px]">
+    <div className="w-full">
       <MoveBoard
         fen={m.fen_before}
         orientation={m.player_color === "black" ? "black" : "white"}

@@ -166,7 +166,7 @@ export default function WeaknessesPage() {
       };
       break;
     case "clock":
-      answer = t("answer.clock", { times: h.times });
+      answer = h.times === null ? t("answer.clockOnly") : t("answer.clock", { times: h.times });
       action = { label: t("action.clock"), href: "/time-management" };
       break;
     case "color": {
@@ -210,7 +210,9 @@ export default function WeaknessesPage() {
       times === null
         ? t("clock.none")
         : clockLeak
-          ? t("clock.body", { times: Math.round(times * 10) / 10 })
+          ? normal > 0
+            ? t("clock.body", { times: Math.round(times * 10) / 10 })
+            : t("clock.bodyOnly")
           : t("clock.fine"),
   };
 

@@ -971,6 +971,7 @@
       "phase": "You lose the most ground in the {phase}.",
       "motif": "Your biggest leak is the {motif}. You have missed it {count, plural, one {# time} other {# times}}.",
       "clock": "You blunder about {times} times as often when your clock is low.",
+      "clockOnly": "Almost all your blunders come when your clock is low.",
       "color": "You play a lot worse as {worse} than as {better}.",
       "endgame": "You let won endgames slip: when clearly ahead, you win only about {rate}% of them.",
       "none": "Nothing stands out as a big weakness. Keep playing and check back."
@@ -1005,6 +1006,7 @@
     },
     "clock": {
       "body": "When you are low on clock, you blunder about {times} times as often as when you have plenty of time.",
+      "bodyOnly": "Almost all your blunders happen when you are low on clock, and hardly any when you have plenty of time.",
       "fine": "Low clock does not hurt you much.",
       "none": "We need games with clock times to check this."
     },

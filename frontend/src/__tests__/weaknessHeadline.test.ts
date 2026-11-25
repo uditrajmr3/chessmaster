@@ -89,6 +89,11 @@ describe("weaknessHeadline", () => {
     expect(clockMultiple(report({ blunder_rate_time_trouble: 0 }))).toBeNull();
   });
 
+  it("never invents a multiple when normal-time blunder rate is zero", () => {
+    const h = weaknessHeadline(report({ blunder_rate_normal: 0, blunder_rate_time_trouble: 10 }));
+    expect(h).toMatchObject({ kind: "clock", times: null });
+  });
+
   it("picks the colour gap and names the weaker colour", () => {
     const h = weaknessHeadline(
       report({

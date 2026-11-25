@@ -10,7 +10,7 @@ export type Phase = "opening" | "middlegame" | "endgame";
 export type WeaknessHeadline =
   | { kind: "phase"; tone: WeaknessTone; phase: Phase; avgLoss: number }
   | { kind: "motif"; tone: WeaknessTone; motif: string; count: number }
-  | { kind: "clock"; tone: WeaknessTone; troubleRate: number; normalRate: number; times: number }
+  | { kind: "clock"; tone: WeaknessTone; troubleRate: number; normalRate: number; times: number | null }
   | { kind: "color"; tone: WeaknessTone; worse: "white" | "black"; gap: number }
   | { kind: "endgame"; tone: WeaknessTone; rate: number }
   | { kind: "none"; tone: "good" };
@@ -97,7 +97,8 @@ function clockCandidate(p: PatternReport): Candidate | null {
       tone: toneFor(ratio),
       troubleRate: trouble,
       normalRate: num(p.blunder_rate_normal),
-      times: Math.round(times * 10) / 10,
+      // No normal-time blunders means the real multiple is unknown: never show the capped stand-in.
+      times: num(p.blunder_rate_normal) > 0 ? Math.round(times * 10) / 10 : null,
     },
   };
 }

@@ -141,6 +141,17 @@ class OpeningNode(BaseModel):
     avg_cpl: float | None
 
 
+class ExamplePositionOut(MistakeOut):
+    """MistakeOut plus legacy keys still read by the AI coach prompt (removed in phase 17)."""
+
+    side_to_move: str | None = None
+    fullmove: int | None = None
+    fen: str | None = None
+    player_move: str | None = None
+    best_move: str | None = None
+    date: str | None = None
+
+
 class PatternReport(BaseModel):
     opening_stats: list[OpeningNode]
     worst_openings: list[OpeningNode]
@@ -153,7 +164,9 @@ class PatternReport(BaseModel):
     black_stats: dict[str, float]
     endgame_conversion_rate: float
     blunder_by_move_bucket: dict[str, float]
-    example_positions: list[dict]
+    example_positions: list[ExamplePositionOut]
+    motif_examples: dict[str, MistakeOut] = {}
+    games_analyzed: int = 0
 
 
 class ReportOut(BaseModel):

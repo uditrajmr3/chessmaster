@@ -5,6 +5,7 @@ from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
 from ..models import Game, MoveAnalysis
+from .mistake_payload import build_mistakes
 
 # Checkmate is encoded as ±10000, so a move into/out of mate yields a
 # centipawn_loss in the thousands. Cap it for averages so a handful of mate
@@ -54,6 +55,8 @@ class PatternEngine:
             "endgame_conversion_rate": self._endgame_conversion(),
             "blunder_by_move_bucket": self._blunder_by_move_bucket(),
             "example_positions": self._worst_blunders(),
+            "motif_examples": self._motif_examples(),
+            "games_analyzed": self._games_analyzed(),
         }
 
     def _base_game_query(self):
@@ -320,29 +323,80 @@ class PatternEngine:
             blunders = blunders + [b for b in extra if b.id not in seen]
             blunders = blunders[:limit]
 
+        mistakes = {
+            m.move_analysis_id: m
+            for m in build_mistakes(self.db, self._user_id, [b.id for b in blunders])
+        }
         examples = []
         for b in blunders:
-            game = self.db.query(Game).filter(Game.id == b.game_id, Game.user_id == self._user_id).first()
-            motifs = json.loads(b.tactical_motifs) if b.tactical_motifs else []
+            m = mistakes.get(b.id)
+            if m is None:
+                continue
             parts = (b.fen_before or "").split()
             side = {"w": "White", "b": "Black"}.get(parts[1] if len(parts) > 1 else "", None)
             try:
                 fullmove = int(parts[5])
             except (IndexError, ValueError):
                 fullmove = b.move_number // 2 + 1
-            examples.append({
+            payload = m.model_dump(mode="json")
+            # Legacy keys (additive; removed in phase 17). Consumed by the AI coach prompt.
+            payload.update({
                 "side_to_move": side,
                 "fullmove": fullmove,
-                "eval_before": b.eval_before,
-                "eval_after": b.eval_after,
-                "game_id": b.game_id,
                 "fen": b.fen_before,
                 "player_move": b.move_san,
                 "best_move": b.best_move_san,
-                "centipawn_loss": b.centipawn_loss,
-                "game_phase": b.game_phase,
-                "tactical_motifs": motifs,
-                "opponent": game.black_username if game and game.player_color == "white" else (game.white_username if game else ""),
-                "date": game.played_at.isoformat() if game else "",
+                "opponent": m.opponent or "",
+                "date": m.played_at.isoformat() if m.played_at else "",
             })
+            examples.append(payload)
         return examples
+
+    def _motif_examples(self) -> dict[str, dict]:
+        """One representative MistakeOut per motif present in missed_tactics."""
+        q = self.db.query(MoveAnalysis).filter(
+            MoveAnalysis.is_player_move == 1,
+            MoveAnalysis.tactical_motifs.isnot(None),
+            MoveAnalysis.classification.in_(("blunder", "mistake")),
+        )
+        rows = self._apply_move_filter(q).all()
+
+        def playable(r: MoveAnalysis) -> bool:
+            return (
+                r.eval_before is not None
+                and -EXAMPLE_EVAL_WINDOW <= r.eval_before <= EXAMPLE_EVAL_WINDOW
+                and (r.centipawn_loss or 0) <= MAX_EXAMPLE_CPL
+            )
+
+        best: dict[str, MoveAnalysis] = {}
+        for r in rows:
+            if not r.tactical_motifs:
+                continue
+            for motif in json.loads(r.tactical_motifs):
+                cur = best.get(motif)
+                if cur is None:
+                    best[motif] = r
+                    continue
+                # Rank: playable first, then highest centipawn_loss.
+                if (playable(r), r.centipawn_loss or 0) > (playable(cur), cur.centipawn_loss or 0):
+                    best[motif] = r
+
+        ids = list({r.id for r in best.values()})
+        built = {m.move_analysis_id: m for m in build_mistakes(self.db, self._user_id, ids)}
+        return {
+            motif: built[r.id].model_dump(mode="json")
+            for motif, r in best.items()
+            if r.id in built
+        }
+
+    def _games_analyzed(self) -> int:
+        """Count of the user's filtered games having at least one MoveAnalysis row."""
+        game_ids = self._filtered_game_ids()
+        if not game_ids:
+            return 0
+        return (
+            self.db.query(func.count(func.distinct(MoveAnalysis.game_id)))
+            .filter(MoveAnalysis.game_id.in_(game_ids))
+            .scalar()
+            or 0
+        )

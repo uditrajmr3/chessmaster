@@ -208,5 +208,94 @@ class TestPatternEngine:
             "phase_blunder_rate", "missed_tactics", "blunder_rate_normal",
             "blunder_rate_time_trouble", "white_stats", "black_stats",
             "endgame_conversion_rate", "blunder_by_move_bucket", "example_positions",
+            "motif_examples", "games_analyzed",
         }
         assert set(report.keys()) == expected_keys
+
+
+OTHER_USER_ID = "00000000-0000-0000-0000-000000000099"
+
+
+class TestMistakeExamples:
+    def test_examples_carry_mistake_out_and_legacy_keys(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        make_blunder(db, game_id="g1", move_number=0, centipawn_loss=400, tactical_motifs=["fork"])
+        make_move_analysis(db, game_id="g1", move_number=1, is_player_move=0)
+
+        report = PatternEngine(db, user_id=TEST_USER_ID).generate_report()
+        ex = report["example_positions"][0]
+        # MistakeOut fields
+        assert ex["move_uci"] == "e2e4"
+        assert ex["refutation_uci"] == "e2e4"
+        assert isinstance(ex["move_analysis_id"], int)
+        # Legacy keys still present
+        for key in (
+            "side_to_move", "fullmove", "eval_before", "eval_after", "game_id", "fen",
+            "player_move", "best_move", "centipawn_loss", "game_phase",
+            "tactical_motifs", "opponent", "date",
+        ):
+            assert key in ex
+        assert ex["player_move"] == "e4"
+        assert ex["fen"] == ex["fen_before"]
+        assert ex["tactical_motifs"] == ["fork"]
+        json.dumps(report)  # report_json must stay serializable
+        from app.schemas import PatternReport
+        PatternReport(**report)  # response schema validates
+
+    def test_examples_scoped_to_user(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        make_game(db, id="g2", platform_id="g2", user_id=OTHER_USER_ID)
+        make_blunder(db, game_id="g1", move_number=0, centipawn_loss=100)
+        make_blunder(db, game_id="g2", move_number=0, centipawn_loss=900, tactical_motifs=["pin"])
+
+        report = PatternEngine(db, user_id=TEST_USER_ID).generate_report()
+        assert {e["game_id"] for e in report["example_positions"]} == {"g1"}
+        assert report["motif_examples"] == {}
+        assert report["missed_tactics"] == {}
+
+    def test_motif_examples_keys_match_missed_tactics(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        make_blunder(db, game_id="g1", move_number=0, centipawn_loss=300, tactical_motifs=["fork"])
+        make_blunder(db, game_id="g1", move_number=2, centipawn_loss=500, tactical_motifs=["fork", "pin"])
+        make_blunder(db, game_id="g1", move_number=4, centipawn_loss=100, tactical_motifs=["skewer"])
+
+        report = PatternEngine(db, user_id=TEST_USER_ID).generate_report()
+        assert set(report["motif_examples"]) == set(report["missed_tactics"]) == {"fork", "pin", "skewer"}
+        # highest-CPL playable move wins the representative slot
+        assert report["motif_examples"]["fork"]["centipawn_loss"] == 500
+        assert "fork" in report["motif_examples"]["fork"]["tactical_motifs"]
+        assert report["motif_examples"]["skewer"]["move_uci"] == "e2e4"
+
+    def test_motif_example_falls_back_when_none_playable(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        m = make_blunder(db, game_id="g1", move_number=0, centipawn_loss=5000, tactical_motifs=["fork"])
+        report = PatternEngine(db, user_id=TEST_USER_ID).generate_report()
+        assert report["motif_examples"]["fork"]["move_analysis_id"] == m.id
+
+    def test_motif_examples_respect_filters(self, db):
+        make_game(db, id="g1", platform_id="g1", time_class="rapid")
+        make_game(db, id="g2", platform_id="g2", time_class="blitz")
+        make_blunder(db, game_id="g1", move_number=0, tactical_motifs=["fork"])
+        make_blunder(db, game_id="g2", move_number=0, tactical_motifs=["pin"])
+        report = PatternEngine(db, user_id=TEST_USER_ID).generate_report(time_class="blitz")
+        assert set(report["motif_examples"]) == {"pin"}
+
+    def test_games_analyzed_counts_only_analyzed_games(self, db):
+        make_game(db, id="g1", platform_id="g1")
+        make_game(db, id="g2", platform_id="g2")
+        make_game(db, id="g3", platform_id="g3")  # no analysis
+        make_game(db, id="g4", platform_id="g4", user_id=OTHER_USER_ID)
+        make_move_analysis(db, game_id="g1", move_number=0)
+        make_move_analysis(db, game_id="g1", move_number=2)
+        make_move_analysis(db, game_id="g2", move_number=0)
+        make_move_analysis(db, game_id="g4", move_number=0)
+
+        assert PatternEngine(db, user_id=TEST_USER_ID).generate_report()["games_analyzed"] == 2
+
+    def test_games_analyzed_respects_filters(self, db):
+        make_game(db, id="g1", platform_id="g1", time_class="rapid")
+        make_game(db, id="g2", platform_id="g2", time_class="blitz")
+        make_move_analysis(db, game_id="g1", move_number=0)
+        make_move_analysis(db, game_id="g2", move_number=0)
+        engine = PatternEngine(db, user_id=TEST_USER_ID)
+        assert engine.generate_report(time_class="blitz")["games_analyzed"] == 1

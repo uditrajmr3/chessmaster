@@ -105,6 +105,40 @@ export interface OpeningNode {
   avg_cpl: number | null;
 }
 
+/** Canonical single-move payload (backend schemas.MistakeOut). */
+export interface MistakeOut {
+  move_analysis_id: number;
+  game_id: string;
+  move_number: number;
+  player_color: string;
+  fen_before: string;
+  move_uci: string;
+  move_san: string;
+  best_move_uci: string | null;
+  best_move_san: string | null;
+  refutation_uci: string | null;
+  eval_before: number | null;
+  eval_after: number | null;
+  centipawn_loss: number;
+  classification: string;
+  game_phase: string;
+  tactical_motifs: string[];
+  time_spent: number | null;
+  time_remaining: number | null;
+  opponent: string | null;
+  played_at: string | null;
+}
+
+/** MistakeOut plus legacy keys (removed in phase 17). */
+export interface ExamplePosition extends MistakeOut {
+  side_to_move: string | null;
+  fullmove: number;
+  fen: string;
+  player_move: string;
+  best_move: string;
+  date: string;
+}
+
 export interface PatternReport {
   opening_stats: OpeningNode[];
   worst_openings: OpeningNode[];
@@ -117,17 +151,9 @@ export interface PatternReport {
   black_stats: Record<string, number>;
   endgame_conversion_rate: number;
   blunder_by_move_bucket: Record<string, number>;
-  example_positions: Array<{
-    game_id: string;
-    fen: string;
-    player_move: string;
-    best_move: string;
-    centipawn_loss: number;
-    game_phase: string;
-    tactical_motifs: string[];
-    opponent: string;
-    date: string;
-  }>;
+  example_positions: ExamplePosition[];
+  motif_examples: Record<string, MistakeOut>;
+  games_analyzed: number;
 }
 
 export interface ReportData {

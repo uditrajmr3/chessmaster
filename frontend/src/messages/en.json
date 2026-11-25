@@ -20,7 +20,7 @@
     "learnChess": "Learn Chess",
     "puzzles": "Puzzles",
     "openings": "Openings",
-    "weaknesses": "Weaknesses",
+    "weaknesses": "My mistakes",
     "endgameDrills": "Endgame Drills",
     "analysis": "Analysis",
     "timeManagement": "Time Management",
@@ -896,7 +896,7 @@
     "missedCapture": "You could have taken the {piece} on {square}.",
     "smallSlip": "A small slip.",
     "costPawn": "This cost you about a pawn.",
-    "costPiece": "This cost you about a piece.",
+    "costPiece": "This cost you about a knight or bishop.",
     "costRook": "This cost you about a rook or more.",
     "turnedGame": "This turned the game.",
     "good": "A good move.",
@@ -957,6 +957,72 @@
       "analyzedGames": "{count, plural, one {# analyzed game} other {# analyzed games}}",
       "gamesWithClock": "{count, plural, one {# game with clock times} other {# games with clock times}}",
       "endgames": "{count, plural, one {# endgame} other {# endgames}}"
+    }
+  },
+  "weaknesses": {
+    "title": "My mistakes",
+    "question": "What do I keep getting wrong?",
+    "unlocks": "your most costly mistakes and the tactics you miss",
+    "empty": {
+      "title": "No patterns yet",
+      "description": "Sync and analyze your games and the mistakes you repeat will show up here."
+    },
+    "answer": {
+      "phase": "You lose the most ground in the {phase}.",
+      "motif": "Your biggest leak is the {motif}. You have missed it {count, plural, one {# time} other {# times}}.",
+      "clock": "You blunder about {times} times as often when your clock is low.",
+      "color": "You play a lot worse as {worse} than as {better}.",
+      "endgame": "You let won endgames slip: when clearly ahead, you win only about {rate}% of them.",
+      "none": "Nothing stands out as a big weakness. Keep playing and check back."
+    },
+    "action": {
+      "clock": "See how you use your clock",
+      "color": "Check your openings",
+      "endgame": "Practise endgames"
+    },
+    "colors": {
+      "white": "White",
+      "black": "Black"
+    },
+    "costly": {
+      "title": "Your most costly mistakes",
+      "empty": "No big mistakes found yet."
+    },
+    "motifs": {
+      "title": "Tactics you miss most",
+      "count": "{count, plural, one {You missed # {motif}} other {You missed # {motif}s}}",
+      "empty": "No missed tactics found yet."
+    },
+    "phases": {
+      "title": "Where in the game it goes wrong",
+      "weakest": "Weakest",
+      "noData": "No moves yet",
+      "chartTitle": "Points lost per move, by phase",
+      "bucketTitle": "Blunders by move number (% of moves)"
+    },
+    "other": {
+      "title": "Other patterns"
+    },
+    "clock": {
+      "body": "When you are low on clock, you blunder about {times} times as often as when you have plenty of time.",
+      "fine": "Low clock does not hurt you much.",
+      "none": "We need games with clock times to check this."
+    },
+    "color": {
+      "body": "You win more often as {better} than as {worse}.",
+      "even": "You do about equally well with both colours.",
+      "none": "We need a few games with each colour to compare."
+    },
+    "endgame": {
+      "body": "When you reach an endgame clearly ahead, you win about {rate}% of the time.",
+      "none": "We have not seen enough winning endgames yet."
+    },
+    "numbers": {
+      "normal": "Blunders with plenty of time",
+      "trouble": "Blunders when low on clock",
+      "white": "Win rate as White",
+      "black": "Win rate as Black",
+      "rate": "Winning endgames converted"
     }
   },
   "mistakeCard": {

@@ -53,7 +53,7 @@ const PIECE_VALUE: Record<string, number> = { p: 100, n: 300, b: 300, r: 500, q:
 const MINOR_VALUE = 300;
 
 // Backend motif string -> message id (motif.<id>.name / .explain).
-const MOTIF_ID: Record<string, string> = {
+export const MOTIF_ID: Record<string, string> = {
   fork: "fork",
   pin: "pin",
   skewer: "skewer",

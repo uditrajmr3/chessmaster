@@ -1074,7 +1074,7 @@
     "total": "Puzzles",
     "attempted": "Tried",
     "mastered": "Mastered",
-    "solvedFirstTry": "Solved first try",
+    "rightAnswers": "Right answers",
     "filters": {
       "phase": "Filter by game phase",
       "motif": "Filter by tactical motif",

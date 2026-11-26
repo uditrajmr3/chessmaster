@@ -1074,7 +1074,7 @@
     "total": "कुल पहेलियाँ",
     "attempted": "कोशिश की",
     "mastered": "पक्की हुईं",
-    "solvedFirstTry": "पहली कोशिश में सही",
+    "rightAnswers": "सही जवाब",
     "filters": {
       "phase": "खेल का चरण चुनें",
       "motif": "तरकीब चुनें",

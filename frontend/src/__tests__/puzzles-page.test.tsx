@@ -104,7 +104,7 @@ describe("PuzzlesPage", () => {
     expect(screen.getByTestId("puzzle-context")).toHaveTextContent(
       "From your game vs Magnus. You are White. Find a better move than you played.",
     );
-    expect(screen.getByText("Solved first try")).toBeInTheDocument();
+    expect(screen.getByText("Right answers")).toBeInTheDocument();
     expect(screen.queryByText("Accuracy")).not.toBeInTheDocument();
     expect(screen.queryByText(/Centipawn/i)).not.toBeInTheDocument();
     expect(screen.getByTestId("teaching-board")).toHaveAttribute("data-orientation", "white");

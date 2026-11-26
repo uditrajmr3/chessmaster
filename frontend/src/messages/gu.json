@@ -1074,7 +1074,7 @@
     "total": "કુલ કોયડા",
     "attempted": "પ્રયત્ન કર્યા",
     "mastered": "પાકા થયા",
-    "solvedFirstTry": "પહેલા પ્રયત્ને સાચા",
+    "rightAnswers": "સાચા જવાબ",
     "filters": {
       "phase": "રમતનો તબક્કો પસંદ કરો",
       "motif": "યુક્તિ પસંદ કરો",

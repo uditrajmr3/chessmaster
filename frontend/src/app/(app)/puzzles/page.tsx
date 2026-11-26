@@ -240,20 +240,6 @@ function PuzzlesPageInner() {
         </div>
       )}
 
-      {/* Stats bar */}
-      {stats && stats.total_puzzles > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
-          <Stat label={t("total")} value={stats.total_puzzles} />
-          <Stat label={t("attempted")} value={stats.attempted} />
-          <Stat label={t("mastered")} value={stats.mastered} />
-          <Stat
-            label={t("solvedFirstTry")}
-            value={`${stats.accuracy}%`}
-            valueClassName={stats.accuracy >= 70 ? "text-green-400" : stats.accuracy >= 40 ? "text-yellow-400" : "text-red-400"}
-          />
-        </div>
-      )}
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 flex flex-col items-center gap-4 min-w-0">
           {state === "loading" && (
@@ -387,6 +373,20 @@ function PuzzlesPageInner() {
               </div>
             )}
           </div>
+
+          {/* Stats bar */}
+          {stats && stats.total_puzzles > 0 && (
+            <div className="grid grid-cols-2 gap-3 stagger-children">
+              <Stat label={t("total")} value={stats.total_puzzles} />
+              <Stat label={t("attempted")} value={stats.attempted} />
+              <Stat label={t("mastered")} value={stats.mastered} />
+              <Stat
+                label={t("rightAnswers")}
+                value={`${stats.accuracy}%`}
+                valueClassName={stats.accuracy >= 70 ? "text-green-400" : stats.accuracy >= 40 ? "text-yellow-400" : "text-red-400"}
+              />
+            </div>
+          )}
 
           {stats && stats.total_puzzles > 0 && (motifRows.length > 0 || phaseRows.length > 0) && (
             <div className="surface-card p-5 space-y-5" data-testid="puzzle-progress">

@@ -44,7 +44,7 @@ export interface MistakeCardProps {
 const RAW_PIECE_KEYS = new Set(["verdict.hangsPiece"]);
 
 /** Returns a function turning a verdict key + params into finished text. */
-function useVerdictText() {
+export function useVerdictText() {
   const tv = useTranslations("verdict");
   const tp = useTranslations("pieces");
   const tm = useTranslations("motif");
@@ -59,7 +59,7 @@ function useVerdictText() {
   };
 }
 
-function safeVerdict(m: MistakeInput): Verdict | null {
+export function safeVerdict(m: MistakeInput): Verdict | null {
   try {
     return verdict(m);
   } catch {

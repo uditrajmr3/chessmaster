@@ -11,6 +11,7 @@ let mockQuery = "motif=fork&phase=endgame";
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ replace: mockReplace, push: jest.fn() }),
   useSearchParams: () => new URLSearchParams(mockQuery),
+  usePathname: () => "/puzzles",
 }));
 
 jest.mock("react-chessboard", () => ({ Chessboard: () => <div /> }));
@@ -49,6 +50,25 @@ describe("PuzzlesPage deep links", () => {
     fireEvent.change(screen.getByLabelText("Filter by game phase"), {
       target: { value: "" },
     });
-    expect(mockReplace).toHaveBeenCalledWith("?motif=fork", { scroll: false });
+    expect(mockReplace).toHaveBeenCalledWith("/puzzles?motif=fork", { scroll: false });
+  });
+
+  it("uses the pathname, not a bare query, when clearing the last filter", async () => {
+    mockQuery = "phase=endgame";
+    render(<PuzzlesPage />);
+    fireEvent.change(screen.getByLabelText("Filter by game phase"), {
+      target: { value: "" },
+    });
+    expect(mockReplace).toHaveBeenCalledWith("/puzzles", { scroll: false });
+    mockQuery = "motif=fork&phase=endgame";
+  });
+
+  it("shows a deep-linked value that is not in the option list as selected", () => {
+    mockQuery = "motif=zugzwang";
+    render(<PuzzlesPage />);
+    const sel = screen.getByLabelText("Filter by tactical motif") as HTMLSelectElement;
+    expect(sel.value).toBe("zugzwang");
+    expect(sel.options[sel.selectedIndex].textContent).toBe("Zugzwang");
+    mockQuery = "motif=fork&phase=endgame";
   });
 });

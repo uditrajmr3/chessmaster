@@ -1060,5 +1060,62 @@
       "better": "Better",
       "threat": "Their threat"
     }
+  },
+  "puzzles": {
+    "title": "Puzzles from your own games",
+    "intro": "These are real positions where you went wrong. Find a better move than the one you played.",
+    "context": "From your game vs {opponent}. You are {colour}. Find a better move than you played.",
+    "colour": {
+      "white": "White",
+      "black": "Black"
+    },
+    "due": "{count, plural, one {# puzzle is waiting for review today} other {# puzzles are waiting for review today}}",
+    "streak": "Streak: {count} in a row",
+    "total": "Puzzles",
+    "attempted": "Tried",
+    "mastered": "Mastered",
+    "solvedFirstTry": "Solved first try",
+    "filters": {
+      "phase": "Filter by game phase",
+      "motif": "Filter by tactical motif",
+      "allPhases": "All phases",
+      "allMotifs": "All tactics"
+    },
+    "result": {
+      "youPlayed": "What you played",
+      "better": "The better move",
+      "why": "Why it matters",
+      "correct": "Correct! You found a better move.",
+      "missed": "Not quite. The better move was {san}.",
+      "revealed": "The better move was {san}.",
+      "playedAria": "Board showing the move you played",
+      "betterAria": "Board showing the better move",
+      "next": "Next puzzle"
+    },
+    "empty": {
+      "title": "No puzzles yet",
+      "desc": "Sync your games from the sidebar, then run Analyze. Puzzles are made from the mistakes in your own games.",
+      "filteredTitle": "No puzzles match these filters",
+      "filteredDesc": "Try clearing the filters above, or analyze more games to widen the pool."
+    },
+    "allDone": {
+      "title": "All caught up",
+      "desc": "Nothing is waiting for review right now. Come back tomorrow, or try another tactic."
+    },
+    "info": {
+      "title": "About this puzzle",
+      "phase": "Game phase",
+      "theme": "Tactic",
+      "date": "Game date",
+      "progress": "Your record",
+      "newPuzzle": "New puzzle",
+      "record": "Solved {successes} of {attempts} tries"
+    },
+    "progress": {
+      "title": "Your puzzles by tactic",
+      "phaseTitle": "By game phase",
+      "practise": "Practise",
+      "count": "{count, plural, one {# puzzle} other {# puzzles}}"
+    }
   }
 }

@@ -1117,5 +1117,86 @@
       "practise": "Practise",
       "count": "{count, plural, one {# puzzle} other {# puzzles}}"
     }
+  },
+  "gameDetail": {
+    "question": "What happened in this game?",
+    "answer": {
+      "won": "You won.",
+      "lost": "You lost.",
+      "drew": "It was a draw."
+    },
+    "turningPoint": "You were doing well until move {n}, then things went wrong.",
+    "turningPointOther": "The biggest swing came on move {n}.",
+    "cleanGame": "You made no big slips.",
+    "notAnalyzed": "This game has not been analyzed yet.",
+    "analyze": "Run Analyze Games to see where it turned and get your accuracy and phase grades. You can still replay the moves on the board.",
+    "keyMoments": "Key moments",
+    "seeOnBoard": "See it on the board",
+    "back": "Back to games",
+    "notFound": {
+      "title": "Game not found",
+      "desc": "This game may have been removed, or the link is incorrect.",
+      "cta": "View all games"
+    },
+    "vs": "vs {opponent}",
+    "unknownOpening": "Unknown opening",
+    "result": {
+      "win": "Won",
+      "loss": "Lost",
+      "draw": "Draw"
+    },
+    "color": {
+      "white": "White",
+      "black": "Black"
+    },
+    "nav": {
+      "start": "Start",
+      "previous": "Previous",
+      "next": "Next",
+      "end": "End",
+      "hint": "Use the left and right arrow keys to step through the game"
+    },
+    "advantage": {
+      "title": "Your advantage",
+      "hint": "click to jump"
+    },
+    "moves": {
+      "title": "Moves",
+      "count": "{count, plural, one {# move} other {# moves}}"
+    },
+    "review": {
+      "title": "Game review",
+      "you": "You",
+      "opponent": "Opponent"
+    },
+    "phases": {
+      "title": "How you played each part",
+      "avgLoss": "Average loss per move"
+    },
+    "groups": {
+      "good": "Good moves",
+      "slips": "Slips",
+      "big": "Big mistakes",
+      "showAll": "Show all ten types",
+      "hideAll": "Show fewer"
+    },
+    "classes": {
+      "brilliant": "Brilliant",
+      "great": "Great",
+      "best": "Best",
+      "excellent": "Excellent",
+      "good": "Good",
+      "book": "Book",
+      "inaccuracy": "Inaccuracy",
+      "miss": "Miss",
+      "mistake": "Mistake",
+      "blunder": "Blunder"
+    },
+    "moveDetail": {
+      "opponentMove": "This was your opponent's move.",
+      "mateSwing": "mate swing",
+      "phase": "Phase",
+      "missedTactics": "Missed tactics"
+    }
   }
 }

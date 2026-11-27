@@ -37,6 +37,8 @@ export interface MistakeCardProps {
   onSolved?: (correct: boolean) => void;
   onNext?: () => void;
   compact?: boolean;
+  /** Hide the "See it in the game" link (when the card is already inside that game's page). */
+  hideGameLink?: boolean;
 }
 
 // Verdict keys whose message is an ICU select on the raw piece id (grammar
@@ -111,6 +113,7 @@ export default function MistakeCard({
   onSolved,
   onNext,
   compact = false,
+  hideGameLink = false,
 }: MistakeCardProps) {
   const t = useTranslations("mistakeCard");
   const tc = useTranslations("plain");
@@ -357,7 +360,7 @@ export default function MistakeCard({
                   {t("tryIt")}
                 </button>
               )}
-              <NextStep label={t("seeInGame")} href={gameHref} variant="inline" />
+              {!hideGameLink && <NextStep label={t("seeInGame")} href={gameHref} variant="inline" />}
             </div>
             <ShowNumbers>{numbers}</ShowNumbers>
           </>

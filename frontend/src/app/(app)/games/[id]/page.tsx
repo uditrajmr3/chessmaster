@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
@@ -10,8 +11,23 @@ import { api } from "@/lib/api";
 import type { GameDetail, MoveAnalysis } from "@/lib/types";
 import { gameAccuracy } from "@/lib/accuracy";
 import AccuracyBadge from "@/components/insight/AccuracyBadge";
-import { ResultBadge, EmptyState } from "@/components/ui/page-kit";
+import { EmptyState } from "@/components/ui/page-kit";
 import Term from "@/components/Term";
+import PageAnswer from "@/components/insight/PageAnswer";
+import ShowNumbers from "@/components/insight/ShowNumbers";
+import MistakeCard, { safeVerdict, useVerdictText } from "@/components/insight/MistakeCard";
+import { MOTIF_ID } from "@/lib/verdict";
+import {
+  CHIP_GROUPS,
+  fullMoveNumber,
+  groupChipCounts,
+  keyMoments,
+  parseMoveParam,
+  toMistakeInput,
+  turningPoint,
+  type ChipGroup,
+  type KeyMoment,
+} from "@/lib/gameReview";
 import {
   ArrowLeft,
   Swords,
@@ -19,26 +35,26 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  ChevronDown,
 } from "lucide-react";
 import { darkSquareStyle, lightSquareStyle } from "@/lib/boardTheme";
 
 // chess.com-style move classifications. "best" is derived (move == engine best).
 const CLASS_META: Record<
   string,
-  { label: string; symbol: string; color: string; chip: string }
+  { symbol: string; color: string; chip: string }
 > = {
-  brilliant: { label: "Brilliant", symbol: "!!", color: "text-cyan-300", chip: "bg-cyan-400/15 text-cyan-300" },
-  great: { label: "Great", symbol: "!", color: "text-blue-300", chip: "bg-blue-400/15 text-blue-300" },
-  best: { label: "Best", symbol: "★", color: "text-green-400", chip: "bg-green-400/15 text-green-400" },
-  excellent: { label: "Excellent", symbol: "", color: "text-emerald-300", chip: "bg-emerald-400/12 text-emerald-300" },
-  good: { label: "Good", symbol: "", color: "text-gray-300", chip: "bg-white/10 text-gray-300" },
-  book: { label: "Book", symbol: "", color: "text-amber-300/80", chip: "bg-amber-400/10 text-amber-300/80" },
-  inaccuracy: { label: "Inaccuracy", symbol: "?!", color: "text-yellow-400", chip: "bg-yellow-400/15 text-yellow-400" },
-  miss: { label: "Miss", symbol: "✗", color: "text-rose-400", chip: "bg-rose-400/15 text-rose-400" },
-  mistake: { label: "Mistake", symbol: "?", color: "text-orange-400", chip: "bg-orange-400/15 text-orange-400" },
-  blunder: { label: "Blunder", symbol: "??", color: "text-red-400", chip: "bg-red-400/15 text-red-400" },
+  brilliant: { symbol: "!!", color: "text-cyan-300", chip: "bg-cyan-400/15 text-cyan-300" },
+  great: { symbol: "!", color: "text-blue-300", chip: "bg-blue-400/15 text-blue-300" },
+  best: { symbol: "★", color: "text-green-400", chip: "bg-green-400/15 text-green-400" },
+  excellent: { symbol: "", color: "text-emerald-300", chip: "bg-emerald-400/12 text-emerald-300" },
+  good: { symbol: "", color: "text-gray-300", chip: "bg-white/10 text-gray-300" },
+  book: { symbol: "", color: "text-amber-300/80", chip: "bg-amber-400/10 text-amber-300/80" },
+  inaccuracy: { symbol: "?!", color: "text-yellow-400", chip: "bg-yellow-400/15 text-yellow-400" },
+  miss: { symbol: "✗", color: "text-rose-400", chip: "bg-rose-400/15 text-rose-400" },
+  mistake: { symbol: "?", color: "text-orange-400", chip: "bg-orange-400/15 text-orange-400" },
+  blunder: { symbol: "??", color: "text-red-400", chip: "bg-red-400/15 text-red-400" },
 };
-const CLASS_ORDER = ["brilliant", "great", "best", "excellent", "good", "book", "inaccuracy", "miss", "mistake", "blunder"];
 
 const CPL_CAP = 1000; // mate-score swings (±10000) are clamped so they don't skew metrics
 
@@ -98,12 +114,12 @@ function evalToStr(cp: number | null): string {
   return (v > 0 ? "+" : "") + v.toFixed(2);
 }
 
-function phaseGrade(cpl: number | null): { label: string; color: string } {
-  if (cpl === null) return { label: "—", color: "text-white/40" };
-  if (cpl <= 30) return { label: "Excellent", color: "text-green-400" };
-  if (cpl <= 70) return { label: "Good", color: "text-green-300" };
-  if (cpl <= 130) return { label: "OK", color: "text-yellow-400" };
-  return { label: "Shaky", color: "text-red-400" };
+function phaseGrade(cpl: number | null): { key: "excellent" | "good" | "ok" | "shaky" | null; color: string } {
+  if (cpl === null) return { key: null, color: "text-white/40" };
+  if (cpl <= 30) return { key: "excellent", color: "text-green-400" };
+  if (cpl <= 70) return { key: "good", color: "text-green-300" };
+  if (cpl <= 130) return { key: "ok", color: "text-yellow-400" };
+  return { key: "shaky", color: "text-red-400" };
 }
 
 interface SideSummary {
@@ -144,8 +160,21 @@ function summarize(moves: MoveAnalysis[]): SideSummary {
   };
 }
 
-export default function GameReviewPage() {
+export default function GameReviewPageWrapper() {
+  // useSearchParams (?move=N) needs a Suspense boundary under the app router.
+  return (
+    <Suspense fallback={<GameReviewSkeleton />}>
+      <GameReviewPage />
+    </Suspense>
+  );
+}
+
+function GameReviewPage() {
+  const t = useTranslations("gameDetail");
   const params = useParams();
+  const searchParams = useSearchParams();
+  const moveParam = searchParams.get("move");
+  const boardRef = useRef<HTMLDivElement>(null);
   const [game, setGame] = useState<GameDetail | null>(null);
   const [ply, setPly] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -200,6 +229,28 @@ export default function GameReviewPage() {
     [totalPlies]
   );
 
+  // ?move=N: open the board at that ply (1-based over all plies; see lib/gameReview).
+  useEffect(() => {
+    if (!game) return;
+    const target = parseMoveParam(moveParam, totalPlies);
+    if (target !== null) setPly(target);
+  }, [game, moveParam, totalPlies]);
+
+  const turning = useMemo(() => (game && isAnalyzed ? turningPoint(game.moves) : null), [game, isAnalyzed]);
+  const moments = useMemo(
+    () => (game && isAnalyzed ? keyMoments(game.moves, game.player_color, game.id) : []),
+    [game, isAnalyzed],
+  );
+
+  // "See it on the board": jump to the ply and bring the board into view.
+  const seeOnBoard = useCallback(
+    (p: number) => {
+      go(p);
+      boardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    [go],
+  );
+
   // Keyboard navigation through the game.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -216,14 +267,14 @@ export default function GameReviewPage() {
   if (!game)
     return (
       <div className="space-y-6">
-        <BackLink />
+        <BackLink label={t("back")} />
         <EmptyState
           icon={Swords}
-          title="Game not found"
-          description="This game may have been removed, or the link is incorrect."
+          title={t("notFound.title")}
+          description={t("notFound.desc")}
           action={
             <Link href="/games" className="inline-flex items-center gap-2 bg-accent-600 hover:bg-accent-500 text-white font-medium rounded-lg btn-press px-4 py-2 text-sm">
-              View all games
+              {t("notFound.cta")}
             </Link>
           }
         />
@@ -233,6 +284,19 @@ export default function GameReviewPage() {
   const current = plies[ply];
   const currentMove: MoveAnalysis | null = isAnalyzed && ply > 0 ? game.moves[ply - 1] ?? null : null;
   const orientation = game.player_color === "black" ? "black" : "white";
+
+  const colorLabel = t(`color.${orientation}`);
+  const resultKey = game.result === "win" || game.result === "loss" ? game.result : "draw";
+  const resultLabel = t(`result.${resultKey}`);
+  const resultSentence = t(`answer.${resultKey === "win" ? "won" : resultKey === "loss" ? "lost" : "drew"}`);
+  let answerText: string;
+  if (!isAnalyzed) answerText = `${resultSentence} ${t("notAnalyzed")}`;
+  else if (!turning) answerText = `${resultSentence} ${t("cleanGame")}`;
+  else {
+    const n = fullMoveNumber(turning.ply);
+    answerText = `${resultSentence} ${t(turning.winBefore >= 55 ? "turningPoint" : "turningPointOther", { n })}`;
+  }
+  const answerTone = !isAnalyzed ? "neutral" : resultKey === "win" ? "good" : resultKey === "loss" ? "bad" : "warn";
 
   const lastMoveStyles: Record<string, React.CSSProperties> = {};
   if (current.uci && current.uci.length >= 4) {
@@ -266,26 +330,28 @@ export default function GameReviewPage() {
 
   return (
     <div className="space-y-6">
-      <BackLink />
+      <BackLink label={t("back")} />
 
       <header className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-2xl sm:text-[1.75rem] font-bold tracking-tight text-white">vs {game.opponent_name}</h1>
+          <h1 className="text-2xl sm:text-[1.75rem] font-bold tracking-tight text-white">{t("vs", { opponent: game.opponent_name })}</h1>
           <p className="mt-1 text-sm text-white/55">
-            {new Date(game.played_at).toLocaleDateString()} · {game.opening_name || game.opening_eco || "Unknown opening"} · {game.time_class}
+            {new Date(game.played_at).toLocaleDateString()} · {game.opening_name || game.opening_eco || t("unknownOpening")} · {game.time_class}
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap shrink-0">
-          <span className="text-xs uppercase tracking-wider text-white/45 font-medium">{game.player_color}</span>
-          <ResultBadge result={game.result} />
+          <span className="text-xs uppercase tracking-wider text-white/45 font-medium">{colorLabel}</span>
+          <ResultChip result={game.result} label={resultLabel} />
           <span className="text-white/55 font-mono text-sm">{game.player_rating} vs {game.opponent_rating}</span>
         </div>
       </header>
 
+      <PageAnswer question={t("question")} answer={answerText} tone={answerTone} />
+
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Board + controls */}
         <div className="lg:col-span-3 space-y-3">
-          <div className="surface-card p-3 sm:p-4">
+          <div ref={boardRef} className="surface-card p-3 sm:p-4 scroll-mt-4">
             <div className="mx-auto w-full max-w-[560px]">
               <Chessboard
                 options={{
@@ -304,41 +370,45 @@ export default function GameReviewPage() {
             </div>
             {/* Nav controls */}
             <div className="mt-3 flex items-center justify-center gap-2">
-              <NavBtn onClick={() => go(0)} disabled={ply === 0} label="Start"><ChevronsLeft className="h-4 w-4" /></NavBtn>
-              <NavBtn onClick={() => go(ply - 1)} disabled={ply === 0} label="Previous"><ChevronLeft className="h-4 w-4" /></NavBtn>
+              <NavBtn onClick={() => go(0)} disabled={ply === 0} label={t("nav.start")}><ChevronsLeft className="h-4 w-4" /></NavBtn>
+              <NavBtn onClick={() => go(ply - 1)} disabled={ply === 0} label={t("nav.previous")}><ChevronLeft className="h-4 w-4" /></NavBtn>
               <span className="px-3 text-sm font-mono text-white/60 tabular-nums">{ply} / {totalPlies}</span>
-              <NavBtn onClick={() => go(ply + 1)} disabled={ply === totalPlies} label="Next"><ChevronRight className="h-4 w-4" /></NavBtn>
-              <NavBtn onClick={() => go(totalPlies)} disabled={ply === totalPlies} label="End"><ChevronsRight className="h-4 w-4" /></NavBtn>
+              <NavBtn onClick={() => go(ply + 1)} disabled={ply === totalPlies} label={t("nav.next")}><ChevronRight className="h-4 w-4" /></NavBtn>
+              <NavBtn onClick={() => go(totalPlies)} disabled={ply === totalPlies} label={t("nav.end")}><ChevronsRight className="h-4 w-4" /></NavBtn>
             </div>
-            <p className="mt-2 text-center text-[0.7rem] text-white/35">Use ← → arrow keys to step through the game</p>
+            <p className="mt-2 text-center text-[0.7rem] text-white/35">{t("nav.hint")}</p>
           </div>
 
           {/* Evaluation graph — scrub the game, click to jump */}
           {isAnalyzed && <EvalGraph moves={game.moves} ply={ply} onSeek={go} />}
 
           {/* Current move detail */}
-          {currentMove && <MoveDetail move={currentMove} />}
+          {currentMove && (
+            <MoveDetail
+              move={currentMove}
+              input={currentMove.is_player_move ? toMistakeInput(game.moves, ply - 1, game.player_color, game.id) : null}
+            />
+          )}
         </div>
 
         {/* Right column: review summary + move list */}
         <div className="lg:col-span-2 space-y-6">
+          {moments.length > 0 && <KeyMoments moments={moments} onSee={seeOnBoard} />}
+
           {isAnalyzed && summary ? (
             <ReviewSummary you={summary.you} opp={summary.opp} opponent={game.opponent_name} />
           ) : (
             <div className="surface-card p-5">
-              <h2 className="text-base font-semibold text-white mb-1">Game Review</h2>
-              <p className="text-sm text-white/55">
-                This game isn&apos;t analyzed yet. Run <span className="text-accent-300">Analyze Games</span> to get
-                accuracy, move classifications, and phase grades. You can still replay the moves on the board.
-              </p>
+              <h2 className="text-base font-semibold text-white mb-1">{t("review.title")}</h2>
+              <p className="text-sm text-white/55">{t("analyze")}</p>
             </div>
           )}
 
           {/* Move list */}
           <div className="surface-card overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-              <h2 className="text-base font-semibold text-white">Moves</h2>
-              <span className="text-xs text-white/45 font-mono">{totalPlies} ply</span>
+              <h2 className="text-base font-semibold text-white">{t("moves.title")}</h2>
+              <span className="text-xs text-white/45">{t("moves.count", { count: fullMoveNumber(totalPlies) })}</span>
             </div>
             <div className="max-h-[460px] overflow-y-auto divide-y divide-white/5">
               {rows.map((row) => (
@@ -388,50 +458,122 @@ function PlyCell({
 }
 
 function ReviewSummary({ you, opp, opponent }: { you: SideSummary; opp: SideSummary; opponent: string }) {
+  const t = useTranslations("gameDetail");
+  const tg = useTranslations("plain");
+  const [showAll, setShowAll] = useState(false);
+  const youGroups = groupChipCounts(you.counts);
+  const oppGroups = groupChipCounts(opp.counts);
+  const groupMeta: Record<ChipGroup, string> = {
+    good: "text-green-400",
+    slips: "text-yellow-400",
+    big: "text-red-400",
+  };
+  const groupOrder: ChipGroup[] = ["good", "slips", "big"];
+  const row = (label: string, color: string, a: number, b: number, key: string, small = false) => (
+    <div key={key} className="grid grid-cols-[2rem_1fr_2rem] items-center text-sm">
+      <span className={`text-right font-mono ${color}`}>{a}</span>
+      <span className={`text-center ${small ? "text-xs" : "text-sm font-medium"} ${color}`}>{label}</span>
+      <span className="text-left font-mono text-white/60">{b}</span>
+    </div>
+  );
   return (
     <div className="surface-card p-5 animate-fade-in-up">
-      <h2 className="text-base font-semibold text-white mb-4">Game Review</h2>
+      <h2 className="text-base font-semibold text-white mb-4">{t("review.title")}</h2>
 
       {/* Accuracy */}
       <div className="grid grid-cols-2 gap-3 mb-5">
-        <AccuracyCard label="You" accuracy={you.accuracy} highlight />
-        <AccuracyCard label={opponent || "Opponent"} accuracy={opp.accuracy} />
+        <AccuracyCard label={t("review.you")} accuracy={you.accuracy} highlight />
+        <AccuracyCard label={opponent || t("review.opponent")} accuracy={opp.accuracy} />
       </div>
 
-      {/* Classification counts */}
-      <div className="space-y-1.5 mb-5">
-        {CLASS_ORDER.map((c) => {
-          const meta = CLASS_META[c];
-          return (
-            <div key={c} className="grid grid-cols-[1.5rem_1fr_1.5rem] items-center text-sm">
-              <span className={`text-right font-mono ${meta.color}`}>{you.counts[c] || 0}</span>
-              <span className={`text-center text-xs uppercase tracking-wide ${meta.color}`}>{meta.label}</span>
-              <span className="text-left font-mono text-white/60">{opp.counts[c] || 0}</span>
-            </div>
-          );
-        })}
+      {/* Classification groups: three headline groups, full ten-way on expand */}
+      <div className="space-y-1.5 mb-2">
+        {groupOrder.map((g) => row(t(`groups.${g}`), groupMeta[g], youGroups[g], oppGroups[g], g))}
       </div>
+      <button
+        type="button"
+        aria-expanded={showAll}
+        onClick={() => setShowAll((v) => !v)}
+        className="mb-3 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-accent-300 hover:text-accent-200"
+      >
+        <ChevronDown className={`h-4 w-4 transition-transform ${showAll ? "rotate-180" : ""}`} aria-hidden="true" />
+        {showAll ? t("groups.hideAll") : t("groups.showAll")}
+      </button>
+      {showAll && (
+        <div className="space-y-1.5 mb-5">
+          {(Object.keys(CHIP_GROUPS) as ChipGroup[]).flatMap((g) =>
+            CHIP_GROUPS[g].map((c) =>
+              row(t(`classes.${c}`), CLASS_META[c].color, you.counts[c] || 0, opp.counts[c] || 0, c, true),
+            ),
+          )}
+        </div>
+      )}
 
-      {/* Phase grades */}
+      {/* Phase grades: words first, the average loss lives under Show numbers */}
       <div className="border-t border-white/5 pt-4">
-        <h3 className="text-xs uppercase tracking-wider text-white/45 font-medium mb-2">Your phase grades</h3>
+        <h3 className="text-xs uppercase tracking-wider text-white/45 font-medium mb-2">{t("phases.title")}</h3>
         <div className="grid grid-cols-3 gap-2">
           {["opening", "middlegame", "endgame"].map((p) => {
             const g = phaseGrade(you.phaseCpl[p]);
             return (
               <div key={p} className="rounded-lg bg-white/[0.03] px-3 py-2.5 text-center">
-                <p className="text-[0.65rem] uppercase tracking-wider text-white/40">{p}</p>
-                <p className={`text-sm font-semibold mt-0.5 ${g.color}`}>{g.label}</p>
-                <p className="text-[0.65rem] text-white/35 font-mono mt-0.5">
-                  {you.phaseCpl[p] !== null ? `${you.phaseCpl[p]!.toFixed(0)} cpl` : "—"}
-                </p>
+                <p className="text-[0.65rem] uppercase tracking-wider text-white/40">{tg(`phase.${p}`)}</p>
+                <p className={`text-sm font-semibold mt-0.5 ${g.color}`}>{g.key ? tg(`grade.${g.key}`) : "—"}</p>
               </div>
             );
           })}
         </div>
+        <ShowNumbers>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm text-white/75">
+            {["opening", "middlegame", "endgame"].map((p) => (
+              <div key={p} className="contents">
+                <dt className="text-white/50">
+                  {tg(`phase.${p}`)} · <Term id="cpl">{t("phases.avgLoss")}</Term>
+                </dt>
+                <dd className="font-mono">{you.phaseCpl[p] !== null ? you.phaseCpl[p]!.toFixed(0) : "—"}</dd>
+              </div>
+            ))}
+          </dl>
+        </ShowNumbers>
       </div>
     </div>
   );
+}
+
+function KeyMoments({ moments, onSee }: { moments: KeyMoment[]; onSee: (ply: number) => void }) {
+  const t = useTranslations("gameDetail");
+  return (
+    <section aria-label={t("keyMoments")} className="space-y-3">
+      <h2 className="text-base font-semibold text-white">{t("keyMoments")}</h2>
+      {moments.map((m) => (
+        <MistakeCard
+          key={m.ply}
+          compact
+          hideGameLink
+          mistake={m.mistake}
+          context={
+            <button
+              type="button"
+              onClick={() => onSee(m.ply)}
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-accent-500 px-4 text-sm font-semibold text-white hover:bg-accent-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-300"
+            >
+              {t("seeOnBoard")}
+            </button>
+          }
+        />
+      ))}
+    </section>
+  );
+}
+
+function ResultChip({ result, label }: { result: string; label: string }) {
+  const tone =
+    result === "win"
+      ? "bg-green-500/15 text-green-400"
+      : result === "loss"
+      ? "bg-red-500/15 text-red-400"
+      : "bg-yellow-500/15 text-yellow-400";
+  return <span className={`px-2.5 py-1 rounded-md text-xs font-semibold uppercase tracking-wide ${tone}`}>{label}</span>;
 }
 
 function AccuracyCard({ label, accuracy, highlight }: { label: string; accuracy: number | null; highlight?: boolean }) {
@@ -454,6 +596,7 @@ function EvalGraph({
   ply: number;
   onSeek: (p: number) => void;
 }) {
+  const t = useTranslations("gameDetail");
   const data = moves.map((m, i) => ({
     ply: i + 1,
     advantage: Math.max(-1000, Math.min(1000, m.eval_after ?? 0)) / 100,
@@ -462,8 +605,8 @@ function EvalGraph({
   return (
     <div className="surface-card p-3">
       <div className="flex items-center justify-between px-1 pb-1.5">
-        <span className="text-xs font-semibold text-white/70">Your advantage</span>
-        <span className="text-[0.65rem] text-white/35">click to jump</span>
+        <span className="text-xs font-semibold text-white/70">{t("advantage.title")}</span>
+        <span className="text-[0.65rem] text-white/35">{t("advantage.hint")}</span>
       </div>
       <ResponsiveContainer width="100%" height={110}>
         <AreaChart
@@ -500,39 +643,57 @@ function EvalGraph({
   );
 }
 
-function MoveDetail({ move }: { move: MoveAnalysis }) {
+function MoveDetail({ move, input }: { move: MoveAnalysis; input: ReturnType<typeof toMistakeInput> | null }) {
+  const t = useTranslations("gameDetail");
+  const tm = useTranslations("mistakeCard");
+  const tc = useTranslations("plain");
+  const tmo = useTranslations("motif");
+  const vText = useVerdictText();
   const cls = effectiveClass(move);
   const meta = CLASS_META[cls];
   const mate = involvesMate(move);
+  const v = useMemo(() => (input ? safeVerdict(input) : null), [input]);
+  // Lead with the plain sentence; opponent moves have no player-POV verdict.
+  const headline = v ? vText(v.primaryKey, v.primaryParams) : t("moveDetail.opponentMove");
+  const missed = (move.tactical_motifs ?? []).map((x) => {
+    const id = MOTIF_ID[x];
+    return { raw: x, name: id && tmo.has(`${id}.name`) ? tmo(`${id}.name`) : x.replace("_", " ") };
+  });
   return (
     <div className="surface-card p-5 animate-fade-in">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className={`text-xl font-bold font-mono ${meta.color}`}>{move.move_san}{meta.symbol}</span>
-          <span className={`text-xs px-2 py-0.5 rounded-md ${meta.chip}`}>{meta.label}</span>
+      <div className="flex flex-wrap items-center gap-2 mb-2">
+        <span className={`text-xl font-bold font-mono ${meta.color}`}>{move.move_san}{meta.symbol}</span>
+        <span className={`text-xs px-2 py-0.5 rounded-md ${meta.chip}`}>{t(`classes.${cls}`)}</span>
+        {v && v.isSlip && (
+          <span className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-xs text-white/80">
+            {tc(`cost.${v.cost}`)}
+          </span>
+        )}
+      </div>
+      <p className="text-base font-semibold leading-snug text-white">{headline}</p>
+      {v?.secondaryKey && <p className="mt-1 text-sm text-white/70">{vText(v.secondaryKey, v.secondaryParams)}</p>}
+      {missed.length > 0 && (
+        <div className="mt-3 flex items-center gap-2 flex-wrap">
+          <span className="text-white/45 text-xs uppercase tracking-wider font-medium">{t("moveDetail.missedTactics")}</span>
+          {missed.map((m) => (
+            <span key={m.raw} className="px-2 py-0.5 bg-red-500/15 text-red-400 rounded-md text-xs capitalize">{m.name}</span>
+          ))}
         </div>
-        <span className="text-sm font-mono text-white/55">
-          {evalToStr(move.eval_before)} → {evalToStr(move.eval_after)}
-        </span>
-      </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-        {move.best_move_san && move.best_move_san !== move.move_san && (
-          <Field label="Best move"><span className="text-green-400 font-mono font-semibold">{move.best_move_san}</span></Field>
-        )}
-        <Field label={<Term id="cpl">Centipawn loss</Term>}>
-          <span className="font-mono">{mate ? "mate swing" : move.centipawn_loss.toFixed(0)}</span>
-        </Field>
-        <Field label="Phase"><span className="capitalize">{move.game_phase}</span></Field>
-        {move.tactical_motifs && move.tactical_motifs.length > 0 && (
-          <Field label="Missed tactics">
-            <div className="flex gap-1.5 flex-wrap">
-              {move.tactical_motifs.map((t) => (
-                <span key={t} className="px-2 py-0.5 bg-red-500/15 text-red-400 rounded-md text-xs capitalize">{t.replace("_", " ")}</span>
-              ))}
-            </div>
+      )}
+      <ShowNumbers>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+          <Field label={tm("evalLabel")}>
+            <span className="font-mono text-white/75">{evalToStr(move.eval_before)} → {evalToStr(move.eval_after)}</span>
           </Field>
-        )}
-      </div>
+          <Field label={<Term id="cpl">{tm("lossLabel")}</Term>}>
+            <span className="font-mono">{mate ? t("moveDetail.mateSwing") : move.centipawn_loss.toFixed(0)}</span>
+          </Field>
+          {move.best_move_san && move.best_move_san !== move.move_san && (
+            <Field label={tm("best")}><span className="text-green-400 font-mono font-semibold">{move.best_move_san}</span></Field>
+          )}
+          <Field label={t("moveDetail.phase")}><span>{tc(`phase.${move.game_phase}`)}</span></Field>
+        </div>
+      </ShowNumbers>
     </div>
   );
 }
@@ -559,11 +720,11 @@ function NavBtn({ onClick, disabled, label, children }: { onClick: () => void; d
   );
 }
 
-function BackLink() {
+function BackLink({ label }: { label: string }) {
   return (
     <Link href="/games" className="inline-flex items-center gap-1.5 text-sm text-white/55 hover:text-white transition-colors">
       <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
-      Back to games
+      {label}
     </Link>
   );
 }

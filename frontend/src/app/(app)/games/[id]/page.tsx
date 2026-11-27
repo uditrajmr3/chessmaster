@@ -578,7 +578,7 @@ function ResultChip({ result, label }: { result: string; label: string }) {
 
 function AccuracyCard({ label, accuracy, highlight }: { label: string; accuracy: number | null; highlight?: boolean }) {
   return (
-    <div className={`rounded-xl px-4 py-3 ${highlight ? "bg-accent-500/12 border border-accent-500/25" : "bg-white/[0.03] border border-white/5"}`}>
+    <div className={`min-w-0 rounded-xl px-4 py-3 ${highlight ? "bg-accent-500/12 border border-accent-500/25" : "bg-white/[0.03] border border-white/5"}`}>
       <p className="text-xs text-white/50 truncate">{label}</p>
       <div className="mt-1">
         <AccuracyBadge value={accuracy} source={accuracy === null ? null : "chessint"} size="lg" />

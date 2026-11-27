@@ -72,8 +72,8 @@ export default function AccuracyBadge({
       title={source === "chessint" ? t("accuracy.byChessInt") : undefined}
     >
       <Ring pct={value} className={style.ring} px={lg ? 40 : 22} />
-      <span className="inline-flex flex-col items-start leading-tight">
-        <span className="inline-flex items-baseline gap-1.5">
+      <span className="inline-flex min-w-0 flex-col items-start leading-tight">
+        <span className="inline-flex flex-wrap items-baseline gap-x-1.5">
           <span className={`font-mono font-bold ${lg ? "text-2xl" : "text-sm"} text-white`}>
             {shown}
             <span className={`${lg ? "text-sm" : "text-xs"} text-white/50`}>%</span>

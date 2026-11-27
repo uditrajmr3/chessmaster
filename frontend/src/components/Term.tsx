@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 /**
@@ -24,6 +24,20 @@ export default function Term({
   const t = useTranslations("glossary");
   const [open, setOpen] = useState(false);
   const tipId = useId();
+  const tipRef = useRef<HTMLSpanElement>(null);
+  // Keep an open tooltip inside the viewport near screen edges. A closed
+  // tooltip is display:none so it never adds page scroll width.
+  useLayoutEffect(() => {
+    const el = tipRef.current;
+    if (!el) return;
+    el.style.marginLeft = "0px";
+    if (!open) return;
+    const rect = el.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const pad = 8;
+    if (rect.left < pad) el.style.marginLeft = `${pad - rect.left}px`;
+    else if (rect.right > vw - pad) el.style.marginLeft = `${vw - pad - rect.right}px`;
+  }, [open]);
 
   // Unknown id → render the children (or nothing) without a tooltip.
   if (!t.has(`${id}.term`)) return <>{children}</>;
@@ -46,12 +60,13 @@ export default function Term({
         {children ?? term}
       </button>
       <span
+        ref={tipRef}
         id={tipId}
         role="tooltip"
-        className={`pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-lg border border-white/10 bg-ink-800 p-3 text-left text-xs font-normal leading-relaxed text-gray-300 shadow-xl transition duration-150 ease-out ${
+        className={`pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-[min(16rem,calc(100vw-2rem))] -translate-x-1/2 rounded-lg border border-white/10 bg-ink-800 p-3 text-left text-xs font-normal leading-relaxed text-gray-300 shadow-xl transition duration-150 ease-out ${
           open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
         }`}
-        style={{ visibility: open ? "visible" : "hidden" }}
+        style={{ display: open ? undefined : "none" }}
       >
         <span className="mb-1 block font-semibold text-white">{term}</span>
         {short}
